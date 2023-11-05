@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+   <nav class="navbar bg-body-tertiary" layout:fragment="nav">
+      <div class="container">
+        <a class="navbar-brand" th:href="@{#}">
+          <img src="/images/icons/logo.png" th:src="@{/images/icons/logo.png}">
+        </a>
+        <ul class="nav justify-content-end nav-pills">
+          <th:block sec:authorize="isAuthenticated()">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+              role="button" aria-expanded="false">作物管理</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" th:href="@{#}">作物一覧</a></li>
+              <li><a class="dropdown-item" th:href="@{#}">作物新規登録</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+            </ul>
+          </li> 
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+              role="button" aria-expanded="false">栽培計画管理</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" th:href="@{#}">栽培計画一覧</a></li>
+              <li><a class="dropdown-item" th:href="@{#}">栽培計画新規登録</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+              role="button" aria-expanded="false">栽培日誌管理</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" th:href="@{#}">栽培日誌一覧</a></li>
+              <li><a class="dropdown-item" th:href="@{#}">栽培日誌新規登録</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+              role="button" aria-expanded="false">区画管理</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" th:href="@{#}">区画利用状況</a></li>
+              <li><a class="dropdown-item" th:href="@{#}">区画新規登録</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+              th:href="@{#}" role="button" aria-expanded="false">マイページ</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" th:href="@{#}">プロフィールの編集</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{#}">ログアウト</a>
+          </li>
+        </th:block>
+        <th:block sec:authorize="!isAuthenticated()">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{#}">ユーザー登録</a>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{#}">ログイン</a>
+        </th:block>
+        </ul>
+      </div>
+    </nav>
+    <div id="messages" layout:fragment="messages" th:if="!${#lists.isEmpty(#fields.detailedErrors())}">
+      <ul>
+        <li th:each="error : ${#fields.detailedErrors()}" class="error-message" th:text="${error.message}"/>
+      </ul>
+    </div>
+</body>
+</html>
