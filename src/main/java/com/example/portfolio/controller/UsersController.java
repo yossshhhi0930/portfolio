@@ -18,10 +18,10 @@ import com.example.portfolio.entity.User.Authority;
 import com.example.portfolio.form.UserForm;
 import com.example.portfolio.repository.UserRepository;
 
+
 @Controller
 public class UsersController {
-
-    @Autowired
+	@Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
