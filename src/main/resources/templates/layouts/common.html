@@ -70,9 +70,9 @@
         </th:block>
         <th:block sec:authorize="!isAuthenticated()">
           <li class="nav-item">
-            <a class="nav-link" th:href="@{#}">ユーザー登録</a>
+            <a class="nav-link" th:href="@{users/new}">ユーザー登録</a>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{#}">ログイン</a>
+            <a class="nav-link" th:href="@{sessions/new}">ログイン</a>
         </th:block>
         </ul>
       </div>
