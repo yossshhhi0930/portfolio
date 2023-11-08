@@ -1,3 +1,4 @@
+<!doctype html>
 <html
   xmlns:th="http://www.thymeleaf.org"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -7,7 +8,9 @@
   </head>
   <body>
 <div class="pages-index-wrapper text-center" layout:fragment="contents">
-<h1 class="text-white">Make you Happy</h1>
+    <h1>野菜を育てよう</h1>
+			<a class="btn btn-primary" th:href="@{#}" role="button">ユーザー登録</a>
+			<a class="btn btn-primary" th:href="@{#}" role="button">ログイン</a>
 </div>
   </body>
 </html>
