@@ -3,6 +3,7 @@ package com.example.portfolio.entity;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -30,4 +31,10 @@ public class AbstractEntity {
     public void onPreUpdate() {
         setUpdatedAt(new Date());
     }
+    
+    
+	public User getLoginUser() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

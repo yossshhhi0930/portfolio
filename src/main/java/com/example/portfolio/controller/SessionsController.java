@@ -10,7 +10,7 @@ public class SessionsController {
 
     @GetMapping(path = "/login")
     public String index() {
-        return "sessions/new";
+        return "/sessions/new";
     }
 
     @GetMapping(path = "/login-failure")
@@ -19,7 +19,7 @@ public class SessionsController {
         model.addAttribute("class", "alert-danger");
         model.addAttribute("message", "Emailまたはパスワードに誤りがあります。");
 
-        return "sessions/new";
+        return "/sessions/new";
     }
 
     @GetMapping(path = "/logout-complete")
@@ -27,7 +27,6 @@ public class SessionsController {
         model.addAttribute("hasMessage", true);
         model.addAttribute("class", "alert-info");
         model.addAttribute("message", "ログアウトしました。");
-
-        return "layouts/complete";
+        return "/layouts/complete";
     }
 }

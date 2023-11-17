@@ -5,4 +5,6 @@ public interface UserInf {
     Long getUserId();
 
     String getUsername();
+
+	//User getLoginUser();
 }

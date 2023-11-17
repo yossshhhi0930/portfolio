@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,9 +15,19 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.Transient;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.example.portfolio.entity.UserInf;
+import com.example.portfolio.repository.UserRepository;
+
+
+import java.security.Principal;
 
 import lombok.Data;
 
@@ -25,20 +36,22 @@ import lombok.Data;
 @Data
 public class User extends AbstractEntity implements UserDetails, UserInf {
     private static final long serialVersionUID = 1L;
-
+    
     public enum Authority {
         ROLE_USER, ROLE_ADMIN
     };
 
-    public User() {
+        public User() {
         super();
     }
 
-    public User(String email, String name, String password, Authority authority) {
+    public User(String email, String name, String password, Authority authority, String verificationCode, boolean enabled) {
         this.username = email;
         this.name = name;
         this.password = password;
         this.authority = authority;
+        this.verificationCode = verificationCode;
+        this.enabled = enabled;
     }
 
     @Id
@@ -46,10 +59,10 @@ public class User extends AbstractEntity implements UserDetails, UserInf {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
@@ -58,6 +71,14 @@ public class User extends AbstractEntity implements UserDetails, UserInf {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Authority authority;
+    
+    // 認証コード
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+    
+    // 初期値はfalse 認証が成功すると trueになる。
+    @Column
+    private boolean enabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,13 +97,15 @@ public class User extends AbstractEntity implements UserDetails, UserInf {
         return true;
     }
 
+    
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
+    
     @Override
     public boolean isEnabled() {
-        return true;
+        return false;
     }
+
 }

@@ -5,7 +5,7 @@
 <body>
    <nav class="navbar bg-body-tertiary" layout:fragment="nav">
       <div class="container">
-        <a class="navbar-brand" th:href="@{#}">
+        <a class="navbar-brand" th:href="@{/mypage}">
           <img src="/images/icons/logo.png" th:src="@{/images/icons/logo.png}">
         </a>
         <ul class="nav justify-content-end nav-pills">
@@ -56,23 +56,24 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-              th:href="@{#}" role="button" aria-expanded="false">マイページ</a>
+              th:href="@{/mypage}" role="button" aria-expanded="false">マイページ</a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" th:href="@{#}">プロフィールの編集</a></li>
+              <li><a class="dropdown-item" th:href="@{/settings}">設定</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{#}">ログアウト</a>
+            <a class="nav-link" th:href="@{/logout}">ログアウト</a>
           </li>
         </th:block>
         <th:block sec:authorize="!isAuthenticated()">
           <li class="nav-item">
-            <a class="nav-link" th:href="@{users/new}">ユーザー登録</a>
+            <a class="nav-link" th:href="@{/users/new}">ユーザー登録</a>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{sessions/new}">ログイン</a>
+            <a class="nav-link" th:href="@{/login}">ログイン</a>
         </th:block>
         </ul>
       </div>

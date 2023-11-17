@@ -13,9 +13,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.example.portfolio.entity.User;
 import com.example.portfolio.filter.FormAuthenticationProvider;
 import com.example.portfolio.repository.UserRepository;
+
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -23,16 +26,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected static Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Autowired
+    private FormAuthenticationProvider authenticationProvider;
+    
+    @Autowired
     private UserRepository repository;
 
     @Autowired
     UserDetailsService service;
+    
+    
+    private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**", "/h2-console/**"};
 
-    @Autowired
-    private FormAuthenticationProvider authenticationProvider;
-
-    private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**", "/h2-console/**" };
-
+	
     /**
     * 認証から除外する
     */
@@ -47,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
-        http.authorizeRequests().antMatchers("/login", "/logout-complete", "/users/new", "/user").permitAll()
+        http.authorizeRequests().antMatchers("/", "/login", "/logout-complete", "/users/new", "/user", "/reissue/**", "/verify/**").permitAll()
+                .antMatchers("/settings").hasAuthority(User.Authority.ROLE_ADMIN.name())
                 .anyRequest().authenticated()
                 // ログアウト処理
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/logout-complete").clearAuthentication(true)
@@ -55,10 +61,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true).permitAll().and().csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 // form
-                .and().formLogin().loginPage("/login").defaultSuccessUrl("/topics").failureUrl("/login-failure")
+                .and().formLogin().loginPage("/login").defaultSuccessUrl("/mypage").failureUrl("/login-failure")
                 .permitAll();
+}
         // @formatter:on
-    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
