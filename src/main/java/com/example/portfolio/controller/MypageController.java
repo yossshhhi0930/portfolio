@@ -4,16 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class PagesController {
+public class MypageController {
 	
-	@RequestMapping("/")
+	@RequestMapping("/mypage")
     public String index() {
-        return "pages/index";
-    }
-	
-	@RequestMapping("/settings")
-    public String setting() {
-        return "pages/setting";
+        return "mypages/index";
     }
 
 }

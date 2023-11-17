@@ -14,6 +14,7 @@
       <main class="col-md-4 mx-auto">
         <h1 class="text-center">Log in</h1>
         <form method="post" th:action="@{/login}">
+          <div layout:replace="~{layouts/common::messages}"></div>
           <div class="mb-3">
             <label class="form-label" for="session_email">Email</label>
             <input class="form-control" type="text" name="username" id="session_email" />
@@ -24,6 +25,7 @@
           </div>
           <input type="submit" value="ログイン" class="btn w-100 btn-outline-light" />
         </form>
+      <a th:href="@{/reissue}">パスワードを忘れた</a>
       </main>
     </div>
   </div>

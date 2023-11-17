@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/layout}">
+  <head>
+    <title>Portfolio</title>
+  </head>
+  <body>
+		<div class="users-new-wrapper" layout:fragment="contents">
+        <h1>Reissue password</h1>
+        <form method="post" th:action="@{/reissue/create}" th:object="${form}">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-control" th:field="*{email}" /><p th:if="${#fields.hasErrors('email')}" class="error-message" th:errors="*{email}"></p>
+            <input type="submit" value="Reissue password" class="btn" />
+    </div>
+  </body>
+</html>

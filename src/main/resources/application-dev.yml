@@ -8,4 +8,17 @@ spring:
   h2:
     console:
       enabled: true
+  mail:
+    default-encoding: UTF-8
+    protocol: smtp
+    host: smtp.gmail.com
+    port: 587
+    username: yossshhhi@gmail.com
+    password: erqh ncdw kyke xcnr
+    properties: 
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 debug: true

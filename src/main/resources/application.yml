@@ -5,10 +5,23 @@ spring:
         enabled: true
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:pictgram
+    url: jdbc:h2:mem:portfolio
     username: sa
     password: 
 
   h2:
     console:
       enabled: true
+  mail:
+    default-encoding: UTF-8
+    protocol: smtp
+    host: ${spring.mail.host}
+    port: ${spring.mail.port}
+    username: ${spring.mail.username}
+    password: ${spring.mail.password}
+    properties: 
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
