@@ -104,55 +104,5 @@ public class UsersController {
             return "sessions/new";
         
     }
-    
-//    @GetMapping(path ="/fogotPassword")
-//    public String checkEmail(Model model) {
-//    	return "pages/checkEmail";
-//    }
-//    @RequestMapping(value = "/sendPasswordResetMail", method = RequestMethod.POST)
-//    public String sendPasswordResetMail(@RequestParam("email") String email, Model model) {
-//    	User user = repository.findByUsername(email);
-//    	if (user == null) {
-//        	model.addAttribute("hasMessage", true);
-//        	model.addAttribute("class", "alert-danger");
-//        	model.addAttribute("message", "このメールアドレスは未登録です。");
-//            return "pages/index";
-//        }
-//        	String randomCode = RandomString.make(64);
-//        	userService.sendPasswordResettingMail(email, randomCode);
-//        	user.setVerificationCode(randomCode);
-//        	repository.saveAndFlush(user);
-//        	model.addAttribute("hasMessage", true);
-//            model.addAttribute("class", "alert-info");
-//            model.addAttribute("message", "パスワード再設定用URLをメールアドレスに送信しました。");
-//            return "pages/default";
-//        
-//    }
-//    @GetMapping(path ="/resetPassword/{verificationCode}")
-//    public String resetPassword(@PathVariable String verificationCode, Model model, RedirectAttributes redirAttrs) {
-//        User user = repository.findByVerificationCode(verificationCode);
-//        if (user == null) {
-//        	model.addAttribute("hasMessage", true);
-//        	model.addAttribute("class", "alert-danger");
-//        	model.addAttribute("message", "このURLは無効です。");
-//            return "pages/index";
-//        }else {
-//        	return "users/resetpassword";
-//        }
-//    }
-//    
-//    @RequestMapping(value = "/resetPaswordComplete/{userId}", method = RequestMethod.POST)
-//    public String resetPaswordComplete(@PathVariable Long userId, @RequestParam("password") String password, Model model) {
-//    	User user = repository.findByUserId(userId);
-//    	user.setPassword(passwordEncoder.encode(password));
-//    	repository.saveAndFlush(user);
-//        
-//        model.addAttribute("hasMessage", true);
-//        model.addAttribute("class", "alert-info");
-//        model.addAttribute("message", "パスワードの再設定が完了しました。");
-//       
-//        return "sessions/new";
-//    	
-//    
-//    }
+
 }
