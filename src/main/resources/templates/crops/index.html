@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="users-new-wrapper" layout:fragment="contents">
+		<div class="row" th:each="crop:${list}">
+
+			<div class="card" style="max-width: 400px;">
+				<img class="card-img" th:src="${crop.cropimage.path}" alt="Image">
+				<div class="card-img-overlay">
+					<a th:href="@{/crops/detail(param1=${crop.id})}">
+						<p class="text-white" th:text="${crop.name}"></p>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

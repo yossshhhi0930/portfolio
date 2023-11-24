@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="topics-new-wrapper" layout:fragment="contents">
+		<div th:if="${crop}">
+			<div layout:replace="~{layouts/common::messages}"></div>
+			<input type="hidden" th:field="*{id}" th:text="${crop.id}" />
+			<label>Name</label>
+			<span th:text="${crop.name}"></span>
+			<label>Sowing Start</label>
+			<span th:text="${crop.sowing_start}"></span>
+			<label>Sowing End</label>
+			<span th:text="${crop.sowing_end}"></span>
+			<label>Harvest Start</label>
+			<span th:text="${crop.harvest_start}"></span>
+			<label>Harvest End</label>
+			<span th:text="${crop.harvest_end}"></span>
+			<label>Cultivation Period</label>
+			<span th:text="${crop.cultivationp_period}"></span>
+			<span>日</span>
+			<label>Manual</label>
+			<span th:text="${crop.manual}"></span>
+		</div>
+		<div th:each="image:${list}">
+			<img th:src="${image.path}" alt="Image">
+		</div>
+		<button type="button" class="btn btn-secondary">
+					<a th:href="@{/crops/edit(cropId=${crop.id}}" style="text-decoration: none; color: inherit;">
+					　編集する
+					</a>
+				</button>
+		<button type="button" class="btn btn-secondary">
+					<a th:href="@{/corops/delete(cropId=${crop.id})}" style="text-decoration: none; color: inherit;">
+						削除する
+					</a>
+				</button>
+	</div>
+
+	<body>
