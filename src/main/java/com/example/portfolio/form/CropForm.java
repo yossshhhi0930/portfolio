@@ -22,8 +22,8 @@ public class CropForm {
     
     private String manual;
     
-   
-    private String sowing_start;
+    
+    private MonthDay sowing_start;
     
     
     private Date sowing_end;
