@@ -17,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import com.example.portfolio.entity.User;
 import com.example.portfolio.entity.AbstractEntity;
+import java.time.MonthDay;
 
 import lombok.Data;
 
@@ -41,7 +42,7 @@ public class Crop extends AbstractEntity implements Serializable {
     private String manual;
     
     @Column
-    private Date sowing_start;
+    private MonthDay sowing_start;
     
     @Column
     private Date sowing_end;

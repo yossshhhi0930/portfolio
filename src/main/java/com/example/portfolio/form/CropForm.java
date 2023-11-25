@@ -1,8 +1,11 @@
 package com.example.portfolio.form;
 
+import java.time.MonthDay;
 import java.util.Date;
 
 import javax.validation.constraints.NotEmpty;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
@@ -13,14 +16,14 @@ public class CropForm {
 
     private Long userId;
 
-    @NotEmpty
+    
     private String name;
   
     
     private String manual;
     
    
-    private Date sowing_start;
+    private String sowing_start;
     
     
     private Date sowing_end;

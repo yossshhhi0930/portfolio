@@ -7,9 +7,11 @@ import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.MonthDay;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,8 +85,7 @@ public class CropController {
 		// 作物リストallCropsから、一つずつ作物取り出し、該当月に種まき時期が該当するか否かの判定
 		for (Crop crop : allCrops) {
 			// sowing_startをDate型からLoccalDate型に変換
-			LocalDate sowing_start_localDate = crop.getSowing_start().toInstant().atZone(ZoneId.systemDefault())
-					.toLocalDate();
+			LocalDate sowing_start_localDate = crop.getSowing_start().atYear(year);
 			// sowing_startをDate型からLoccalDate型に変換
 			LocalDate sowing_end_localDate = crop.getSowing_end().toInstant().atZone(ZoneId.systemDefault())
 					.toLocalDate();
@@ -118,12 +119,12 @@ public class CropController {
 			BindingResult result, Model model, RedirectAttributes redirAttrs, RedirectAttributes attributes)
 			throws IOException {
 
-		// 同一の作物が既に登録されている場合、エラー項目に追加
-		if (repository.findByName(form.getName()) != null) {
-			FieldError fieldError = new FieldError(result.getObjectName(), "name", "その作物はすでに登録されています。");
-			result.addError(fieldError);
-		}
-		// エラーがある場合、エラー文を表示し、新しいformを送信
+//		// 同一の作物が既に登録されている場合、エラー項目に追加
+//		if (repository.findByName(form.getName()) != null) {
+//			FieldError fieldError = new FieldError(result.getObjectName(), "name", "その作物はすでに登録されています。");
+//			result.addError(fieldError);
+//		}
+		 //エラーがある場合、エラー文を表示し、新しいformを送信
 		if (result.hasErrors()) {
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("class", "alert-danger");
@@ -138,7 +139,7 @@ public class CropController {
 		entity.setUserId(user.getUserId());
 		entity.setName(form.getName());
 		entity.setManual(form.getManual());
-		entity.setSowing_start(form.getSowing_start());
+		entity.setSowing_start(convertStringToMonthDay(form.getSowing_start()));
 		entity.setSowing_end(form.getSowing_end());
 		entity.setHarvest_start(form.getHarvest_start());
 		entity.setHarvest_end(form.getHarvest_end());
@@ -157,10 +158,15 @@ public class CropController {
 		return "crops/index";
 		
 		
-		
-		
-		
 	}
+	
+	private MonthDay convertStringToMonthDay(String dateString) {
+        // 適切な方法で文字列を MonthDay に変換する処理を実装
+        // 例: DateTimeFormatter を使用する
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
+        return MonthDay.parse(dateString, formatter);
+    }
+
 
 	// 画像の保存
 	@RequestMapping(value = "/crops/upload-image", method = RequestMethod.POST)
@@ -314,7 +320,7 @@ public class CropController {
 
 		// CropEntityのフィールド値を更新
 		entity.ifPresent(crop -> crop.setName(form.getName()));
-		entity.ifPresent(crop -> crop.setSowing_start(form.getSowing_start()));
+		entity.ifPresent(crop -> crop.setSowing_start(convertStringToMonthDay(form.getSowing_start())));
 		entity.ifPresent(crop -> crop.setSowing_end(form.getSowing_end()));
 		entity.ifPresent(crop -> crop.setHarvest_start(form.getHarvest_start()));
 		entity.ifPresent(crop -> crop.setHarvest_end(form.getHarvest_end()));
