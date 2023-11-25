@@ -85,8 +85,7 @@ public class CropController {
 			// sowing_startをDate型からLoccalDate型に変換
 			LocalDate sowing_start_localDate = crop.getSowing_start().atYear(year);
 			// sowing_startをDate型からLoccalDate型に変換
-			LocalDate sowing_end_localDate = crop.getSowing_end().toInstant().atZone(ZoneId.systemDefault())
-					.toLocalDate();
+			LocalDate sowing_end_localDate = crop.getSowing_end().atYear(year);
 			// 判定を行い、判定を通過した作物を作物リストmonthCropsに追加
 			if ((!sowing_start_localDate.isBefore(firstDayOfMonth) && !sowing_start_localDate.isAfter(lastDayOfMonth))
 					|| (!sowing_end_localDate.isBefore(firstDayOfMonth)

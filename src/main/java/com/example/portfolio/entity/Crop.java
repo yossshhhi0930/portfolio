@@ -45,13 +45,13 @@ public class Crop extends AbstractEntity implements Serializable {
     private MonthDay sowing_start;
     
     @Column
-    private Date sowing_end;
+    private MonthDay sowing_end;
     
     @Column
-    private Date harvest_start;
+    private MonthDay harvest_start;
     
     @Column
-    private Date harvest_end;
+    private MonthDay harvest_end;
     
     @Column
     private int cultivationp_period;

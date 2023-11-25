@@ -26,13 +26,13 @@ public class CropForm {
     private MonthDay sowing_start;
     
     
-    private Date sowing_end;
+    private MonthDay sowing_end;
     
    
-    private Date harvest_start;
+    private MonthDay harvest_start;
     
     
-    private Date harvest_end;
+    private MonthDay harvest_end;
     
    
     private int cultivationp_period;
