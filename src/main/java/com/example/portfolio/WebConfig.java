@@ -7,13 +7,16 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.example.portfolio.converter.MonthDayConverter;
+import com.example.portfolio.converter.MonthDayToStringConverter;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new MonthDayConverter());
-    
-    }
+	@Override
+	public void addFormatters(FormatterRegistry registry) {
+		registry.addConverter(new MonthDayConverter());
+		registry.addConverter(new MonthDayToStringConverter());
+
+	}
+
 }

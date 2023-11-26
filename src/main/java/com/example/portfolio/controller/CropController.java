@@ -7,6 +7,7 @@ import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.MonthDay;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneId;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
@@ -40,9 +42,12 @@ import com.example.portfolio.entity.CropImage;
 import com.example.portfolio.entity.UserInf;
 import com.example.portfolio.form.CropForm;
 import com.example.portfolio.form.CropImageForm;
+import com.example.portfolio.form.UserForm;
+
 import org.springframework.beans.BeanUtils;
 
 @Controller
+@SessionAttributes("cropform") // 必要なければ削除
 public class CropController {
 
 	protected static Logger log = LoggerFactory.getLogger(CropController.class);
@@ -55,6 +60,12 @@ public class CropController {
 
 	@Autowired
 	CropImageReposiory imageRepository;
+
+	//必要なければ削除
+	@ModelAttribute("cropform")
+	public CropForm getCropForm() {
+		return new CropForm();
+	}
 
 	private static final String UPLOAD_DIR = "uploads";
 
@@ -101,13 +112,9 @@ public class CropController {
 	@GetMapping(path = "/crops/new")
 	public String newTopic(Model model) {
 		CropForm cropform = new CropForm();
-		CropImageForm cropImageform = new CropImageForm();
-		cropImageform.setCropId(cropform.getId());
-		model.addAttribute("cropform", cropform );
-		model.addAttribute("cropImageform", cropImageform);
-		
+		model.addAttribute("cropform", cropform);
 		return "crops/new";
-		
+
 	}
 
 	// formから送られた作物データを登録
@@ -115,21 +122,21 @@ public class CropController {
 	public String create(Principal principal, @Validated @ModelAttribute("cropform") CropForm form,
 			BindingResult result, Model model, RedirectAttributes redirAttrs, RedirectAttributes attributes)
 			throws IOException {
-
 		// 同一の作物が既に登録されている場合、エラー項目に追加
 		if (repository.findByName(form.getName()) != null) {
 			FieldError fieldError = new FieldError(result.getObjectName(), "name", "その作物はすでに登録されています。");
 			result.addError(fieldError);
 		}
-		 //エラーがある場合、エラー文を表示し、新しいformを送信
+		// エラーがある場合、エラー文を表示しformを再度返す
 		if (result.hasErrors()) {
+			model.addAttribute("form", form);
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("class", "alert-danger");
 			model.addAttribute("message", "作物データ登録に失敗しました。");
-			return "crops/index";
+			return "crops/new";
 		}
 
-		// CropEntityのインスタンスを生成
+//		//CropEntityのインスタンスを生成
 		Crop entity = new Crop();
 		Authentication authentication = (Authentication) principal;
 		UserInf user = (UserInf) authentication.getPrincipal();
@@ -151,45 +158,60 @@ public class CropController {
 		model.addAttribute("hasMessage", true);
 		model.addAttribute("class", "alert-info");
 		model.addAttribute("message", "作物データ登録に成功しました。");
-		//attributes.addFlashAttribute("cropId", form.getId());
-		return "crops/index";
-		
-		
-	}
+		attributes.addFlashAttribute("cropId", entity.getId());
+		return "redirect:/crops/newImage/" + entity.getId();
 
+	}
+	@GetMapping(path = "/crops/newImage/{cropId}")
+	public String newImage(@PathVariable Long cropId, Model model) {
+		CropImageForm cropImageform = new CropImageForm();
+		cropImageform.setCropId(cropId);
+		Optional<Crop> optionalCrop = repository.findById(cropId);
+		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optionalが空の場合は例外をスローするなどの対処
+		model.addAttribute("crop", crop);
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
+		model.addAttribute("list", imageList);
+		model.addAttribute("cropImageform", cropImageform);
+		return "crops/newImage";
+
+	}
+	
 	// 画像の保存
 	@RequestMapping(value = "/crops/upload-image", method = RequestMethod.POST)
-	public String uploadImage(Principal principal, @Validated @ModelAttribute("cropImageform") CropImageForm form,
-			BindingResult result, Model model, @RequestParam MultipartFile image,
-			RedirectAttributes redirAttrs) throws IOException {
+	public String uploadImage(Principal principal, @Validated @ModelAttribute("cropImageform") CropImageForm imageform,
+			 BindingResult result, Model model,
+			@RequestParam MultipartFile image, RedirectAttributes redirAttrs, RedirectAttributes attributes) throws IOException {
 		// ファイルの拡張子が画像形式かどうかの検証をエラー項目に追加
 		if (image != null && !isImageFile(image)) {
 			FieldError fieldError = new FieldError(result.getObjectName(), "image", "画像ファイル以外はアップロードできません。");
 			result.addError(fieldError);
 		}
+
 		// エラーがある場合、エラー文を表示し、新しいformを送信
+		
 		if (result.hasErrors()) {
-			model.addAttribute("hasMessage", true);
-			model.addAttribute("class", "alert-danger");
-			model.addAttribute("message", "画像のアップロードに失敗しました。");
-			return "redirect:/crops/new";
+			
+			attributes.addFlashAttribute("hasMessage", true);
+			attributes.addFlashAttribute("class", "alert-danger");
+			attributes.addFlashAttribute("message", "画像のアップロードに失敗しました。");
+			Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(imageform.getCropId());
+			redirAttrs.addFlashAttribute("list", imageList);
+			return "redirect:/crops/newImage/"+ imageform.getCropId();
 		}
+
 		// CropImagEntityのインスタンスを生成
-		CropImage imageEntity = new CropImage();
-		Path uploadPath = Path.of(UPLOAD_DIR);
+		CropImage cropImage = new CropImage();
+		Path uploadPath = Path.of("images", UPLOAD_DIR);
 		Path filePath = uploadPath.resolve(image.getOriginalFilename());
-		imageEntity.setCropId(form.getCropId());
-		imageEntity.setPath(filePath.toString());
+		cropImage.setCropId(imageform.getCropId());
+		cropImage.setPath("/" + filePath.toString().replace("\\", "/"));
 		saveFile(image);
 		// entityの保存
-		imageRepository.saveAndFlush(imageEntity);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(form.getCropId());
-		model.addAttribute("list", imageList);
-
+		imageRepository.saveAndFlush(cropImage);
 		redirAttrs.addFlashAttribute("hasMessage", true);
 		redirAttrs.addFlashAttribute("class", "alert-info");
 		redirAttrs.addFlashAttribute("message", "画像のアップロードに成功しました。");
-		return "/crops/new";
+		return "redirect:/crops/newImage/"+ imageform.getCropId();
 	}
 
 	private boolean isImageFile(MultipartFile file) {
@@ -200,7 +222,7 @@ public class CropController {
 	}
 
 	private void saveFile(MultipartFile image) throws IOException {
-		Path uploadPath = Path.of(UPLOAD_DIR);
+		Path uploadPath = Path.of("src", "main", "resources", "static", "images", UPLOAD_DIR);
 
 		// ディレクトリが存在しない場合は作成
 		if (!Files.exists(uploadPath)) {
@@ -215,23 +237,123 @@ public class CropController {
 	}
 
 	// 画像の削除
-	@RequestMapping(value = "/crops/delete-image", method = RequestMethod.POST)
-	public String deleteImage(@RequestParam("imageId") Long imageId, BindingResult result,
-			RedirectAttributes redirAttrs, Model model) throws IOException {
+	@GetMapping(value = "/crops/delete-image")
+	public String deleteImage(@RequestParam Long imageId, @RequestParam Long cropId, Model model,
+			RedirectAttributes redirAttrs ) throws IOException {
 		Optional<CropImage> entity = imageRepository.findById(imageId);
 		// 画面が保持されるか要確認
 		if (entity == null) {
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("class", "alert-danger");
 			model.addAttribute("message", "その画像は存在しません。");
-			return "redirect:/crops/new";
+			return "redirect:/crops/newImage/"+ cropId;
 		}
 		imageRepository.deleteById(imageId);
 		redirAttrs.addFlashAttribute("hasMessage", true);
 		redirAttrs.addFlashAttribute("class", "alert-info");
 		redirAttrs.addFlashAttribute("message", "画像の削除に成功しました。");
-		return "redirect:/crops/new";
+		return "redirect:/crops/newImage/"+ cropId;
 	}
+
+
+	@GetMapping(path = "/crops/detail/{cropId}")
+	public String showDetai(@PathVariable Long cropId, Model model) throws IOException {
+		// Optional<Crop> entity = repository.findById(cropId);
+		Optional<Crop> optionalCrop = repository.findById(cropId);
+		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional
+																							// が空の場合は例外をスローするなどの対処
+		model.addAttribute("crop", crop);
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
+		model.addAttribute("list", imageList);
+		return "crops/detail";
+	}
+
+	// 編集画面
+		@GetMapping(path = "/crops/edit/{cropId}")
+		public String showEditPage(@PathVariable Long cropId, Model model) throws IOException {
+			Optional<Crop> entity = repository.findById(cropId);
+			CropForm form = getCrop(entity);
+			model.addAttribute("form", form);
+			Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(form.getId());
+			model.addAttribute("list", imageList);
+			return "/crops/edit";
+			// @Validated @ModelAttribute("cropImageform") CropImageForm form, BindingResult
+			// result,
+			// Model model, @RequestParam("image") MultipartFile image, RedirectAttributes
+			// redirAttrs )
+		}
+
+		public CropForm getCrop(Optional<Crop> entity) throws IOException {
+			modelMapper.getConfiguration().setAmbiguityIgnored(true);
+			modelMapper.typeMap(Crop.class, CropForm.class);
+			CropForm form = modelMapper.map(entity, CropForm.class);
+			return form;
+		}
+
+		// 編集データの送信
+		@RequestMapping(value = "/crops/edit-complete", method = RequestMethod.POST)
+		public String edit(@RequestParam("cropId") Long cropId, @Validated @ModelAttribute("cropform") CropForm form,
+				BindingResult result, Model model, RedirectAttributes redirAttrs, RedirectAttributes attributes)
+				throws IOException {
+			Optional<Crop> entity = repository.findById(cropId);
+			// 同一の作物が既に登録されている場合、エラー項目に追加
+			if (repository.findByName(form.getName()) != null) {
+				FieldError fieldError = new FieldError(result.getObjectName(), "email", "その作物はすでに登録されています。");
+				result.addError(fieldError);
+			}
+			// エラーがある場合、エラー文を表示し、新しいformを送信
+			if (result.hasErrors()) {
+				model.addAttribute("hasMessage", true);
+				model.addAttribute("class", "alert-danger");
+				model.addAttribute("message", "作物データ編集に失敗しました。");
+				// データを保持する処理
+
+				CropForm oldForm = getCrop(entity);
+				model.addAttribute("form", oldForm);
+				Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(oldForm.getId());
+				model.addAttribute("list", imageList);
+				return "redirect:/crops/edit";
+			}
+
+			// CropEntityのフィールド値を更新
+			entity.ifPresent(crop -> crop.setName(form.getName()));
+			entity.ifPresent(crop -> crop.setSowing_start(form.getSowing_start()));
+			entity.ifPresent(crop -> crop.setSowing_end(form.getSowing_end()));
+			entity.ifPresent(crop -> crop.setHarvest_start(form.getHarvest_start()));
+			entity.ifPresent(crop -> crop.setHarvest_end(form.getHarvest_end()));
+			entity.ifPresent(crop -> crop.setName(form.getName()));
+			entity.ifPresent(crop -> crop.setCultivationp_period(form.getCultivationp_period()));
+			// entityの保存
+			repository.saveAndFlush(entity);
+			// 画像を表示するためのimageListを作成
+			Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(form.getId());
+			model.addAttribute("list", imageList);
+
+			redirAttrs.addFlashAttribute("hasMessage", true);
+			redirAttrs.addFlashAttribute("class", "alert-info");
+			redirAttrs.addFlashAttribute("message", "作物データ登録に成功しました。");
+			attributes.addFlashAttribute("cropId", form.getId());
+			return "redirect:/crops/detail";
+
+		}
+
+		@RequestMapping(value = "/crops/delete/{cropId}", method = RequestMethod.POST)
+		public String delete(@PathVariable Long cropId, BindingResult result, RedirectAttributes redirAttrs,
+				Model model) throws IOException {
+			Optional<Crop> entity = repository.findById(cropId);
+			if (entity == null) {
+				model.addAttribute("hasMessage", true);
+				model.addAttribute("class", "alert-danger");
+				model.addAttribute("message", "その作物データは存在しません。");
+				return "/crops/list";
+			}
+			repository.deleteById(cropId);
+			redirAttrs.addFlashAttribute("hasMessage", true);
+			redirAttrs.addFlashAttribute("class", "alert-info");
+			redirAttrs.addFlashAttribute("message", "作物データの削除に成功しました。");
+			return "/crops/list";
+		}
+	
 
 	// 作物の一覧表示画面ｎ表示
 	@GetMapping(path = "/crops/list")
@@ -251,97 +373,5 @@ public class CropController {
 		return repository.findByNameContaining(keyword);
 	}
 
-	@GetMapping(path = "/crops/detail")
-	public String showDetai(@ModelAttribute("cropId") Long cropId, Model model) throws IOException {
-		Optional<Crop> entity = repository.findById(cropId);
-		model.addAttribute("crop", entity);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
-		model.addAttribute("list", imageList);
-		return "/crops/detail";
-	}
-
-	// 編集画面
-	@GetMapping(path = "/crops/edit")
-	public String showEditPage(@ModelAttribute("cropId") Long cropId, Model model) throws IOException {
-		Optional<Crop> entity = repository.findById(cropId);
-		CropForm form = getCrop(entity);
-		model.addAttribute("form", form);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(form.getId());
-		model.addAttribute("list", imageList);
-		return "/crops/edit";
-		// @Validated @ModelAttribute("cropImageform") CropImageForm form, BindingResult
-		// result,
-		// Model model, @RequestParam("image") MultipartFile image, RedirectAttributes
-		// redirAttrs )
-	}
-
-	public CropForm getCrop(Optional<Crop> entity) throws IOException {
-		modelMapper.getConfiguration().setAmbiguityIgnored(true);
-		modelMapper.typeMap(Crop.class, CropForm.class);
-		CropForm form = modelMapper.map(entity, CropForm.class);
-		return form;
-	}
-
-	// 編集データの送信
-	@RequestMapping(value = "/crops/edit-complete", method = RequestMethod.POST)
-	public String edit(@RequestParam("cropId") Long cropId, @Validated @ModelAttribute("cropform") CropForm form,
-			BindingResult result, Model model, RedirectAttributes redirAttrs, RedirectAttributes attributes)
-			throws IOException {
-		Optional<Crop> entity = repository.findById(cropId);
-		// 同一の作物が既に登録されている場合、エラー項目に追加
-		if (repository.findByName(form.getName()) != null) {
-			FieldError fieldError = new FieldError(result.getObjectName(), "email", "その作物はすでに登録されています。");
-			result.addError(fieldError);
-		}
-		// エラーがある場合、エラー文を表示し、新しいformを送信
-		if (result.hasErrors()) {
-			model.addAttribute("hasMessage", true);
-			model.addAttribute("class", "alert-danger");
-			model.addAttribute("message", "作物データ編集に失敗しました。");
-			// データを保持する処理
-
-			CropForm oldForm = getCrop(entity);
-			model.addAttribute("form", oldForm);
-			Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(oldForm.getId());
-			model.addAttribute("list", imageList);
-			return "redirect:/crops/edit";
-		}
-
-		// CropEntityのフィールド値を更新
-		entity.ifPresent(crop -> crop.setName(form.getName()));
-		entity.ifPresent(crop -> crop.setSowing_start(form.getSowing_start()));
-		entity.ifPresent(crop -> crop.setSowing_end(form.getSowing_end()));
-		entity.ifPresent(crop -> crop.setHarvest_start(form.getHarvest_start()));
-		entity.ifPresent(crop -> crop.setHarvest_end(form.getHarvest_end()));
-		entity.ifPresent(crop -> crop.setName(form.getName()));
-		entity.ifPresent(crop -> crop.setCultivationp_period(form.getCultivationp_period()));
-		// entityの保存
-		repository.saveAndFlush(entity);
-		// 画像を表示するためのimageListを作成
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(form.getId());
-		model.addAttribute("list", imageList);
-
-		redirAttrs.addFlashAttribute("hasMessage", true);
-		redirAttrs.addFlashAttribute("class", "alert-info");
-		redirAttrs.addFlashAttribute("message", "作物データ登録に成功しました。");
-		attributes.addFlashAttribute("cropId", form.getId());
-		return "redirect:/crops/detail";
-
-	}
-	@RequestMapping(value = "/crops/delete", method = RequestMethod.POST)
-	public String delete(@RequestParam("cropId") Long cropId, BindingResult result, RedirectAttributes redirAttrs,
-			Model model) throws IOException {
-		Optional<Crop> entity = repository.findById(cropId);
-		if (entity == null) {
-			model.addAttribute("hasMessage", true);
-			model.addAttribute("class", "alert-danger");
-			model.addAttribute("message", "その作物データは存在しません。");
-			return "/crops/list";
-		}
-		repository.deleteById(cropId);
-		redirAttrs.addFlashAttribute("hasMessage", true);
-		redirAttrs.addFlashAttribute("class", "alert-info");
-		redirAttrs.addFlashAttribute("message", "作物データの削除に成功しました。");
-		return "/crops/list";
-	}
+	
 }

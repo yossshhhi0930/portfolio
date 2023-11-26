@@ -7,38 +7,37 @@
 
 <body>
 	<div class="topics-new-wrapper" layout:fragment="contents">
+		<div layout:replace="~{layouts/common::messages}"></div>
 		<div th:if="${crop}">
-			<div layout:replace="~{layouts/common::messages}"></div>
-			<input type="hidden" th:field="*{id}" th:text="${crop.id}" />
-			<label>Name</label>
+			<label>作物名</label>
 			<span th:text="${crop.name}"></span>
-			<label>Sowing Start</label>
+			<label>種まき可能開始日</label>
 			<span th:text="${crop.sowing_start}"></span>
-			<label>Sowing End</label>
+			<label>種まき可能終了日</label>
 			<span th:text="${crop.sowing_end}"></span>
-			<label>Harvest Start</label>
+			<label>収穫開始予定日</label>
 			<span th:text="${crop.harvest_start}"></span>
-			<label>Harvest End</label>
+			<label>収穫終了予定日</label>
 			<span th:text="${crop.harvest_end}"></span>
-			<label>Cultivation Period</label>
+			<label>栽培期間</label>
 			<span th:text="${crop.cultivationp_period}"></span>
 			<span>日</span>
-			<label>Manual</label>
+			<label>育て方</label>
 			<span th:text="${crop.manual}"></span>
 		</div>
-		<div th:each="image:${list}">
-			<img th:src="${image.path}" alt="Image">
+		<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+			<div class="d-inline-block">
+				<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
+				<span th:text="${image.path}"></span>
+
+			</div>
 		</div>
-		<button type="button" class="btn btn-secondary">
-					<a th:href="@{/crops/edit(cropId=${crop.id}}" style="text-decoration: none; color: inherit;">
-					　編集する
-					</a>
-				</button>
-		<button type="button" class="btn btn-secondary">
-					<a th:href="@{/corops/delete(cropId=${crop.id})}" style="text-decoration: none; color: inherit;">
-						削除する
-					</a>
-				</button>
+		<a class="btn btn-primary" th:href="@{'crops/edit/' + ${crop.Id}}" role="button">編集する</a>
+		<a class="btn btn-primary" th:href="@{'/crops/delete/' + ${crop.Id}}" role="button">削除する</a>
+		<a class="btn btn-primary" th:href="@{'/plans/new/' + ${crop.Id}}" role="button">作物計画を作成する</a>
+
 	</div>
 
 	<body>
+
+</html>

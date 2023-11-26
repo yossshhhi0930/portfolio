@@ -13,5 +13,6 @@ import com.example.portfolio.entity.CropImage;
 public interface CropImageReposiory extends JpaRepository<CropImage, Long> {
 	Iterable<CropImage>findAllByCropIdOrderByUpdatedAtDesc(Long cropId);
 	Optional<CropImage> findById(Long id);
+	CropImage findByPath(String path);
 
 }

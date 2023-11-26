@@ -27,7 +27,7 @@ public class CropImage extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	private Long cropId;
 	
 	@Column(nullable = false)

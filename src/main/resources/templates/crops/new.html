@@ -9,6 +9,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 	<div class="topics-new-wrapper" layout:fragment="contents">
 		<div class="container">
 			<h1>作物新規登録</h1>
+			<h2>1.作物情報登録</h2>
 			<!-- 画像以外のデータを入力するフォーム -->
 			<form method="post" th:action="@{/crop}" th:object="${cropform}">
 				<div layout:replace="~{layouts/common::messages}"></div>
@@ -29,7 +30,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 				<input type="text" th:field="*{harvest_end}" placeholder="MM/dd" />
 				<p th:if="${#fields.hasErrors('harvest_end')}" class="error-message" th:errors="*{sharvest_end}"></p>
 				<label>栽培期間</label>
-				<input type=”number” th:field="*{cultivationp_period}" />
+				<input type="number" th:field="*{cultivationp_period}" />
 				<p th:if=" ${#fields.hasErrors('cultivationp_period')}" class="error-message"
 					th:errors="*{cultivationp_period}">
 				</p>
@@ -39,26 +40,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 				<p th:if="${#fields.hasErrors('manual')}" class="error-message" th:errors="*{manual}"></p>
 				<input type="submit" value="登録" class="btn w-100 btn-outline-dark" />
 			</form>
-			<!-- 画像以外のデータを入力するフォーム -->
-			<form method="post" th:action="@{/crops/upload-image}" th:object="${cropImageform}" enctype="multipart/form-data">
-				<div layout:replace="~{layouts/common::messages}"></div>
-				<label>Image</label>
-				<input type="hidden" th:field="*{cropId}" />
-				<input type="file" th:field="*{image}" />
-				<div th:if="${imageError}" class="error-message">
-					<p th:if="${#fields.hasErrors('image')}" class="error-message" th:errors="*{image}"></p>
-				</div>
-				<button type="submit">画像をアップロードする</button>
-			</form>
-			<!-- 画像がアップロードされたらここに画像を表示 -->
-			<div th:if="${#lists.size(list) > 0}" th:each="image:${list}">
-				<img th:src="${image.path}" alt="Image">
-				<button type="button" class="btn btn-secondary">
-					<a th:href="@{crops/delete-image(imageId=${image.id})}" style="text-decoration: none; color: inherit;">
-						削除する
-					</a>
-				</button>
-			</div>
+			
 		</div>
 	</div>
 </body>

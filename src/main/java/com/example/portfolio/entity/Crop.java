@@ -32,7 +32,7 @@ public class Crop extends AbstractEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private Long userId;
 
     @Column(nullable = false)
