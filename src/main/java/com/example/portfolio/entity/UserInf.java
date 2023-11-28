@@ -6,5 +6,4 @@ public interface UserInf {
 
     String getUsername();
 
-	//User getLoginUser();
 }

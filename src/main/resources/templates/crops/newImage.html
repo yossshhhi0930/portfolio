@@ -1,0 +1,88 @@
+v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="topics-new-wrapper" layout:fragment="contents">
+		<div class="container">
+			<h1>作物画像登録</h1>
+			<h2>作物情報</h2>
+			<div th:if="${crop}">
+				<label>作物名</label>
+				<span th:text="${crop.name}"></span>
+				<label>種まき可能開始日</label>
+				<span th:text="${crop.sowing_start}"></span>
+				<label>種まき可能終了日</label>
+				<span th:text="${crop.sowing_end}"></span>
+				<label>収穫開始予定日</label>
+				<span th:text="${crop.harvest_start}"></span>
+				<label>収穫終了予定日</label>
+				<span th:text="${crop.harvest_end}"></span>
+				<label>栽培期間</label>
+				<span th:text="${crop.cultivationp_period}"></span>
+				<span>日</span>
+				<label>育て方</label>
+				<span th:text="${crop.manual}"></span>
+				<!-- 画像がアップロードされたらトップ画像をここに表示 -->
+				<h3>作物トップ画像</h3>
+					<div th:if="${#lists.size(crop.cropImages) > 0}">
+						<div class="d-inline-block" th:each="image: ${crop.cropImages}">
+							<div th:if="${image.topImage}">
+								<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
+								<span th:text="${image.path}"></span>
+								<a th:href="@{/crops/delete-image(imageId=${image.id}, cropId=${crop.id})}" class="btn btn-secondary">
+									削除する
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- 画像がアップロードされたらトップ画像以外の画像のリストをここに画像を表示 -->
+					<h3>作物画像</3>
+						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+							<div class="d-inline-block">
+								<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
+								<span th:text="${image.path}"></span>
+								<a th:href="@{/crops/delete-image(imageId=${image.id}, cropId=${crop.id})}" class="btn btn-secondary">
+									削除する
+								</a>
+							</div>
+						</div>
+			</div>
+
+			<h2>作物画像登録</h2>
+			<h3>作物トップ画像登録</3>
+				<!-- トップ画像をアップロードするフォーム -->
+				<form method="post" th:action="@{/crops/upload-TopImage}" th:object="${cropTopImageform}"
+					enctype="multipart/form-data">
+					<div layout:replace="~{layouts/common::messages}"></div>
+					<label>Image</label>
+					<input type="hidden" th:field="*{cropId}" />
+					<div class="form-group">
+						<input type="file" class="form-control-file" id="file" name="file" th:field="*{image}" />
+					</div>
+					<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
+					<button type="submit"> トップ画像をアップロードする</button>
+				</form>
+				<h3>作物その他画像登録</h3>
+				<!-- 画像をアップロードするフォーム -->
+				<form method="post" th:action="@{/crops/upload-image}" th:object="${cropImageform}"
+					enctype="multipart/form-data">
+					<div layout:replace="~{layouts/common::messages}"></div>
+					<label>Image</label>
+					<input type="hidden" th:field="*{cropId}" />
+					<div class="form-group">
+						<input type="file" class="form-control-file" id="file" name="file" th:field="*{image}" />
+					</div>
+					<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
+					<button type="submit">画像をアップロードする</button>
+				</form>
+				<a class="btn btn-primary" th:href="@{'/crops/detail/' + ${crop.Id}}" role="button">登録する</a>
+		</div>
+	</div>
+</body>
+
+</html>

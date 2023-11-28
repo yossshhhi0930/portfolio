@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="users-new-wrapper" layout:fragment="contents">
+		<div class="container mt-4">
+			<form id="searchForm" method="post" th:action="@{/crops/search}">
+				<div class="form-group">
+					<label for="keyword">作物名を入力:</label>
+					<input type="text" class="form-control" th:value="${keyword}" id="keyword" name="keyword" required>
+					
+				</div>
+				<div th:if="${message}">
+						<span th:text="${message}"></span>
+					</div>
+				<button type="submit" class="btn btn-primary">検索</button>
+			</form>
+			<!-- 検索結果を表示する部分 -->
+			<div th:if="${searchResults}"　id="searchResults" class="mt-4">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">id</th>
+							<th scope="col">名前</th>
+							<th scope="col">種まき可能開始日</th>
+							<th scope="col">種まき可能終了日</th>
+							<th scope="col">育て方</th>
+							<th scope="col">action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- th:eachで反復処理して検索結果を表示 -->
+						<tr th:each="result : ${searchResults}">
+							<th scope="row" th:text="${result.id}"></th>
+							<td th:text="${result.name}"></td>
+							<td th:text="${result.sowing_start}"></td>
+							<td th:text="${result.sowing_end}"></td>
+							<td th:text="${result.manual}"></td>
+							<td>
+								<button type="button" class="btn btn-secondary">
+									<a th:href="@{'/crops/detail/' + ${result.id}}" style="text-decoration: none; color: inherit;">
+										詳細を見る
+									</a>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<h2>作物一覧</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">名前</th>
+					<th scope="col">種まき可能開始日</th>
+					<th scope="col">種まき可能終了日</th>
+					<th scope="col">育て方</th>
+					<th scope="col">action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="crop : ${list}">
+					<th scope="row" th:text="${crop.id}"></th>
+					<td th:text="${crop.name}"></td>
+					<td th:text="${crop.sowing_start}"></td>
+					<td th:text="${crop.sowing_end}"></td>
+					<td th:text="${crop.manual}"></td>
+					<td>
+						<button type="button" class="btn btn-secondary">
+							<a th:href="@{'/crops/detail/' + ${crop.Id}}" style="text-decoration: none; color: inherit;">
+								詳細を見る
+							</a>
+						</button>
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+		<button type="button" class="btn btn-primary">
+			<a th:href="@{/crops/new}" style="text-decoration: none; color: inherit;">
+				新しい作物を登録
+			</a>
+		</button>
+	</div>
+</body>
+
+</html>
