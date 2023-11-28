@@ -9,35 +9,72 @@
 <body>
 	<div class="users-new-wrapper" layout:fragment="contents">
 		<div class="container mt-4">
-			<form id="searchForm">
+			<form id="searchForm" method="post" th:action="@{/crops/search}">
 				<div class="form-group">
 					<label for="keyword">作物名を入力:</label>
-					<input type="text" class="form-control" id="keyword" name="keyword" required>
+					<input type="text" class="form-control" th:value="${keyword}" id="keyword" name="keyword" required>
+					
 				</div>
+				<div th:if="${message}">
+						<span th:text="${message}"></span>
+					</div>
 				<button type="submit" class="btn btn-primary">検索</button>
 			</form>
-			<div id="searchResults" class="mt-4">
-				<!-- 検索結果を表示する部分 -->
+			<!-- 検索結果を表示する部分 -->
+			<div th:if="${searchResults}"　id="searchResults" class="mt-4">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">id</th>
+							<th scope="col">名前</th>
+							<th scope="col">種まき可能開始日</th>
+							<th scope="col">種まき可能終了日</th>
+							<th scope="col">育て方</th>
+							<th scope="col">action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- th:eachで反復処理して検索結果を表示 -->
+						<tr th:each="result : ${searchResults}">
+							<th scope="row" th:text="${result.id}"></th>
+							<td th:text="${result.name}"></td>
+							<td th:text="${result.sowing_start}"></td>
+							<td th:text="${result.sowing_end}"></td>
+							<td th:text="${result.manual}"></td>
+							<td>
+								<button type="button" class="btn btn-secondary">
+									<a th:href="@{'/crops/detail/' + ${result.id}}" style="text-decoration: none; color: inherit;">
+										詳細を見る
+									</a>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
-		<h1>作物一覧</h1>
-		<table class="table" th:each="crop:${list}">
+		<h2>作物一覧</h2>
+		<table class="table">
 			<thead>
 				<tr>
 					<th scope="col">id</th>
-					<th scope="col">name</th>
-					<th scope="col">manual</th>
+					<th scope="col">名前</th>
+					<th scope="col">種まき可能開始日</th>
+					<th scope="col">種まき可能終了日</th>
+					<th scope="col">育て方</th>
 					<th scope="col">action</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<th scope="row" th:value="${crop.id}"></th>
-					<td th:value="${crop.name}"></td>
-					<td th:value="${crop.manual}"></td>
+				<tr th:each="crop : ${list}">
+					<th scope="row" th:text="${crop.id}"></th>
+					<td th:text="${crop.name}"></td>
+					<td th:text="${crop.sowing_start}"></td>
+					<td th:text="${crop.sowing_end}"></td>
+					<td th:text="${crop.manual}"></td>
 					<td>
-						<button type="button" class="btn btn-secondary" disabled>
-							<a th:href="@{/crops/detail(cropId=${crop.id})}" style="text-decoration: none; color: inherit;">
+						<button type="button" class="btn btn-secondary">
+							<a th:href="@{'/crops/detail/' + ${crop.Id}}" style="text-decoration: none; color: inherit;">
 								詳細を見る
 							</a>
 						</button>
@@ -52,55 +89,6 @@
 			</a>
 		</button>
 	</div>
-	<script>
-		$(document).ready(function () {
-			// フォームがサブミットされたときの処理
-			$('#searchForm').submit(function (e) {
-				e.preventDefault(); // デフォルトのフォームサブミットを防ぐ
-				performSearch();
-			});
-			// 検索を実行する関数
-			function performSearch() {
-				var keyword = $('#keyword').val();
-				$.get('/crops/search', {keyword: keyword}, function (data) {
-					displaySearchResults(data);
-				});
-			}
-
-			// 検索結果を表示する関数
-			function displaySearchResults(results) {
-				var resultsContainer = $('#searchResults');
-				resultsContainer.empty(); // 以前の検索結果をクリア
-
-				if (results.length === 0) {
-					resultsContainer.append('<p>No results found.</p>');
-				} else {
-					// 検索結果がある場合、テーブルを生成して表示
-					var table = $('<table class="table"></table>');
-
-					// テーブルヘッダーを追加
-					var headerRow = $('<tr><th scope="col">id</th><th scope="col">name</th><th scope="col">manual</th><th scope="col">action</th></tr>');
-					table.append(headerRow);
-
-					// results 配列を反復処理して各アイテムをテーブルに追加
-					results.forEach(function (result) {
-						// 各検索結果アイテムの情報をテーブルデータセルに追加
-						var dataRow = $('<tr><td>' + result.id + '</td><td>$' + result.name + '</td><td>$' + result.manual + '</td><td>$'
-							+ <button type="button" class="btn btn-secondary" disabled>
-								<a th:href="@{/crops/detail(cropId=${crop.id})}" style="text-decoration: none; color: inherit;">
-									詳細を見る
-								</a>
-							</button>
-							+ '</td></tr>');
-						table.append(dataRow);
-					});
-
-					// テーブルを結果コンテナに追加
-					resultsContainer.append(table);
-				}
-			}
-		});
-	</script>
 </body>
 
 </html>

@@ -76,4 +76,6 @@ public String getCropImagePath() {
 	
     return cropImage != null ? ((CropImage) cropImage).getPath() : null;
 }
+
+
 }

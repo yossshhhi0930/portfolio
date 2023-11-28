@@ -8,56 +8,38 @@
 <body>
 	<div class="topics-new-wrapper" layout:fragment="contents">
 		<div class="container">
-			<h1>作物編集</h1>
+			<h1>作物情報編集</h1>
 			<!-- 画像以外のデータを入力するフォーム -->
-			<form method="post" th:action="@{/crops/edit-complete}" th:object="${cropform}" 　th:if="${formData}">
+			<form method="post" th:action="@{/crops/edit-complete}" th:object="${form}">
 				<div layout:replace="~{layouts/common::messages}"></div>
-				<input type="hidden" th:field="*{id}" th:text="${formData.id}" />
+				<input type="hidden" th:field="*{id}" />
 				<label>作物名</label>
-				<input type="text" class="form-control" th:field="*{name}" th:text="${formData.name}" />
+				<input type="text" class="form-control" th:field="*{name}" />
 				<p th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></p>
 
 				<label>種まき可能開始日</label>
-				<input type="date" th:field="*{sowing_start}" th:text="${formData.sowing_start}" />
+				<input type="text" th:field="*{sowing_start}" placeholder="MM/dd" />
 				<p th:if="${#fields.hasErrors('sowing_start')}" class="error-message" th:errors="*{sowing_start}"></p>
 				<label>種まき可能終了日</label>
-				<input type="date" th:field="*{sowing_end}" th:text="${formData.sowing_end}" />
+				<input type="text" th:field="*{sowing_end}" placeholder="MM/dd" />
 				<p th:if="${#fields.hasErrors('sowing_end')}" class="error-message" th:errors="*{sowing_end}"></p>
 				<label>収穫開始予定日</label>
-				<input type="date" th:field="*{harvest_start}" th:text="${formData.harvest_start}" />
+				<input type="text" th:field="*{harvest_start}" placeholder="MM/dd" />
 				<p th:if="${#fields.hasErrors('harvest_start')}" class="error-message" th:errors="*{harvest_start}"></p>
 				<label>収穫終了予定日</label>
-				<input type="date" th:field="*{harvest_end}" th:text="${formData.harvest_end}" />
+				<input type="text" th:field="*{harvest_end}" placeholder="MM/dd" />
 				<p th:if="${#fields.hasErrors('harvest_end')}" class="error-message" th:errors="*{sharvest_end}"></p>
 				<label>栽培期間</label>
-				<input type="date" th:field="*{cultivationp_period}" th:text="${formData.cultivationp_period}"/>
+				<input type="number" th:field="*{cultivationp_period}" />
 				<p th:if=" ${#fields.hasErrors('cultivationp_period')}" class="error-message" th:errors="*{cultivationp_period}">
 				</p>
 				<span>日</span>
-				<label>栽培の仕方</label>
-				<textarea class="form-control" th:field="*{manual}" th:errorclass="error-field" th:text="${formData.manual}" ></textarea>
+				<label>育て方</label>
+				<textarea class="form-control" th:field="*{manual}" th:errorclass="error-field" ></textarea>
 				<p th:if="${#fields.hasErrors('manual')}" class="error-message" th:errors="*{manual}"></p>
-				<input type="submit" value="投稿" class="btn w-100 btn-outline-dark" th:value="#{topics.new.submit}" />
+				<input type="submit" value="編集" class="btn w-100 btn-outline-dark" />
 			</form>
-			<!-- 画像以外のデータを入力するフォーム -->
-			<form method="post" th:action="@{crops/upload-image}" th:object="${cropImageform}" enctype="multipart/form-data">
-				<label>Image</label>
-				<input type="file" th:field="*{image}" />
-				<p th:if="${#fields.hasErrors('image')}" class="error-message" th:errors="*{image}"></p>
-				<button type="submit">画像をアップロードする</button>
-			</form>
-
-			<!-- 画像がアップロードされたらここに画像を表示 -->
-			<div th:each="image:${list}">
-				<img th:src="${image.path}" alt="Image">
-				<button type="button" class="btn btn-secondary">
-					<a th:href="@{crops/delete-image(imageId=${image.id})}" style="text-decoration: none; color: inherit;">
-						削除する
-					</a>
-				</button>
-			</div>
 		</div>
 	</div>
 </body>
-
 </html>

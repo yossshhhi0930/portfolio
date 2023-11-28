@@ -8,8 +8,8 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 <body>
 	<div class="topics-new-wrapper" layout:fragment="contents">
 		<div class="container">
-			<h1>作物新規登録</h1>
-			<h2>1.作物情報登録</h2>
+			<h1>作物画像登録</h1>
+			<h2>作物情報</h2>
 			<div th:if="${crop}">
 				<label>作物名</label>
 				<span th:text="${crop.name}"></span>
@@ -40,7 +40,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 					</div>
 				</div>
 			</div>
-			<h2>2.作物画像登録</h2>
+			<h2>作物画像登録</h2>
 			<!-- 画像以外のデータを入力するフォーム -->
 			<form method="post" th:action="@{/crops/upload-image}" th:object="${cropImageform}" enctype="multipart/form-data">
 				<div layout:replace="~{layouts/common::messages}"></div>

@@ -8,8 +8,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 <body>
 	<div class="topics-new-wrapper" layout:fragment="contents">
 		<div class="container">
-			<h1>作物新規登録</h1>
-			<h2>1.作物情報登録</h2>
+			<h1>作物情報登録</h1>
 			<!-- 画像以外のデータを入力するフォーム -->
 			<form method="post" th:action="@{/crop}" th:object="${cropform}">
 				<div layout:replace="~{layouts/common::messages}"></div>

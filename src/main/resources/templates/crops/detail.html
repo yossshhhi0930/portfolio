@@ -9,6 +9,7 @@
 	<div class="topics-new-wrapper" layout:fragment="contents">
 		<div layout:replace="~{layouts/common::messages}"></div>
 		<div th:if="${crop}">
+			<h1>作物詳細</h1>
 			<label>作物名</label>
 			<span th:text="${crop.name}"></span>
 			<label>種まき可能開始日</label>
@@ -32,7 +33,7 @@
 
 			</div>
 		</div>
-		<a class="btn btn-primary" th:href="@{'crops/edit/' + ${crop.Id}}" role="button">編集する</a>
+		<a class="btn btn-primary" th:href="@{'/crops/edit/' + ${crop.Id}}" role="button">編集する</a>
 		<a class="btn btn-primary" th:href="@{'/crops/delete/' + ${crop.Id}}" role="button">削除する</a>
 		<a class="btn btn-primary" th:href="@{'/plans/new/' + ${crop.Id}}" role="button">作物計画を作成する</a>
 
