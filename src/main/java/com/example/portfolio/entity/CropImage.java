@@ -33,7 +33,10 @@ public class CropImage extends AbstractEntity implements Serializable {
 	@Column(nullable = false)
 	private String path;
 	
+	@Column
+	private boolean topImage;
+	
 	@ManyToOne
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    @JoinColumn(name = "cropId", insertable = false, updatable = false)
     private Crop crop;
 }

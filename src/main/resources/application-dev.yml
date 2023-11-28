@@ -21,4 +21,5 @@ spring:
           auth: true
           starttls:
             enable: true
+  topImage: false
 debug: true

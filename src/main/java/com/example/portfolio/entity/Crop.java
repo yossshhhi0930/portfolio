@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,22 +61,13 @@ public class Crop extends AbstractEntity implements Serializable {
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
   
-    @OneToMany
-    @JoinColumn(name = "topicId", insertable = false, updatable = false)
-    private List<CropImage> cropImage;
+    @OneToMany(mappedBy = "crop", cascade = CascadeType.ALL)
+    private List<CropImage> cropImages;
     
 //  @OneToMany
 //  @JoinColumn(name = "topicId", insertable = false, updatable = false)
 //  private Plan plan;
     
  
-
-//CropエンティティからUserエンティティのname属性に直接アクセスするメソッド
-public String getCropImagePath() {
-	
-	
-    return cropImage != null ? ((CropImage) cropImage).getPath() : null;
-}
-
 
 }

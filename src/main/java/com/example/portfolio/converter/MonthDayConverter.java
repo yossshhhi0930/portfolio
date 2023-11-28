@@ -15,6 +15,6 @@ public class MonthDayConverter implements Converter<String, MonthDay> {
             return null; // もしsourceがnullまたは空文字の場合、nullを返す
         }
         // "MM/dd"形式の文字列をMonthDay型に変換
-        return MonthDay.parse(source, DateTimeFormatter.ofPattern("MM/dd"));
+        return MonthDay.parse(source, DateTimeFormatter.ofPattern("MM-dd"));
     }
 }

@@ -11,9 +11,13 @@ import java.time.MonthDay;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -27,6 +31,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,6 +110,7 @@ public class CropController {
 			}
 		}
 		model.addAttribute("list", monthCrops);
+		model.addAttribute("month", Month.valueOf(month).getDisplayName(TextStyle.FULL, Locale.JAPANESE) );
 		return "crops/index";
 	}
 
@@ -119,14 +125,17 @@ public class CropController {
 
 	// formから送られた作物データを登録
 	@RequestMapping(value = "/crop", method = RequestMethod.POST)
-	public String create(Principal principal, @Validated @ModelAttribute("cropform") CropForm form,
-			BindingResult result, Model model, RedirectAttributes attributes) throws IOException {
+	public String create(Principal principal, @Valid @RequestBody @Validated @ModelAttribute("cropform") CropForm form,
+			BindingResult result, BindingResult bindingResult, Model model, RedirectAttributes attributes)
+			throws IOException {
+
 		// 同一の作物が既に登録されている場合、エラー項目に追加
 		if (repository.findByName(form.getName()) != null) {
 			FieldError fieldError = new FieldError(result.getObjectName(), "name", "その作物はすでに登録されています。");
 			result.addError(fieldError);
 		}
 		// エラーがある場合、エラー文を表示しformを再度返す
+
 		if (result.hasErrors()) {
 			model.addAttribute("form", form);
 			model.addAttribute("hasMessage", true);
@@ -163,26 +172,39 @@ public class CropController {
 	public String newImage(@PathVariable Long cropId, Model model) {
 		CropImageForm cropImageform = new CropImageForm();
 		cropImageform.setCropId(cropId);
+		CropImageForm cropTopImageform = new CropImageForm();
+		cropTopImageform.setCropId(cropId);
 		Optional<Crop> optionalCrop = repository.findById(cropId);
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし
 																							// Optionalが空の場合は例外をスローするなどの対処
 		model.addAttribute("crop", crop);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
+		// List<CropImage> topImage =
+		// imageRepository.findByCropIdAndTopImageTrue(cropId);
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdAndTopImageFalseOrderByUpdatedAtDesc(cropId);
+		// model.addAttribute("list", topImage);
 		model.addAttribute("list", imageList);
 
 		model.addAttribute("cropImageform", cropImageform);
+		model.addAttribute("cropTopImageform", cropTopImageform);
 		return "crops/newImage";
 
 	}
 
-	// 画像の保存
-	@RequestMapping(value = "/crops/upload-image", method = RequestMethod.POST)
-	public String uploadImage(Principal principal, @Validated @ModelAttribute("cropImageform") CropImageForm imageform,
-			BindingResult result, Model model, @RequestParam MultipartFile image, RedirectAttributes attributes)
-			throws IOException {
+	// トップ画像の保存
+	@RequestMapping(value = "/crops/upload-TopImage", method = RequestMethod.POST)
+	public String uploadTopImage(Principal principal,
+			@Validated @ModelAttribute("cropTopImageform") CropImageForm imageform, BindingResult result, Model model,
+			@RequestParam MultipartFile image, RedirectAttributes attributes) throws IOException {
+		// トップ画像の登録が既にないかの検証をエラー項目に追加
+		if (image != null && imageRepository.findByCropIdAndTopImageTrue(imageform.getCropId()).size() > 0) {
+			attributes.addFlashAttribute("imageError", "トップ画像のアップロードは一枚までです。");
+			FieldError fieldError = new FieldError(result.getObjectName(), "image", "トップ画像のアップロードは一枚までです。");
+						result.addError(fieldError);
+		}
 		// ファイルの拡張子が画像形式かどうかの検証をエラー項目に追加
 		if (image != null && !isImageFile(image)) {
-			FieldError fieldError = new FieldError(result.getObjectName(), "image", "画像ファイル以外はアップロードできません。");
+			attributes.addFlashAttribute("imageError", "画像ファイル形式が正しくありません。");
+			FieldError fieldError = new FieldError(result.getObjectName(), "image", "画像ファイル形式が正しくありません。");
 			result.addError(fieldError);
 		}
 
@@ -201,6 +223,45 @@ public class CropController {
 		Path filePath = uploadPath.resolve(image.getOriginalFilename());
 		cropImage.setCropId(imageform.getCropId());
 		cropImage.setPath("/" + filePath.toString().replace("\\", "/"));
+		cropImage.setTopImage(true);
+		saveFile(image);
+		// entityの保存
+		imageRepository.saveAndFlush(cropImage);
+		attributes.addFlashAttribute("hasMessage", true);
+		attributes.addFlashAttribute("class", "alert-info");
+		attributes.addFlashAttribute("message", "画像のアップロードに成功しました。");
+		return "redirect:/crops/newImage/" + imageform.getCropId();
+		
+
+	}
+
+	// 画像の保存
+	@RequestMapping(value = "/crops/upload-image", method = RequestMethod.POST)
+	public String uploadImage(Principal principal, @Validated @ModelAttribute("cropImageform") CropImageForm imageform,
+			BindingResult result, Model model, @RequestParam MultipartFile image, RedirectAttributes attributes)
+			throws IOException {
+		// ファイルの拡張子が画像形式かどうかの検証をエラー項目に追加
+		if (image != null && !isImageFile(image)) {
+			attributes.addFlashAttribute("imageError", "画像ファイル形式が正しくありません。");
+		FieldError fieldError = new FieldError(result.getObjectName(), "image", "画像ファイル形式が正しくありません。");
+					result.addError(fieldError);
+		}
+		// エラーがある場合、エラー文を表示し、新しいformを送信
+
+		if (result.hasErrors()) {
+			attributes.addFlashAttribute("hasMessage", true);
+			attributes.addFlashAttribute("class", "alert-danger");
+			attributes.addFlashAttribute("message", "画像のアップロードに失敗しました。");
+			return "redirect:/crops/newImage/" + imageform.getCropId();
+		}
+
+		// CropImagEntityのインスタンスを生成
+		CropImage cropImage = new CropImage();
+		Path uploadPath = Path.of("images", UPLOAD_DIR);
+		Path filePath = uploadPath.resolve(image.getOriginalFilename());
+		cropImage.setCropId(imageform.getCropId());
+		cropImage.setPath("/" + filePath.toString().replace("\\", "/"));
+		cropImage.setTopImage(false);
 		saveFile(image);
 		// entityの保存
 		imageRepository.saveAndFlush(cropImage);
@@ -257,7 +318,7 @@ public class CropController {
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional //
 																							// が空の場合は例外をスローするなどの対処
 		model.addAttribute("crop", crop);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdAndTopImageFalseOrderByUpdatedAtDesc(cropId);
 		model.addAttribute("list", imageList);
 		return "crops/detail";
 	}
@@ -287,7 +348,7 @@ public class CropController {
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional
 
 		// 名前を変更し、他に同一の名前の作物が存在する場合、エラーを返す
-		if (repository.findByName(form.getName()) != null) {
+		if (!crop.getName().equals(form.getName()) && repository.findByName(form.getName()) != null) {
 			FieldError fieldError = new FieldError(result.getObjectName(), "name", "その作物名は使用できません。");
 			result.addError(fieldError);
 		}
@@ -312,7 +373,8 @@ public class CropController {
 		// entityの保存
 		repository.saveAndFlush(crop);
 		// 画像を表示するためのimageListを作成
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(form.getId());
+		Iterable<CropImage> imageList = imageRepository
+				.findAllByCropIdAndTopImageFalseOrderByUpdatedAtDesc(form.getId());
 		model.addAttribute("list", imageList);
 
 		attributes.addFlashAttribute("hasMessage", true);
@@ -327,13 +389,16 @@ public class CropController {
 	public String editImage(@PathVariable Long cropId, Model model) {
 		CropImageForm cropImageform = new CropImageForm();
 		cropImageform.setCropId(cropId);
+		CropImageForm cropTopImageform = new CropImageForm();
+		cropTopImageform.setCropId(cropId);
 		Optional<Crop> optionalCrop = repository.findById(cropId);
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし
 																							// Optionalが空の場合は例外をスローするなどの対処
 		model.addAttribute("crop", crop);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdAndTopImageFalseOrderByUpdatedAtDesc(cropId);
 		model.addAttribute("list", imageList);
 		model.addAttribute("cropImageform", cropImageform);
+		model.addAttribute("cropTopImageform", cropTopImageform);
 		return "crops/newImage";
 
 	}

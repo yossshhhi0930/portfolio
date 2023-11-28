@@ -7,15 +7,18 @@
 </head>
 
 <body>
+	
 	<div class="users-new-wrapper" layout:fragment="contents">
-		<div class="row" th:each="crop:${list}">
-
-			<div class="card" style="max-width: 400px;">
-				<img class="card-img" th:src="${crop.cropimage.path}" alt="Image">
-				<div class="card-img-overlay">
-					<a th:href="@{/crops/detail(param1=${crop.id})}">
-						<p class="text-white" th:text="${crop.name}"></p>
-					</a>
+		<h1><span th:text="${month}"></span>種まき作物</h1>
+		<div class="row" th:each="crop : ${list}">
+			<div th:if="${#lists.size(crop.cropImages) > 0}">
+				<div class="d-inline-block" th:each="image: ${crop.cropImages}">
+					<div th:if="${image.topImage}">
+						<a th:href="@{'/crops/detail/' + ${crop.id}}">
+							<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
+							<p th:text="${crop.name}"></p>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>

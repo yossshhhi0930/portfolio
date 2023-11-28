@@ -24,12 +24,13 @@ public class CropForm {
 
     private String manual;
     
-  
+    
     private MonthDay sowing_start;
+    
     
     private MonthDay sowing_end;
     
-   
+    
     private MonthDay harvest_start;
     
     
