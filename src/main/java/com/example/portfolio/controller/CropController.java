@@ -52,7 +52,7 @@ import com.example.portfolio.form.UserForm;
 import org.springframework.beans.BeanUtils;
 
 @Controller
-@SessionAttributes("cropform") // 必要なければ削除
+//@SessionAttributes("cropform") // 必要なければ削除
 public class CropController {
 
 	protected static Logger log = LoggerFactory.getLogger(CropController.class);
@@ -66,11 +66,11 @@ public class CropController {
 	@Autowired
 	CropImageReposiory imageRepository;
 
-	// 必要なければ削除
-	@ModelAttribute("cropform")
-	public CropForm getCropForm() {
-		return new CropForm();
-	}
+//	// 必要なければ削除
+//	@ModelAttribute("cropform")
+//	public CropForm getCropForm() {
+//		return new CropForm();
+//	}
 
 	private static final String UPLOAD_DIR = "uploads";
 
@@ -125,8 +125,8 @@ public class CropController {
 
 	// formから送られた作物データを登録
 	@RequestMapping(value = "/crop", method = RequestMethod.POST)
-	public String create(Principal principal, @Valid @RequestBody @Validated @ModelAttribute("cropform") CropForm form,
-			BindingResult result, BindingResult bindingResult, Model model, RedirectAttributes attributes)
+	public String create(Principal principal, @Validated @ModelAttribute("cropform") CropForm form,
+			BindingResult result, Model model, RedirectAttributes attributes)
 			throws IOException {
 
 		// 同一の作物が既に登録されている場合、エラー項目に追加
