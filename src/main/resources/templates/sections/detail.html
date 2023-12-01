@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div layout:fragment="contents">
+		<div th:if="${section}">
+			<h1>区画詳細</h1>
+			<label>区画名</label>
+			<span th:text="${section.name}"></span>
+			<label>説明</label>
+			<span th:text="${section.description}"></span>
+		<a class="btn btn-primary" th:href="@{'/sections/edit/' + ${section.id}}" role="button">編集する</a>
+		<a class="btn btn-primary" th:href="@{'/sections/delete/' + ${section.id}}" role="button">削除する</a>
+		<a class="btn btn-primary" th:href="@{'/sections/new/' + ${section.id}}" role="button">作物計画を作成する</a>
+	</div>
+	</div>
+</body>
+
+</html>

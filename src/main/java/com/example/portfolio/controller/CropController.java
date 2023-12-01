@@ -293,7 +293,7 @@ public class CropController {
 		}
 	}
 
-	// 画像の削除
+	// 作物の削除
 	@GetMapping(value = "/crops/delete-image")
 	public String deleteImage(@RequestParam Long imageId, @RequestParam Long cropId, Model model,
 			RedirectAttributes attributes) throws IOException {
@@ -313,7 +313,7 @@ public class CropController {
 	}
 
 	@GetMapping(path = "/crops/detail/{cropId}")
-	public String showDetai(@PathVariable Long cropId, Model model) throws IOException {
+	public String showDetail(@PathVariable Long cropId, Model model) throws IOException {
 		Optional<Crop> optionalCrop = repository.findById(cropId);
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional //
 																							// が空の場合は例外をスローするなどの対処
@@ -368,7 +368,7 @@ public class CropController {
 		crop.setSowing_end(form.getSowing_end());
 		crop.setHarvest_start(form.getHarvest_start());
 		crop.setHarvest_end(form.getHarvest_end());
-		crop.setName(form.getName());
+		crop.setManual(form.getManual());
 		crop.setCultivationp_period(form.getCultivationp_period());
 		// entityの保存
 		repository.saveAndFlush(crop);
@@ -406,13 +406,6 @@ public class CropController {
 	@RequestMapping(value = "/crops/delete/{cropId}", method = RequestMethod.POST)
 	public String delete(@PathVariable Long cropId, BindingResult result, RedirectAttributes redirAttrs, Model model)
 			throws IOException {
-		Optional<Crop> entity = repository.findById(cropId);
-		if (entity == null) {
-			model.addAttribute("hasMessage", true);
-			model.addAttribute("class", "alert-danger");
-			model.addAttribute("message", "その作物データは存在しません。");
-			return "/crops/list";
-		}
 		repository.deleteById(cropId);
 		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
 		imageRepository.deleteAll(imageList);
@@ -422,7 +415,7 @@ public class CropController {
 		return "/crops/list";
 	}
 
-	// 作物の一覧表示画面ｎ表示
+	// 作物一覧画面表示
 	@GetMapping(path = "/crops/list")
 	public String showList(Principal principal, Model model) throws IOException {
 		// User情報の取得

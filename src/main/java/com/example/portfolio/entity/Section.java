@@ -26,26 +26,26 @@ import lombok.Data;
 @Table(name = "section")
 @Data
 public class Section extends AbstractEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
-    @Id
-    @SequenceGenerator(name = "section_id_seq")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	private static final long serialVersionUID = 1L;
 
-    @Column
-    private Long userId;
+	@Id
+	@SequenceGenerator(name = "section_id_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String name;
-    
-    @Column
-    private String description;
-    
-    @ManyToOne
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
-    private User user;
-  
+	@Column
+	private Long userId;
+
+	@Column(nullable = false)
+	private String name;
+
+	@Column
+	private String description;
+
+	@ManyToOne
+	@JoinColumn(name = "userId", insertable = false, updatable = false)
+	private User user;
+
 //    @OneToMany(mappedBy = "crop", cascade = CascadeType.ALL)
 //    private List<Plan> plans;
 
