@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,48 +27,45 @@ import lombok.Data;
 @Table(name = "crop")
 @Data
 public class Crop extends AbstractEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
-    @Id
-    @SequenceGenerator(name = "crop_id_seq")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	private static final long serialVersionUID = 1L;
 
-    @Column
-    private Long userId;
+	@Id
+	@SequenceGenerator(name = "crop_id_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String name;
-  
-    @Column
-    private String manual;
-    
-    @Column
-    private MonthDay sowing_start;
-    
-    @Column
-    private MonthDay sowing_end;
-    
-    @Column
-    private MonthDay harvest_start;
-    
-    @Column
-    private MonthDay harvest_end;
-    
-    @Column
-    private int cultivationp_period;
-    
-    @ManyToOne
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
-    private User user;
-  
-    @OneToMany(mappedBy = "crop", cascade = CascadeType.ALL)
-    private List<CropImage> cropImages;
-    
-//  @OneToMany
-//  @JoinColumn(name = "topicId", insertable = false, updatable = false)
-//  private Plan plan;
-    
- 
+	@Column
+	private Long userId;
 
+	@Column(nullable = false)
+	private String name;
+
+	@Column
+	private String manual;
+
+	@Column
+	private MonthDay sowing_start;
+
+	@Column
+	private MonthDay sowing_end;
+
+	@Column
+	private MonthDay harvest_start;
+
+	@Column
+	private MonthDay harvest_end;
+
+	@Column
+	private int cultivationp_period;
+
+	@ManyToOne
+	@JoinColumn(name = "userId", insertable = false, updatable = false)
+	private User user;
+
+	@OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)
+	private List<CropImage> cropImages;
+
+	@OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)
+	private List<Plan> plans;
+	
 }

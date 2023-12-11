@@ -9,9 +9,9 @@ import com.example.portfolio.entity.Crop;
 
 @Repository
 public interface CropRepository extends JpaRepository<Crop, Long> {
-	Iterable<Crop>findAllByUserIdOrderByUpdatedAtDesc(Long userId);
-	Crop findByName(String name);
+	List<Crop> findAllByUserIdOrderByUpdatedAtDesc(Long userId);
+	Crop findByNameAndUserId(String name, Long userId);
 	Optional<Crop> findById(Long Id);
-	List<Crop>findByNameContaining(String keyword);
+	List<Crop>findByNameContainingAndUserId(String keyword, Long userId);
 	void saveAndFlush(Optional<Crop> entity);
 }

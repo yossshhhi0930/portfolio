@@ -60,9 +60,11 @@ public class SectionController {
 		public String create(Principal principal, @Validated @ModelAttribute("form") SectionForm form,
 				BindingResult result, Model model, RedirectAttributes attributes)
 				throws IOException {
+			Authentication authentication = (Authentication) principal;
+			UserInf user = (UserInf) authentication.getPrincipal();
 
 			// 同一の作物が既に登録されている場合、エラー項目に追加
-			if (repository.findByName(form.getName()) != null) {
+			if (repository.findByNameAndUserId(form.getName(), user.getUserId()) != null) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "name", "その区画名は使用できません。");
 				result.addError(fieldError);
 			}
@@ -78,8 +80,7 @@ public class SectionController {
 
 			//SectionEntityのインスタンスを生成
 			Section entity = new Section();
-			Authentication authentication = (Authentication) principal;
-			UserInf user = (UserInf) authentication.getPrincipal();
+			
 			entity.setUserId(user.getUserId());
 			entity.setName(form.getName());
 			entity.setDescription(form.getDescription());
@@ -120,13 +121,14 @@ public class SectionController {
 		
 		// 編集データの送信
 		@RequestMapping(value = "/sections/edit-complete", method = RequestMethod.POST)
-		public String edit(@Validated @ModelAttribute("form") SectionForm form, BindingResult result, Model model,
+		public String edit(Principal principal, @Validated @ModelAttribute("form") SectionForm form, BindingResult result, Model model,
 				RedirectAttributes attributes) throws IOException {
 			Optional<Section> optionalSection = repository.findById(form.getId());
 			Section section = optionalSection.orElseThrow(() -> new RuntimeException("Section not found")); // もし Optional //																// が空の場合は例外をスローするなどの対処
-			
+			Authentication authentication = (Authentication) principal;
+			UserInf user = (UserInf) authentication.getPrincipal();
 			// 名前を変更し、他に同一の名前の区画が存在する場合、エラーを返す
-			if (!section.getName().equals(form.getName()) && repository.findByName(form.getName()) != null) {
+			if (!section.getName().equals(form.getName()) && repository.findByNameAndUserId(form.getName(), user.getUserId()) != null) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "name", "その区画名は使用できません。");
 				result.addError(fieldError);
 			}
@@ -151,8 +153,8 @@ public class SectionController {
 			return "redirect:/sections/detail/" + form.getId();
 		}
 		
-		@RequestMapping(value = "/crops/delete/{sectionId}", method = RequestMethod.POST)
-		public String delete(@PathVariable Long sectionId, BindingResult result, RedirectAttributes redirAttrs, Model model)
+		@GetMapping(path = "/sections/delete/{sectionId}")
+		public String delete(@PathVariable Long sectionId, Model model, RedirectAttributes redirAttrs)
 				throws IOException {
 			repository.deleteById(sectionId);
 			redirAttrs.addFlashAttribute("hasMessage", true);

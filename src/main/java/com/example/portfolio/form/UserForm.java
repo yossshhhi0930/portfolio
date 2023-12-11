@@ -12,10 +12,8 @@ import lombok.Data;
 @PasswordEquals
 public class UserForm {
 
-    
     @Size(max = 100)
     private String name;
-
     
     @Email
     private String email;

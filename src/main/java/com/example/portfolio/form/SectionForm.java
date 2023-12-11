@@ -18,14 +18,10 @@ public class SectionForm {
 
     private Long userId;
 
-    
     private String name;
-    
     
     private String description;
     
-  
     private UserForm user;
  
-    
 }

@@ -1,5 +1,6 @@
 package com.example.portfolio.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,18 +17,9 @@ import lombok.Data;
 @Entity
 @Table(name = "passwordReissueInfo")
 @Data
-public class PasswordReissueInfo extends AbstractEntity{
+public class PasswordReissueInfo extends AbstractEntity implements Serializable {
+    private static final long serialVersionUID = 1L; 
 
-	public PasswordReissueInfo() {
-        super();
-    }
-	
-	public PasswordReissueInfo(String email, String password,String token, String secret, LocalDateTime expiryDate) {
-        this.username = email;
-        this.token = password;
-        this.secret = secret;
-        this.expiryDate = expiryDate;
-    }
 	
 	@Id
     @SequenceGenerator(name = "users_id_seq")

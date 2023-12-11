@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="users-new-wrapper" layout:fragment="contents">
+		<h1>区画使用状況確認</h1>
+		<div th:if="${sectionList}" 　id="list" class="mt-4">
+			<ul>
+				<li th:each="section : ${sectionList}" th:text="${section.name}">
+					<div th:if="${#lists.size(section.plans) > 0}">
+						<ul>
+							<li th:each="plan : ${section.plans}" th:text="${plan.id}"></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>
+		
+	</div>
+</body>
+
+</html>

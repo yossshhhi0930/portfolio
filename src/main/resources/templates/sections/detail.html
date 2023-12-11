@@ -15,7 +15,7 @@
 			<span th:text="${section.description}"></span>
 		<a class="btn btn-primary" th:href="@{'/sections/edit/' + ${section.id}}" role="button">編集する</a>
 		<a class="btn btn-primary" th:href="@{'/sections/delete/' + ${section.id}}" role="button">削除する</a>
-		<a class="btn btn-primary" th:href="@{'/sections/new/' + ${section.id}}" role="button">作物計画を作成する</a>
+		<a class="btn btn-primary" th:href="@{/sections/new}" role="button">次の区画を作成する</a>
 	</div>
 	</div>
 </body>

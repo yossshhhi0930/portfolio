@@ -10,7 +10,7 @@ import com.example.portfolio.entity.Section;
 
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Long> {
-	Section findByName(String name);
+	Section findByNameAndUserId(String name,Long userId);
 	
 	Optional<Section> findById(Long id);
 	List<Section>findAllByUserIdOrderByUpdatedAtDesc(Long userId);

@@ -11,11 +11,8 @@ import lombok.Data;
 
 @Data
 @PasswordEquals
-public class PasswordResetForm implements Serializable{
+public class PasswordResetForm{
 
-    private static final long serialVersionUID = 1L;
-
-    
     private String email;
 
     

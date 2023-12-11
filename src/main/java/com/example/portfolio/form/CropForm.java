@@ -18,28 +18,18 @@ public class CropForm {
 
     private Long userId;
 
- 
     private String name;
   
-
     private String manual;
-    
     
     private MonthDay sowing_start;
     
-    
     private MonthDay sowing_end;
-    
     
     private MonthDay harvest_start;
     
-    
     private MonthDay harvest_end;
-    
-    private UserForm user;
-    
-   
+  
     private int cultivationp_period;
-    
     
 }

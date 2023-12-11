@@ -10,12 +10,7 @@ import lombok.Data;
 
 @Data
 
-public class CreateReissueInfoForm implements Serializable {
-
- private static final long serialVersionUID = 1L;
-
-private static final RetentionPolicy RUNTIME = null;
-
+public class CreateReissueInfoForm{
 
  @NotEmpty
  private String Email;
