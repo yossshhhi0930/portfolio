@@ -10,6 +10,7 @@ import lombok.Data;
 
 @Data
 public class CropImageForm {
+	
 	private Long id;
 
 	private Long cropId;
@@ -18,5 +19,4 @@ public class CropImageForm {
 
 	private MultipartFile image;
 
-	private CropForm cropform;
 }

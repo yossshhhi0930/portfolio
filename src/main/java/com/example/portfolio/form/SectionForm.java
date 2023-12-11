@@ -12,24 +12,16 @@ import com.example.portfolio.form.UserForm;
 import lombok.Data;
 
 @Data
-public class CropForm {
+public class SectionForm {
 
     private Long id;
 
     private Long userId;
 
     private String name;
-  
-    private String manual;
     
-    private MonthDay sowing_start;
+    private String description;
     
-    private MonthDay sowing_end;
-    
-    private MonthDay harvest_start;
-    
-    private MonthDay harvest_end;
-  
-    private int cultivationp_period;
-    
+    private UserForm user;
+ 
 }

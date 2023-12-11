@@ -52,7 +52,7 @@ import com.example.portfolio.form.UserForm;
 import org.springframework.beans.BeanUtils;
 
 @Controller
-@SessionAttributes("cropform") // 必要なければ削除
+//@SessionAttributes("cropform") // 必要なければ削除
 public class CropController {
 
 	protected static Logger log = LoggerFactory.getLogger(CropController.class);
@@ -66,11 +66,11 @@ public class CropController {
 	@Autowired
 	CropImageReposiory imageRepository;
 
-	// 必要なければ削除
-	@ModelAttribute("cropform")
-	public CropForm getCropForm() {
-		return new CropForm();
-	}
+//	// 必要なければ削除
+//	@ModelAttribute("cropform")
+//	public CropForm getCropForm() {
+//		return new CropForm();
+//	}
 
 	private static final String UPLOAD_DIR = "uploads";
 
@@ -125,12 +125,13 @@ public class CropController {
 
 	// formから送られた作物データを登録
 	@RequestMapping(value = "/crop", method = RequestMethod.POST)
-	public String create(Principal principal, @Valid @RequestBody @Validated @ModelAttribute("cropform") CropForm form,
-			BindingResult result, BindingResult bindingResult, Model model, RedirectAttributes attributes)
+	public String create(Principal principal, @Validated @ModelAttribute("cropform") CropForm form,
+			BindingResult result, Model model, RedirectAttributes attributes)
 			throws IOException {
-
+		Authentication authentication = (Authentication) principal;
+		UserInf user = (UserInf) authentication.getPrincipal();
 		// 同一の作物が既に登録されている場合、エラー項目に追加
-		if (repository.findByName(form.getName()) != null) {
+		if (repository.findByNameAndUserId(form.getName(), user.getUserId()) != null) {
 			FieldError fieldError = new FieldError(result.getObjectName(), "name", "その作物はすでに登録されています。");
 			result.addError(fieldError);
 		}
@@ -146,8 +147,7 @@ public class CropController {
 
 //		//CropEntityのインスタンスを生成
 		Crop entity = new Crop();
-		Authentication authentication = (Authentication) principal;
-		UserInf user = (UserInf) authentication.getPrincipal();
+		
 		entity.setUserId(user.getUserId());
 		entity.setName(form.getName());
 		entity.setManual(form.getManual());
@@ -293,7 +293,7 @@ public class CropController {
 		}
 	}
 
-	// 画像の削除
+	// 作物の削除
 	@GetMapping(value = "/crops/delete-image")
 	public String deleteImage(@RequestParam Long imageId, @RequestParam Long cropId, Model model,
 			RedirectAttributes attributes) throws IOException {
@@ -313,7 +313,7 @@ public class CropController {
 	}
 
 	@GetMapping(path = "/crops/detail/{cropId}")
-	public String showDetai(@PathVariable Long cropId, Model model) throws IOException {
+	public String showDetail(@PathVariable Long cropId, Model model) throws IOException {
 		Optional<Crop> optionalCrop = repository.findById(cropId);
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional //
 																							// が空の場合は例外をスローするなどの対処
@@ -342,13 +342,14 @@ public class CropController {
 
 	// 編集データの送信
 	@RequestMapping(value = "/crops/edit-complete", method = RequestMethod.POST)
-	public String edit(@Validated @ModelAttribute("form") CropForm form, BindingResult result, Model model,
+	public String edit(Principal principal, @Validated @ModelAttribute("form") CropForm form, BindingResult result, Model model,
 			RedirectAttributes attributes) throws IOException {
 		Optional<Crop> optionalCrop = repository.findById(form.getId());
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional
-
+		Authentication authentication = (Authentication) principal;
+		UserInf user = (UserInf) authentication.getPrincipal();
 		// 名前を変更し、他に同一の名前の作物が存在する場合、エラーを返す
-		if (!crop.getName().equals(form.getName()) && repository.findByName(form.getName()) != null) {
+		if (!crop.getName().equals(form.getName()) && repository.findByNameAndUserId(form.getName(),user.getUserId()) != null) {
 			FieldError fieldError = new FieldError(result.getObjectName(), "name", "その作物名は使用できません。");
 			result.addError(fieldError);
 		}
@@ -368,7 +369,7 @@ public class CropController {
 		crop.setSowing_end(form.getSowing_end());
 		crop.setHarvest_start(form.getHarvest_start());
 		crop.setHarvest_end(form.getHarvest_end());
-		crop.setName(form.getName());
+		crop.setManual(form.getManual());
 		crop.setCultivationp_period(form.getCultivationp_period());
 		// entityの保存
 		repository.saveAndFlush(crop);
@@ -403,47 +404,48 @@ public class CropController {
 
 	}
 
-	@RequestMapping(value = "/crops/delete/{cropId}", method = RequestMethod.POST)
-	public String delete(@PathVariable Long cropId, BindingResult result, RedirectAttributes redirAttrs, Model model)
+	@GetMapping(path = "/crops/delete/{cropId}")
+	public String delete(@PathVariable Long cropId, RedirectAttributes redirAttrs, Model model)
 			throws IOException {
-		Optional<Crop> entity = repository.findById(cropId);
-		if (entity == null) {
-			model.addAttribute("hasMessage", true);
-			model.addAttribute("class", "alert-danger");
-			model.addAttribute("message", "その作物データは存在しません。");
-			return "/crops/list";
-		}
 		repository.deleteById(cropId);
 		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
 		imageRepository.deleteAll(imageList);
 		redirAttrs.addFlashAttribute("hasMessage", true);
 		redirAttrs.addFlashAttribute("class", "alert-info");
 		redirAttrs.addFlashAttribute("message", "作物データの削除に成功しました。");
-		return "/crops/list";
+		return "redirect:/crops/list";
 	}
 
-	// 作物の一覧表示画面ｎ表示
+	// 作物一覧画面表示
 	@GetMapping(path = "/crops/list")
 	public String showList(Principal principal, Model model) throws IOException {
 		// User情報の取得
 		Authentication authentication = (Authentication) principal;
 		UserInf user = (UserInf) authentication.getPrincipal();
 		// 該当のユーザーのすべての作物のリストを作成
-		Iterable<Crop> list = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
+		List<Crop> list = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
 		model.addAttribute("list", list);
 		return "/crops/list";
 	}
 
 	// 作物検索機能
 	@RequestMapping(value = "/crops/search", method = RequestMethod.POST)
-	public String searchCrops(@RequestParam("keyword") String keyword, Model model, RedirectAttributes redirAttrs) {
-		List<Crop> searchResults = repository.findByNameContaining(keyword);
-		if (searchResults.isEmpty()) {
-			redirAttrs.addFlashAttribute("message", "その作物は見つかりませんでした。");
-			return "redirect:/crops/list";
+	public String searchCrops(Principal principal, @RequestParam("keyword") String keyword, Model model, RedirectAttributes redirAttrs) {
+		Authentication authentication = (Authentication) principal;
+		UserInf user = (UserInf) authentication.getPrincipal();
+		List<Crop>searchResults = new ArrayList<>();
+		if(keyword==null||keyword.isEmpty()) {
+			searchResults = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
+		}else if(keyword!=null) {
+		searchResults = repository.findByNameContainingAndUserId(keyword, user.getUserId());
 		}
-		redirAttrs.addFlashAttribute("searchResults", searchResults);
-		return "redirect:/crops/list";
+		if (searchResults.isEmpty()) {
+			model.addAttribute("message", "その作物は見つかりませんでした。");
+		}
+		model.addAttribute("searchResults", searchResults);
+		List<Crop> list = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
+		model.addAttribute("list", list);
+		return "/crops/list";
 
 	}
 

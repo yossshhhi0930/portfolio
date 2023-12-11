@@ -1,5 +1,6 @@
 package com.example.portfolio.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -15,7 +16,8 @@ import lombok.Data;
 @Entity
 @Table(name = "failedPasswordReissue")
 @Data
-public class FailedPasswordReissue extends AbstractEntity{
+public class FailedPasswordReissue extends AbstractEntity implements Serializable {
+    private static final long serialVersionUID = 1L; 
 
 	@Id
     @SequenceGenerator(name = "users_id_seq")

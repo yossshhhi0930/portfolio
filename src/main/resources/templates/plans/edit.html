@@ -1,0 +1,58 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="topics-new-wrapper" layout:fragment="contents">
+		<div class="container">
+			<h1>栽培計画編集</h1>
+			<!-- 画像以外のデータを入力するフォーム -->
+			<form method="post" th:action="@{/edit}" th:object="${form}" id="form">
+				<div layout:replace="~{layouts/common::messages}"></div>
+				<input type="hidden" th:field="*{id}" />
+				<label>作物名</label>
+				<input type="text" id="cropName" class="form-control" th:field="*{cropName}" placeholder="作物名を入力してください">
+				<button type="submit" name="cmd" value="search" class="btn w-20 btn-outline-dark">作物名を検索する</button>
+				<ul class="list-group" id="cropList" th:each="crop : ${searchCrops}">
+					<li class="list-group-item" th:text="${crop.name}" th:attr="data-cropname=${crop.name}"
+						onclick="setCropName(this)">
+						<span class="badge bg-primary rounded-pill float-end" data-bs-toggle="tooltip"></span>
+					</li>
+				</ul>
+				<p th:if="${searchCropsMessage}" th:text="${searchCropsMessage}"></p>
+				<p th:if="${#fields.hasErrors('cropName')}" class="error-message" th:errors="*{cropName}"></p>
+				<label>播種日</label>
+				<input type="date" th:field="*{sowing_date}" />
+				<p th:if="${#fields.hasErrors('sowing_date')}" class="error-message" th:errors="*{sowing_date}"></p>
+				<label>収穫完了予定日</label>
+				<input type="date" th:field="*{harvest_completion_date}" />
+				<p th:if="${#fields.hasErrors('harvest_completion_date')}" class="error-message"
+					th:errors="*{harvest_completion_date}"></p>
+				<button type="submit" name="cmd" value="calculate" class="btn w-100 btn-outline-dark">収穫完了予定日を算出する</button>
+				<label>栽培区画</label>
+				<label for="sectionDropdown">利用可能な区画</label>
+				<!-- 区画を選択するドロップダウン -->
+				<select id="sectionDropdown" th:field="*{sectionName}">
+					<option value="">区画を選択してください</option>
+					<option th:each="section : ${searchSections}" th:value="${section.name}" th:text="${section.name}"
+						th:selected="${section.name == form.sectionName}"></option>
+				</select>
+				<p th:if="${searchSectionsMessage}" th:text="${searchSectionsMessage}"></p>
+				<p th:if="${#fields.hasErrors('sectionName')}" class="error-message" th:errors="*{sectionName}"></p>
+				<button type="submit" name="cmd" value="select" class="btn w-100 btn-outline-dark"
+					onclick="setSelectedSection()">利用可能な区画を表示する</button>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="customCheckbox" th:field="*{completion}">
+					<label class="form-check-label" for="customCheckbox">栽培終了</label>
+				</div>
+				<button type="submit" name="cmd" value="register" class="btn w-100 btn-outline-dark">編集</button>
+
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="topics-new-wrapper" layout:fragment="contents">
+		<div th:if="${plan}">
+			<h1>作物計画詳細</h1>
+			<label>作物名</label>
+			<span th:text="${plan.crop.name}"></span>
+			<label>播種日</label>
+			<span th:text="${plan.sowing_date}"></span>
+			<label>収穫完了予定日</label>
+			<span th:text="${plan.harvest_completion_date}"></span>
+			<label>栽培区画</label>
+			<span th:text="${plan.section.name}"></span>
+			<label>栽培ステイタス</label>
+			<span th:text="${plan.completion ? '終了' : '計画中'}"></span>
+		<a class="btn btn-primary" th:href="@{'/plans/edit/' + ${plan.Id}}" role="button">編集する</a>
+		<a class="btn btn-primary" th:href="@{'/plans/delete/' + ${plan.Id}}" role="button">削除する</a>
+		<a class="btn btn-primary" th:href="@{/plans/new}" role="button">次の作物計画を作成する</a>
+	</div>
+	</div>
+	</body>
+</html>

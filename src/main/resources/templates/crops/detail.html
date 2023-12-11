@@ -25,18 +25,18 @@
 			<span>日</span>
 			<label>育て方</label>
 			<span th:text="${crop.manual}"></span>
-		</div>
-		<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
-			<div class="d-inline-block">
-				<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
-				<span th:text="${image.path}"></span>
 
+			<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+				<div class="d-inline-block">
+					<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
+					<span th:text="${image.path}"></span>
+
+				</div>
 			</div>
+			<a class="btn btn-primary" th:href="@{'/crops/edit/' + ${crop.Id}}" role="button">編集する</a>
+			<a class="btn btn-primary" th:href="@{'/crops/delete/' + ${crop.Id}}" role="button">削除する</a>
+			<a class="btn btn-primary" th:href="@{/plans/new/(cropId=${crop.Id})}" role="button">作物計画を作成する</a>
 		</div>
-		<a class="btn btn-primary" th:href="@{'/crops/edit/' + ${crop.Id}}" role="button">編集する</a>
-		<a class="btn btn-primary" th:href="@{'/crops/delete/' + ${crop.Id}}" role="button">削除する</a>
-		<a class="btn btn-primary" th:href="@{'/plans/new/' + ${crop.Id}}" role="button">作物計画を作成する</a>
-
 	</div>
 
 	<body>

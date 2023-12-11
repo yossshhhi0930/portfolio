@@ -24,13 +24,13 @@ import java.time.MonthDay;
 import lombok.Data;
 
 @Entity
-@Table(name = "crop")
+@Table(name = "section")
 @Data
-public class Crop extends AbstractEntity implements Serializable {
+public class Section extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "crop_id_seq")
+	@SequenceGenerator(name = "section_id_seq")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
@@ -41,31 +41,14 @@ public class Crop extends AbstractEntity implements Serializable {
 	private String name;
 
 	@Column
-	private String manual;
-
-	@Column
-	private MonthDay sowing_start;
-
-	@Column
-	private MonthDay sowing_end;
-
-	@Column
-	private MonthDay harvest_start;
-
-	@Column
-	private MonthDay harvest_end;
-
-	@Column
-	private int cultivationp_period;
+	private String description;
 
 	@ManyToOne
 	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private User user;
 
-	@OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)
-	private List<CropImage> cropImages;
-
-	@OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "section", fetch = FetchType.LAZY)
 	private List<Plan> plans;
 	
+
 }
