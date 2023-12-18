@@ -16,6 +16,7 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
 	//List<Crop>findByNameContaining(String keyword);
 	//void saveAndFlush(Optional<Crop> entity);
 	List<Plan>findAllByUserIdOrderByUpdatedAtDesc(Long userId);
+	List<Plan>findAllBySectionIdOrderByUpdatedAtDesc(Long sectionId);
 	List<Plan>findAllByUserIdAndCompletionTrueOrderByUpdatedAtDesc(Long userId);
 	List<Plan>findAllByUserIdAndCompletionFalseOrderByUpdatedAtDesc(Long userId);
 	List<Plan>findAllByUserIdAndCropNameContainingOrderByUpdatedAtDesc(Long userId, String keyword);

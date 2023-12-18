@@ -45,11 +45,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.Authentication;
 
 import com.example.portfolio.repository.CropRepository;
+import com.example.portfolio.repository.DiaryRepository;
 import com.example.portfolio.repository.PlanRepository;
 import com.example.portfolio.repository.SectionRepository;
 import com.example.portfolio.repository.CropImageReposiory;
 import com.example.portfolio.entity.Crop;
 import com.example.portfolio.entity.CropImage;
+import com.example.portfolio.entity.Diary;
 import com.example.portfolio.entity.Plan;
 import com.example.portfolio.entity.Section;
 import com.example.portfolio.entity.UserInf;
@@ -77,6 +79,9 @@ public class PlanController {
 
 	@Autowired
 	PlanRepository repository;
+	
+	@Autowired
+	DiaryRepository diaryRepository;
 
 	// 作物データ新規登録formの表示
 	@GetMapping(path = "/plans/new")
@@ -128,7 +133,7 @@ public class PlanController {
 				result.addError(fieldError);
 			}
 			if (form.getSowing_date() == null) {
-				FieldError fieldError = new FieldError(result.getObjectName(), "cropName", "播種日を入力してください。");
+				FieldError fieldError = new FieldError(result.getObjectName(), "sowing_date", "播種日を入力してください。");
 				result.addError(fieldError);
 			}
 			if (result.hasErrors()) {
@@ -140,9 +145,8 @@ public class PlanController {
 				return "plans/new";
 			}
 
-			LocalDate sowing_date = form.getSowing_date();
 			int cultivationp_period = crop.getCultivationp_period();
-			LocalDate harvest_completion_date = sowing_date.plusDays(cultivationp_period);
+			LocalDate harvest_completion_date = form.getSowing_date().plusDays(cultivationp_period);
 			form.setHarvest_completion_date(harvest_completion_date);
 			searchSections = availableSctionGenerater(user.getUserId(), form.getSowing_date(), harvest_completion_date,
 					form.getId());
@@ -156,7 +160,7 @@ public class PlanController {
 
 		if ("select".equals(cmd)) {
 			if (form.getSowing_date() == null) {
-				FieldError fieldError = new FieldError(result.getObjectName(), "cropName", "播種日を入力してください。");
+				FieldError fieldError = new FieldError(result.getObjectName(), "sowing_date", "播種日を入力してください。");
 				result.addError(fieldError);
 			}
 			// 収穫完了予定日が入力されていない場合のエラーの追加
@@ -174,9 +178,6 @@ public class PlanController {
 				model.addAttribute("message", "利用可能な区画の取得に失敗しました。");
 				return "plans/new";
 			}
-
-			searchSections = availableSctionGenerater(user.getUserId(), form.getSowing_date(),
-					form.getHarvest_completion_date(), form.getId());
 			if (searchSections.isEmpty()) {
 				model.addAttribute("searchSectionsMessage", "利用可能な区画はありません。");
 			}
@@ -200,32 +201,19 @@ public class PlanController {
 				result.addError(fieldError);
 			}
 			if (form.getSowing_date() == null) {
-				FieldError fieldError = new FieldError(result.getObjectName(), "cropName", "播種日を入力してください。");
+				FieldError fieldError = new FieldError(result.getObjectName(), "sowing_date", "播種日を入力してください。");
 				result.addError(fieldError);
-			}
-			// 収穫完了予定日が入力されていない場合のエラーの追加
-			if (form.getHarvest_completion_date() == null) {
+			} else if (form.getHarvest_completion_date() == null) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "harvest_completion_date",
 						"収穫完了予定日を入力して下さい。");
 				result.addError(fieldError);
-			}
-			// 区画名が入力されていない場合に返すエラーの追加。
-			if (form.getSectionName() == null || form.getSectionName().isEmpty()) {
+			} else if (form.getSectionName() == null || form.getSectionName().isEmpty()) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "sectionName", "区画を選択して下さい。");
 				result.addError(fieldError);
-			}
-
-			// 区画名が誤っている場合に返すエラーの追加
-			if (!(form.getSectionName() == null || form.getSectionName().isEmpty()) && section == null) {
+			} else if (section == null) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "sectionName", "区画名に誤りがあります。");
 				result.addError(fieldError);
-			}
-			searchSections = availableSctionGenerater(user.getUserId(), form.getSowing_date(),
-					form.getHarvest_completion_date(), form.getId());
-
-			// 区画が条件を満たしていない場合のエラーを追加
-			if (!(form.getSectionName() == null || form.getSectionName().isEmpty())
-					&& !searchSections.contains(section)) {
+			} else if (!searchSections.contains(section)) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "sectionName", "この区画は使用不可です。");
 				result.addError(fieldError);
 			}
@@ -300,7 +288,7 @@ public class PlanController {
 				result.addError(fieldError);
 			}
 			if (form.getSowing_date() == null) {
-				FieldError fieldError = new FieldError(result.getObjectName(), "cropName", "播種日を入力してください。");
+				FieldError fieldError = new FieldError(result.getObjectName(), "sowing_date", "播種日を入力してください。");
 				result.addError(fieldError);
 			}
 
@@ -313,9 +301,8 @@ public class PlanController {
 				return "plans/edit";
 			}
 
-			LocalDate sowing_date = form.getSowing_date();
 			int cultivationp_period = crop.getCultivationp_period();
-			LocalDate harvest_completion_date = sowing_date.plusDays(cultivationp_period);
+			LocalDate harvest_completion_date = form.getSowing_date().plusDays(cultivationp_period);
 			form.setHarvest_completion_date(harvest_completion_date);
 			searchSections = availableSctionGenerater(user.getUserId(), form.getSowing_date(), harvest_completion_date,
 					form.getId());
@@ -329,7 +316,7 @@ public class PlanController {
 
 		if ("select".equals(cmd)) {
 			if (form.getSowing_date() == null) {
-				FieldError fieldError = new FieldError(result.getObjectName(), "cropName", "播種日を入力してください。");
+				FieldError fieldError = new FieldError(result.getObjectName(), "sowing_date", "播種日を入力してください。");
 				result.addError(fieldError);
 			}
 			// 収穫完了予定日が入力されていない場合のエラーの追加
@@ -345,8 +332,6 @@ public class PlanController {
 				model.addAttribute("message", "利用可能な区画の取得に失敗しました。");
 				return "plans/edit";
 			}
-			searchSections = availableSctionGenerater(user.getUserId(), form.getSowing_date(),
-					form.getHarvest_completion_date(), form.getId());
 			if (searchSections.isEmpty()) {
 				model.addAttribute("searchSectionsMessage", "利用可能な区画はありません。");
 			}
@@ -369,37 +354,22 @@ public class PlanController {
 				result.addError(fieldError);
 			}
 			if (form.getSowing_date() == null) {
-				FieldError fieldError = new FieldError(result.getObjectName(), "cropName", "播種日を入力してください。");
+				FieldError fieldError = new FieldError(result.getObjectName(), "sowing_date", "播種日を入力してください。");
 				result.addError(fieldError);
-			}
-
-			// 収穫完了予定日が入力されていない場合のエラーの追加
-			if (form.getHarvest_completion_date() == null) {
+			} else if (form.getHarvest_completion_date() == null) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "harvest_completion_date",
 						"収穫完了予定日を入力して下さい。");
 				result.addError(fieldError);
-			}
-			// 区画名が入力されていない場合に返すエラーの追加。
-			if (form.getSectionName() == null || form.getSectionName().isEmpty()) {
+			} else if (form.getSectionName() == null || form.getSectionName().isEmpty()) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "sectionName", "区画を選択して下さい。");
 				result.addError(fieldError);
-			}
-
-			// 区画名が誤っている場合に返すエラーの追加
-			if (!(form.getSectionName() == null || form.getSectionName().isEmpty()) && section == null) {
+			} else if (section == null) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "sectionName", "区画名に誤りがあります。");
 				result.addError(fieldError);
-			}
-			searchSections = availableSctionGenerater(user.getUserId(), form.getSowing_date(),
-					form.getHarvest_completion_date(), form.getId());
-
-			// 区画が条件を満たしていない場合のエラーを追加
-			if (!(form.getSectionName() == null || form.getSectionName().isEmpty())
-					&& !searchSections.contains(section)) {
+			} else if (!searchSections.contains(section)) {
 				FieldError fieldError = new FieldError(result.getObjectName(), "sectionName", "この区画は使用不可です。");
 				result.addError(fieldError);
 			}
-
 			if (result.hasErrors()) {
 				model.addAttribute("searchSections", searchSections);
 				model.addAttribute("form", form);
@@ -410,7 +380,6 @@ public class PlanController {
 			}
 			Optional<Plan> optionalPlan = repository.findById(form.getId());
 			Plan entity = optionalPlan.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional //
-																									// //
 			entity.setUserId(user.getUserId());
 			entity.setCropId(crop.getId());
 			entity.setSowing_date(form.getSowing_date());
@@ -459,20 +428,13 @@ public class PlanController {
 		}
 		return searchSections;
 	}
-
-//	// 完了済みの計画か否かの判定
-//	private boolean completionJudgement(LocalDate harvest_completion_date) throws IOException {
-//		if (harvest_completion_date.isBefore(LocalDate.now())) {
-//			return true;
-//		}
-//		return false;
-//	}
-
+	
 	@GetMapping(path = "/plans/detail/{planId}")
 	public String showDetail(@PathVariable Long planId, Model model) throws IOException {
 		Optional<Plan> optionalPlan = repository.findById(planId);
 		Plan plan = optionalPlan.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional // //
-																							// が空の場合は例外をスローするなどの対
+		List<Diary> list = diaryRepository.findAllByPlanIdOrderByUpdatedAtDesc(planId);
+		model.addAttribute("list", list);																					// が空の場合は例外をスローするなどの対
 		model.addAttribute("plan", plan);
 		return "plans/detail";
 	}
@@ -522,8 +484,10 @@ public class PlanController {
 		UserInf user = (UserInf) authentication.getPrincipal();
 		List<Plan> list = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
 		List<Section> sectionList = sectionRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
-		List<PlanForm> gantList = getGantList(LocalDate.now().getYear(), list);
+		List<PlanForm> gantList = getGantList(list);
 		Set<Integer> yearList = getYearList(list);
+		model.addAttribute("minDate", getMinDate(LocalDate.now().getYear()));
+		model.addAttribute("maxDate", getMaxDate(LocalDate.now().getYear()));
 		model.addAttribute("yearList", yearList);
 		model.addAttribute("gantList", gantList);
 		model.addAttribute("list", list);
@@ -543,7 +507,7 @@ public class PlanController {
 		Authentication authentication = (Authentication) principal;
 		UserInf user = (UserInf) authentication.getPrincipal();
 		List<Section> sectionList = sectionRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
-		
+
 		// 該当のユーザーのすべての作物のリストを作成
 		List<Plan> list = new ArrayList<>();
 		if (sectionName == null || sectionName.isEmpty()) {
@@ -597,15 +561,17 @@ public class PlanController {
 				}
 			}
 		}
-		if(year != null) {
+		if (year != null) {
 			list = getListOfYear(year, list);
 		}
 		if (list.isEmpty()) {
 			model.addAttribute("message", "その栽培計画は見つかりませんでした。");
 		}
 		List<Plan> allList = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
-		Set<Integer>yearList = getYearList(allList);
-		List<PlanForm> gantList = getGantList(year, list);
+		Set<Integer> yearList = getYearList(allList);
+		List<PlanForm> gantList = getGantList(list);
+		model.addAttribute("minDate", getMinDate(year));
+		model.addAttribute("maxDate", getMaxDate(year));
 		model.addAttribute("gantList", gantList);
 		model.addAttribute("list", list);
 		model.addAttribute("yearList", yearList);
@@ -618,32 +584,49 @@ public class PlanController {
 	}
 
 	// PlanListからGantList<PlanForm>を得る
-	private List<PlanForm> getGantList(Integer year, List<Plan> list) throws IOException {
+	private List<PlanForm> getGantList(List<Plan> list) throws IOException {
 		List<PlanForm> gantList = new ArrayList<>();
 		for (Plan plan : list) {
 			PlanForm planForm = getPlan(plan);
 			gantList.add(planForm);
 		}
-		LocalDate startDate = null;
-		LocalDate endDate = null;
+//		LocalDate startDate = null;
+//		LocalDate endDate = null;
+//
+//		if (year == null) {
+//			startDate = LocalDate.ofYearDay(LocalDate.now().getYear(), 1);
+//			int dayOfYear = Year.of(LocalDate.now().getYear()).isLeap() ? 366 : 365;
+//			endDate = LocalDate.ofYearDay(LocalDate.now().getYear(), dayOfYear);
+//		}
+//		if (year != null) {
+//			// 年の最初の日付
+//			startDate = LocalDate.ofYearDay(year, 1);
+//			// 年の最後の日付
+//			int dayOfYear = Year.of(year).isLeap() ? 366 : 365;
+//			endDate = LocalDate.ofYearDay(year, dayOfYear);
+//		}
+//		PlanForm start_end = new PlanForm((long) 0, "start", "", startDate, endDate, true);
+//		gantList.add(start_end);
+		return gantList;
+	}
 
-		if(year == null) {
-			startDate = LocalDate.ofYearDay(LocalDate.now().getYear(), 1);
-			int dayOfYear = Year.of(LocalDate.now().getYear()).isLeap() ? 366 : 365;
-			endDate = LocalDate.ofYearDay(LocalDate.now().getYear(), dayOfYear);
+	private LocalDate getMinDate(Integer year) throws IOException {
+		if (year == null) {
+			return null;
 		}
-		if(year != null) {
 		// 年の最初の日付
-		startDate = LocalDate.ofYearDay(year, 1);
+		LocalDate minDate = LocalDate.ofYearDay(year, 1);
+		return minDate;
+	}
+
+	private LocalDate getMaxDate(Integer year) throws IOException {
+		if (year == null) {
+			return null;
+		}
 		// 年の最後の日付
 		int dayOfYear = Year.of(year).isLeap() ? 366 : 365;
-		endDate = LocalDate.ofYearDay(year, dayOfYear);
-		}
-		PlanForm startDatePlan = new PlanForm((long) 1000, "start", "", startDate, startDate, true);
-		PlanForm endDatePlan = new PlanForm((long) 0, "end", "", endDate, endDate, true);
-		gantList.add(startDatePlan);
-		gantList.add(endDatePlan);
-		return gantList;
+		LocalDate maxDate = LocalDate.ofYearDay(year, dayOfYear);
+		return maxDate;
 	}
 
 	// PlanListからYearList<Integer>を得る
@@ -658,8 +641,9 @@ public class PlanController {
 	}
 
 	private List<Plan> getListOfYear(Integer year, List<Plan> list) {
-	    list.removeIf(plan -> !(plan.getSowing_date().getYear() == year || plan.getHarvest_completion_date().getYear() == year));
-	    return list;
+		list.removeIf(plan -> !(plan.getSowing_date().getYear() == year
+				|| plan.getHarvest_completion_date().getYear() == year));
+		return list;
 	}
 
 	@GetMapping("/confirmation")
@@ -669,9 +653,18 @@ public class PlanController {
 		UserInf user = (UserInf) authentication.getPrincipal();
 		List<Section> sectionList = sectionRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
 		model.addAttribute("sectionList", sectionList);
-
 		return "plans/confirmation";
+	}
 
+	@GetMapping("/plans/calendar")
+	public String showCalendar(Principal principal, Model model) throws IOException {
+		// User情報の取得
+		Authentication authentication = (Authentication) principal;
+		UserInf user = (UserInf) authentication.getPrincipal();
+		List<Plan> list = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
+		List<PlanForm> gantList = getGantList(list);
+		model.addAttribute("gantList", gantList);
+		return "plans/calendar";
 	}
 
 }

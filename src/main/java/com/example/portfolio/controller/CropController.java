@@ -110,7 +110,7 @@ public class CropController {
 			}
 		}
 		model.addAttribute("list", monthCrops);
-		model.addAttribute("month", Month.valueOf(month).getDisplayName(TextStyle.FULL, Locale.JAPANESE) );
+		model.addAttribute("month", Month.valueOf(month).getDisplayName(TextStyle.FULL, Locale.JAPANESE));
 		return "crops/index";
 	}
 
@@ -126,8 +126,7 @@ public class CropController {
 	// formから送られた作物データを登録
 	@RequestMapping(value = "/crop", method = RequestMethod.POST)
 	public String create(Principal principal, @Validated @ModelAttribute("cropform") CropForm form,
-			BindingResult result, Model model, RedirectAttributes attributes)
-			throws IOException {
+			BindingResult result, Model model, RedirectAttributes attributes) throws IOException {
 		Authentication authentication = (Authentication) principal;
 		UserInf user = (UserInf) authentication.getPrincipal();
 		// 同一の作物が既に登録されている場合、エラー項目に追加
@@ -147,14 +146,12 @@ public class CropController {
 
 //		//CropEntityのインスタンスを生成
 		Crop entity = new Crop();
-		
+
 		entity.setUserId(user.getUserId());
 		entity.setName(form.getName());
 		entity.setManual(form.getManual());
 		entity.setSowing_start(form.getSowing_start());
 		entity.setSowing_end(form.getSowing_end());
-		entity.setHarvest_start(form.getHarvest_start());
-		entity.setHarvest_end(form.getHarvest_end());
 		entity.setCultivationp_period(form.getCultivationp_period());
 
 		// entityの保存
@@ -180,7 +177,7 @@ public class CropController {
 		model.addAttribute("crop", crop);
 		// List<CropImage> topImage =
 		// imageRepository.findByCropIdAndTopImageTrue(cropId);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdAndTopImageFalseOrderByUpdatedAtDesc(cropId);
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
 		// model.addAttribute("list", topImage);
 		model.addAttribute("list", imageList);
 
@@ -199,7 +196,7 @@ public class CropController {
 		if (image != null && imageRepository.findByCropIdAndTopImageTrue(imageform.getCropId()).size() > 0) {
 			attributes.addFlashAttribute("imageError", "トップ画像のアップロードは一枚までです。");
 			FieldError fieldError = new FieldError(result.getObjectName(), "image", "トップ画像のアップロードは一枚までです。");
-						result.addError(fieldError);
+			result.addError(fieldError);
 		}
 		// ファイルの拡張子が画像形式かどうかの検証をエラー項目に追加
 		if (image != null && !isImageFile(image)) {
@@ -231,7 +228,6 @@ public class CropController {
 		attributes.addFlashAttribute("class", "alert-info");
 		attributes.addFlashAttribute("message", "画像のアップロードに成功しました。");
 		return "redirect:/crops/newImage/" + imageform.getCropId();
-		
 
 	}
 
@@ -243,8 +239,8 @@ public class CropController {
 		// ファイルの拡張子が画像形式かどうかの検証をエラー項目に追加
 		if (image != null && !isImageFile(image)) {
 			attributes.addFlashAttribute("imageError", "画像ファイル形式が正しくありません。");
-		FieldError fieldError = new FieldError(result.getObjectName(), "image", "画像ファイル形式が正しくありません。");
-					result.addError(fieldError);
+			FieldError fieldError = new FieldError(result.getObjectName(), "image", "画像ファイル形式が正しくありません。");
+			result.addError(fieldError);
 		}
 		// エラーがある場合、エラー文を表示し、新しいformを送信
 
@@ -318,7 +314,7 @@ public class CropController {
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional //
 																							// が空の場合は例外をスローするなどの対処
 		model.addAttribute("crop", crop);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdAndTopImageFalseOrderByUpdatedAtDesc(cropId);
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
 		model.addAttribute("list", imageList);
 		return "crops/detail";
 	}
@@ -342,14 +338,15 @@ public class CropController {
 
 	// 編集データの送信
 	@RequestMapping(value = "/crops/edit-complete", method = RequestMethod.POST)
-	public String edit(Principal principal, @Validated @ModelAttribute("form") CropForm form, BindingResult result, Model model,
-			RedirectAttributes attributes) throws IOException {
+	public String edit(Principal principal, @Validated @ModelAttribute("form") CropForm form, BindingResult result,
+			Model model, RedirectAttributes attributes) throws IOException {
 		Optional<Crop> optionalCrop = repository.findById(form.getId());
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし Optional
 		Authentication authentication = (Authentication) principal;
 		UserInf user = (UserInf) authentication.getPrincipal();
 		// 名前を変更し、他に同一の名前の作物が存在する場合、エラーを返す
-		if (!crop.getName().equals(form.getName()) && repository.findByNameAndUserId(form.getName(),user.getUserId()) != null) {
+		if (!crop.getName().equals(form.getName())
+				&& repository.findByNameAndUserId(form.getName(), user.getUserId()) != null) {
 			FieldError fieldError = new FieldError(result.getObjectName(), "name", "その作物名は使用できません。");
 			result.addError(fieldError);
 		}
@@ -367,15 +364,12 @@ public class CropController {
 		crop.setName(form.getName());
 		crop.setSowing_start(form.getSowing_start());
 		crop.setSowing_end(form.getSowing_end());
-		crop.setHarvest_start(form.getHarvest_start());
-		crop.setHarvest_end(form.getHarvest_end());
 		crop.setManual(form.getManual());
 		crop.setCultivationp_period(form.getCultivationp_period());
 		// entityの保存
 		repository.saveAndFlush(crop);
 		// 画像を表示するためのimageListを作成
-		Iterable<CropImage> imageList = imageRepository
-				.findAllByCropIdAndTopImageFalseOrderByUpdatedAtDesc(form.getId());
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(form.getId());
 		model.addAttribute("list", imageList);
 
 		attributes.addFlashAttribute("hasMessage", true);
@@ -396,7 +390,7 @@ public class CropController {
 		Crop crop = optionalCrop.orElseThrow(() -> new RuntimeException("Crop not found")); // もし
 																							// Optionalが空の場合は例外をスローするなどの対処
 		model.addAttribute("crop", crop);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdAndTopImageFalseOrderByUpdatedAtDesc(cropId);
+		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
 		model.addAttribute("list", imageList);
 		model.addAttribute("cropImageform", cropImageform);
 		model.addAttribute("cropTopImageform", cropTopImageform);
@@ -405,11 +399,8 @@ public class CropController {
 	}
 
 	@GetMapping(path = "/crops/delete/{cropId}")
-	public String delete(@PathVariable Long cropId, RedirectAttributes redirAttrs, Model model)
-			throws IOException {
+	public String delete(@PathVariable Long cropId, RedirectAttributes redirAttrs, Model model) throws IOException {
 		repository.deleteById(cropId);
-		Iterable<CropImage> imageList = imageRepository.findAllByCropIdOrderByUpdatedAtDesc(cropId);
-		imageRepository.deleteAll(imageList);
 		redirAttrs.addFlashAttribute("hasMessage", true);
 		redirAttrs.addFlashAttribute("class", "alert-info");
 		redirAttrs.addFlashAttribute("message", "作物データの削除に成功しました。");
@@ -430,21 +421,22 @@ public class CropController {
 
 	// 作物検索機能
 	@RequestMapping(value = "/crops/search", method = RequestMethod.POST)
-	public String searchCrops(Principal principal, @RequestParam("keyword") String keyword, Model model, RedirectAttributes redirAttrs) {
+	public String searchCrops(Principal principal, @RequestParam(name = "keyword", required = false) String keyword,
+			Model model, RedirectAttributes redirAttrs) {
 		Authentication authentication = (Authentication) principal;
 		UserInf user = (UserInf) authentication.getPrincipal();
-		List<Crop>searchResults = new ArrayList<>();
-		if(keyword==null||keyword.isEmpty()) {
-			searchResults = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
-		}else if(keyword!=null) {
-		searchResults = repository.findByNameContainingAndUserId(keyword, user.getUserId());
+		List<Crop> list = new ArrayList<>();
+		if (keyword == null) {
+			list = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
 		}
-		if (searchResults.isEmpty()) {
+		if (keyword != null) {
+			list = repository.findByNameContainingAndUserId(keyword, user.getUserId());
+		}
+		if (list.isEmpty()) {
 			model.addAttribute("message", "その作物は見つかりませんでした。");
 		}
-		model.addAttribute("searchResults", searchResults);
-		List<Crop> list = repository.findAllByUserIdOrderByUpdatedAtDesc(user.getUserId());
 		model.addAttribute("list", list);
+		model.addAttribute("keyword", keyword);
 		return "/crops/list";
 
 	}

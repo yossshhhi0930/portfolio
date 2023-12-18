@@ -6,23 +6,47 @@
 </head>
 
 <body>
-	<div class="topics-new-wrapper" layout:fragment="contents">
-		<div th:if="${plan}">
-			<h1>作物計画詳細</h1>
-			<label>作物名</label>
-			<span th:text="${plan.crop.name}"></span>
-			<label>播種日</label>
-			<span th:text="${plan.sowing_date}"></span>
-			<label>収穫完了予定日</label>
-			<span th:text="${plan.harvest_completion_date}"></span>
-			<label>栽培区画</label>
-			<span th:text="${plan.section.name}"></span>
-			<label>栽培ステイタス</label>
-			<span th:text="${plan.completion ? '終了' : '計画中'}"></span>
-		<a class="btn btn-primary" th:href="@{'/plans/edit/' + ${plan.Id}}" role="button">編集する</a>
-		<a class="btn btn-primary" th:href="@{'/plans/delete/' + ${plan.Id}}" role="button">削除する</a>
-		<a class="btn btn-primary" th:href="@{/plans/new}" role="button">次の作物計画を作成する</a>
+	<div layout:fragment="contents">
+		<div class="container">
+			<div class="row ">
+				<main class="col-md-8 mx-auto frame">
+					<div th:if="${plan}">
+						<h1 id="dark_h1" class="text-center">栽培計画詳細</h1>
+						<h3>-- 作物名 --</h3>
+						<p th:text="${plan.crop.name}"></p>
+						<h3>-- 播種日 --</h3>
+						<p th:text="${plan.sowing_date}"></p>
+						<h3>-- 収穫完了予定日 --</h3>
+						<p th:text="${plan.harvest_completion_date}"></p>
+						<h3>-- 栽培区画 --</h3>
+						<p th:text="${plan.section.name}"></p>
+						<h3>-- 栽培ステイタス --</h3>
+						<p th:text="${plan.completion ? '終了' : '計画中'}"></p>
+						<a class="btn btn-success" th:href="@{'/plans/edit/' + ${plan.Id}}" role="button">編集する</a>
+						<a class="btn btn-success" th:href="@{'/plans/delete/' + ${plan.Id}}" role="button">削除する</a>
+						<a class="btn btn-success" th:href="@{/plans/new}" role="button">続けて作物計画を登録する</a>
+					</div>
+					<h3 id="dark_h1">--　栽培日誌一覧　--</h1>
+					<div style="display: flex; flex-wrap: wrap;">
+						<div th:each="diary : ${list}" class="card" style="width: 18rem; margin: 10px;">
+							<div th:if="${#lists.size(diary.diaryImages) > 0}">
+								<div th:each="image, index : ${diary.diaryImages}" th:if="${index.index == 0}">
+									<img th:src="${image.path}" alt="Image" class="card-img-top">
+								</div>
+							</div>
+							<div class="card-body">
+								<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
+								<p class="card-text" th:text="${diary.description}">Some quick example text to build on the card title
+									and make up the bulk of the card's content.</p>
+								<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
+							</div>
+						</div>
+					</div>
+					<a class="btn btn-success" th:href="@{'/diarys/new/' + ${plan.Id}}" role="button">作物日誌を作成する</a>
+				</main>
+			</div>
+		</div>
 	</div>
-	</div>
-	</body>
+</body>
+
 </html>

@@ -1,0 +1,48 @@
+v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="topics-new-wrapper" layout:fragment="contents">
+		<div class="container">
+			<div class="row">
+				<main class="col-md-6 mx-auto">
+					<h1 class="text-center">栽培日誌登録</h1>
+					<form method="post" th:action="@{/diarys/edit-complete}" th:object="${form}" enctype="multipart/form-data">
+						<div layout:replace="~{layouts/common::messages}"></div>
+						<input type="hidden" th:field="*{id}" />
+						<label class="form-label" for="planId">栽培計画ID</label>
+						<input type="text" class="form-control" id="planId" th:field="*{planId}" readonly />
+						<br>
+						<!-- 既に登録している画像リストをここに表示 -->
+						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+							<div class="image-container">
+								<img th:src="${image.path}" alt="Image" class="img-full-width">
+								<a th:href="@{/diarys/delete-image(imageId=${image.id}, diaryId=${image.diaryId})}">
+									削除する
+								</a>
+							</div>
+						</div>
+						<div id="margin_for_imagePreview">
+							<label class="form-label" for="images">画像の選択</label>
+							<input type="file" id="images" name="images" multiple>
+						</div>
+						<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
+						<label class="form-label" for="record_date">記録日</label>
+						<input type="date" id="record_date" class="form-control" th:field="*{record_date}" />
+						<p th:if="${#fields.hasErrors('record_date')}" class="error-message" th:errors="*{record_date}"></p>
+						<label class="form-label" for="description">説明</label>
+						<textarea class="form-control" id="description" th:field="*{description}"></textarea>
+						<p th:if="${#fields.hasErrors('description')}" class="error-message" th:errors="*{description}"></p>
+						<input type="submit" value="編集" class="btn w-100 btn-success" />
+					</form>
+				</main>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
