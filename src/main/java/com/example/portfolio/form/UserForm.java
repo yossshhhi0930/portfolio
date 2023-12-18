@@ -12,10 +12,12 @@ import lombok.Data;
 @PasswordEquals
 public class UserForm {
 
+	@NotEmpty
     @Size(max = 100)
     private String name;
     
-    @Email
+	@NotEmpty
+	@Email
     private String email;
 
     @NotEmpty

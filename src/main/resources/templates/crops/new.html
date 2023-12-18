@@ -8,38 +8,55 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 <body>
 	<div class="topics-new-wrapper" layout:fragment="contents">
 		<div class="container">
-			<h1>作物情報登録</h1>
-			<!-- 画像以外のデータを入力するフォーム -->
-			<form method="post" th:action="@{/crop}" th:object="${cropform}">
-				<div layout:replace="~{layouts/common::messages}"></div>
-				<input type="hidden" th:field="*{id}" />
-				<label>作物名</label>
-				<input type="text" class="form-control" th:field="*{name}" />
-				<p th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></p>
-				<label>種まき可能開始日</label>
-				<input type="text" th:field="*{sowing_start}" placeholder="MM-dd" />
-				<p th:if="${#fields.hasErrors('sowing_start')}" class="error-message" th:errors="*{sowing_start}"></p>
-				<label>種まき可能終了日</label>
-				<input type="text" th:field="*{sowing_end}" placeholder="MM-dd" />
-				<p th:if="${#fields.hasErrors('sowing_end')}" class="error-message" th:errors="*{sowing_end}"></p>
-				<label>収穫開始予定日</label>
-				<input type="text" th:field="*{harvest_start}" placeholder="MM-dd" />
-				<p th:if="${#fields.hasErrors('harvest_start')}" class="error-message" th:errors="*{harvest_start}"></p>
-				<label>収穫終了予定日</label>
-				<input type="text" th:field="*{harvest_end}" placeholder="MM-dd" />
-				<p th:if="${#fields.hasErrors('harvest_end')}" class="error-message" th:errors="*{sharvest_end}"></p>
-				<label>栽培期間</label>
-				<input type="number" th:field="*{cultivationp_period}" />
-				<p th:if=" ${#fields.hasErrors('cultivationp_period')}" class="error-message"
-					th:errors="*{cultivationp_period}">
-				</p>
-				<span>日</span>
-				<label>育て方</label>
-				<textarea class="form-control" th:field="*{manual}" th:errorclass="error-field"></textarea>
-				<p th:if="${#fields.hasErrors('manual')}" class="error-message" th:errors="*{manual}"></p>
-				<input type="submit" value="登録" class="btn w-100 btn-outline-dark" />
-			</form>
-
+			<div class="row">
+				<main class="col-md-5 mx-auto">
+					<h1 class="text-center">作物登録</h1>
+					<form method="post" th:action="@{/crop}" th:object="${cropform}">
+						<div layout:replace="~{layouts/common::messages}"></div>
+						<input type="hidden" th:field="*{id}" />
+						<div class="mb-3">
+							<label class="form-label" for="name">作物名</label>
+							<input type="text" class="form-control" id="name" th:field="*{name}" />
+							<p th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></p>
+						</div>
+						<div class="mb-3 row">
+							<label class="form-label" 　for="sowing_period" 　>播種可能期間</label>
+							<div class="row">
+								<div class="input-group">
+									<div class="col">
+										<input type="text" class="form-control" 　id="sowing_period" th:field="*{sowing_start}"
+											placeholder="MM-dd" />
+									</div>
+									<span class="mx-2">～</span>
+									<div class="col">
+										<input type="text" class="form-control" 　id="sowing_period" th:field="*{sowing_end}"
+											placeholder="MM-dd" />
+									</div>
+								</div>
+							</div>
+							<p th:if="${#fields.hasErrors('sowing_start')}" class="error-message" th:errors="*{sowing_start}">
+							</p>
+							<p th:if="${#fields.hasErrors('sowing_end')}" class="error-message" th:errors="*{sowing_end}"></p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label" 　for="cultivationp_period">栽培日数</label>
+							<div class="input-group">
+								<input type="number" class="form-control" 　id="cultivationp_period" th:field="*{cultivationp_period}" />
+								<span>日</span>
+							</div>
+							<p th:if=" ${#fields.hasErrors('cultivationp_period')}" class="error-message"
+								th:errors="*{cultivationp_period}">
+							</p>
+						</div>
+						<div class="mb-3">
+							<label class="form-label" for="manual">育て方メモ</label>
+							<textarea class="form-control" id="manual" th:field="*{manual}"></textarea>
+							<p th:if="${#fields.hasErrors('manual')}" class="error-message" th:errors="*{manual}"></p>
+						</div>
+						<input type="submit" value="登録" class="btn w-100 btn-success" />
+					</form>
+				</main>
+			</div>
 		</div>
 	</div>
 </body>

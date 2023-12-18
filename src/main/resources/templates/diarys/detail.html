@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div layout:fragment="contents">
+		<div class="container">
+			<div class="row ">
+				<main class="col-md-7 mx-auto frame">
+					<div th:if="${diary}">
+						<h1 id="dark_h1" class="text-center">栽培日誌詳細</h1>
+						<h3>-栽培計画ID-</h3>
+						<p th:text="${diary.planId}"></p>
+						<h3>-作物名-</h3>
+						<p th:text="${diary.plan.crop.name}"></p>
+						<!-- 画像リストをここに表示 -->
+						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+							<img th:src="${image.path}" alt="Image" class="img-full-width">
+						</div>
+						<h3>-記録日-</h3>
+						<p th:text="${diary.record_date}"></p>
+						<h3>-説明-</h3>
+						<pre class="description" th:text="${diary.description}"></pre>
+						<a class="btn btn-success" th:href="@{'/diarys/edit/' + ${diary.Id}}" role="button">編集する</a>
+						<a class="btn btn-success" th:href="@{'/diarys/delete/' + ${diary.Id}}" role="button">削除する</a>
+						<a class="btn btn-success" th:href="@{/plans/list}" role="button">続けて栽培日誌を登録する</a>
+					<a class="btn btn-success" th:href="@{'/plans/detail/' + ${diary.planId}}" role="button">栽培計画へ移動</a>
+					</div>
+				</main>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

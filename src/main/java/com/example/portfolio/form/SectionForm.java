@@ -16,12 +16,9 @@ public class SectionForm {
 
     private Long id;
 
-    private Long userId;
-
+    @NotEmpty
     private String name;
     
     private String description;
-    
-    private UserForm user;
- 
+
 }

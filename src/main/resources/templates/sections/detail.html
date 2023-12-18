@@ -7,15 +7,18 @@
 
 <body>
 	<div layout:fragment="contents">
+		<div class="container">
+			<div class="row ">
+				<main class="col-md-7 mx-auto frame">
 		<div th:if="${section}">
-			<h1>区画詳細</h1>
-			<label>区画名</label>
-			<span th:text="${section.name}"></span>
-			<label>説明</label>
-			<span th:text="${section.description}"></span>
-		<a class="btn btn-primary" th:href="@{'/sections/edit/' + ${section.id}}" role="button">編集する</a>
-		<a class="btn btn-primary" th:href="@{'/sections/delete/' + ${section.id}}" role="button">削除する</a>
-		<a class="btn btn-primary" th:href="@{/sections/new}" role="button">次の区画を作成する</a>
+			<h1 id="dark_h1" class="text-center">区画詳細</h1>
+			<h3>-区画名-</h3>
+			<p th:text="${section.name}"></p>
+			<h3>-説明-</h3>
+			<pre class="description" th:text="${section.description}"></pre>
+		<a class="btn btn-success" th:href="@{'/sections/edit/' + ${section.id}}" role="button">編集する</a>
+		<a class="btn btn-success" th:href="@{'/sections/delete/' + ${section.id}}" role="button">削除する</a>
+		<a class="btn btn-success" th:href="@{/sections/new}" role="button">続けて区画を登録する</a>
 	</div>
 	</div>
 </body>

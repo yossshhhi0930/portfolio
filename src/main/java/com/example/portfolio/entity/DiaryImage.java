@@ -17,26 +17,23 @@ import com.example.portfolio.entity.AbstractEntity;
 import lombok.Data;
 
 @Entity
-@Table(name = "crop_image")
+@Table(name = "diary_image")
 @Data
-public class CropImage extends AbstractEntity implements Serializable {
+public class DiaryImage extends AbstractEntity implements Serializable {
     private static final long serialVersionUID = 1L; 
 
 	@Id
-    @SequenceGenerator(name = "crop_image_id_seq")
+    @SequenceGenerator(name = "diary_image_id_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
 	@Column(nullable = false)
-	private Long cropId;
+	private Long diaryId;
 	
 	@Column(nullable = false)
 	private String path;
 	
-	@Column(nullable = false)
-	private boolean topImage;
-	
 	@ManyToOne
-    @JoinColumn(name = "cropId", insertable = false, updatable = false)
-    private Crop crop;
+    @JoinColumn(name = "diaryId", insertable = false, updatable = false)
+    private Diary diary;
 }

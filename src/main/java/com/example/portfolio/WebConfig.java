@@ -21,7 +21,6 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addConverter(new MonthDayToStringConverter());
 		registry.addConverter(new LocalDateToStringConverter());
 		registry.addConverter(new LocalDateConverter());
-
 	}
 
 }

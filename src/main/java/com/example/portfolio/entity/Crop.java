@@ -34,35 +34,29 @@ public class Crop extends AbstractEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
+	@Column(nullable = false)
 	private Long userId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 
-	@Column
-	private String manual;
-
-	@Column
+	@Column(nullable = false)
 	private MonthDay sowing_start;
 
-	@Column
+	@Column(nullable = false)
 	private MonthDay sowing_end;
 
-	@Column
-	private MonthDay harvest_start;
-
-	@Column
-	private MonthDay harvest_end;
-
-	@Column
+	@Column(nullable = false)
 	private int cultivationp_period;
+	
+	@Column
+	private String manual;
 
 	@ManyToOne
 	@JoinColumn(name = "userId", insertable = false, updatable = false)
 	private User user;
 
-	@OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "crop", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<CropImage> cropImages;
 
 	@OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)

@@ -1,13 +1,11 @@
 package com.example.portfolio.entity;
 
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,11 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import com.example.portfolio.entity.User;
-import com.example.portfolio.entity.AbstractEntity;
-
 import java.time.LocalDate;
-import java.time.MonthDay;
+import java.util.List;
 
 import lombok.Data;
 
@@ -35,22 +30,22 @@ public class Plan extends AbstractEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
+	@Column(nullable = false)
 	private Long userId;
 
-	@Column
+	@Column(nullable = false)
 	private Long cropId;
-
-	@Column
-	private LocalDate sowing_date;
-
-	@Column
-	private LocalDate harvest_completion_date;
-
-	@Column
+	
+	@Column(nullable = false)
 	private Long sectionId;
 
-	@Column
+	@Column(nullable = false)
+	private LocalDate sowing_date;
+
+	@Column(nullable = false)
+	private LocalDate harvest_completion_date;
+
+	@Column(nullable = false)
 	private boolean completion;
 
 	@ManyToOne
@@ -64,5 +59,8 @@ public class Plan extends AbstractEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "sectionId", insertable = false, updatable = false)
 	private Section section;
+	
+	@OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
+	private List<Diary> diarys;
 
 }

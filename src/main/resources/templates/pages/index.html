@@ -1,17 +1,26 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layouts/layout}">
-  <head>
-    <title>Portfolio</title>
-  </head>
-  <body>
-		<div class="pages-index-wrapper text-center" layout:fragment="contents">
-		<div layout:replace="~{layouts/common::messages}"></div>
-    <h1>野菜を育てよう</h1>
-			<a class="btn btn-primary" th:href="@{/users/new}" role="button">ユーザー登録</a>
-			<a class="btn btn-primary" th:href="@{/login}" role="button">ログイン</a>
-</div>
-  </body>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="pages-index-wrapper text-center" layout:fragment="contents">
+		<div class="container">
+			<h1>野菜を育てよう</h1>
+			<p>さいばい手帖へようこそ。<br> おいしい野菜を育てましょう。</p>
+			<div class="row">
+				<div class="col-sm">
+					<a class="btn btn-success" th:href="@{/users/new}" role="button">ユーザー登録</a>
+				</div>
+				<div class="col-sm">
+					<a class="btn btn-success" th:href="@{/login}" role="button">ログイン</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
 </html>

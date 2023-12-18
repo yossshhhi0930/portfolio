@@ -59,10 +59,10 @@ public class User extends AbstractEntity implements UserDetails, UserInf {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -73,7 +73,7 @@ public class User extends AbstractEntity implements UserDetails, UserInf {
     private Authority authority;
     
     // 認証コード
-    @Column(name = "verification_code", length = 64)
+    @Column
     private String verificationCode;
     
     // 初期値はfalse 認証が成功すると trueになる。
