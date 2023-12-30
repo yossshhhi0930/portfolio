@@ -26,7 +26,7 @@
 									</div>
 								</div>
 							</div>
-							<span th:if="${message}" th:text="${message}"></span>
+							<span th:if="${sarchMessage}" th:text="${sarchMessage}"></span>
 							<button type="submit" class="btn w-40 btn-success">検索</button>
 						</div>
 					</form>
@@ -37,20 +37,19 @@
 					<h1>栽培日誌一覧</h1>
 					<div style="display: flex; flex-wrap: wrap;">
 						<div th:each="diary : ${list}" class="card" style="width: 18rem; margin: 10px;">
-								<div th:if="${#lists.size(diary.diaryImages) > 0}">
-									<div th:each="image, index : ${diary.diaryImages}" th:if="${index.index == 0}">
-										<img th:src="${image.path}" alt="Image" class="card-img-top">
-									</div>
-								</div>
-								<div class="card-body">
-									<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
-									<p class="card-text" th:text="${diary.description}">Some quick example text to build on the card title
-										and make up the bulk of the card's content.</p>
-									<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
+							<div th:if="${#lists.size(diary.diaryImages) > 0}">
+								<div th:each="image, index : ${diary.diaryImages}" th:if="${index.index == 0}">
+									<img th:src="${image.path}" alt="Image" class="card-img-top">
 								</div>
 							</div>
+							<div class="card-body">
+								<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
+								<p class="card-text" th:text="${diary.description}"></p>
+								<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
+							</div>
 						</div>
-						<a class="btn btn-success" th:href="@{/plans/list}" role="button">新しい作物日誌を作成</a>
+					</div>
+					<a class="btn btn-success" th:href="@{/plans/list}" role="button">新しい作物日誌を作成</a>
 				</main>
 			</div>
 		</div>

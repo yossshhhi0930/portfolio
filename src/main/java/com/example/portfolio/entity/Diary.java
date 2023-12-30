@@ -31,6 +31,17 @@ import lombok.Data;
 public class Diary extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public Diary() {
+		super();
+	}
+
+	public Diary(Long userId, Long planId, LocalDate record_date, String description) {
+		this.userId = userId;
+		this.planId = planId;
+		this.record_date = record_date;
+		this.description = description;
+	}
+	
 	@Id
 	@SequenceGenerator(name = "diary_id_seq")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

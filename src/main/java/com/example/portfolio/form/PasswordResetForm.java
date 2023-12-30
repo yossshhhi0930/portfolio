@@ -1,31 +1,30 @@
 package com.example.portfolio.form;
 
-import java.io.Serializable;
-
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
 import com.example.portfolio.validation.constraints.PasswordEquals;
-
 import lombok.Data;
 
 @Data
 @PasswordEquals
-public class PasswordResetForm{
+public class PasswordResetForm {
 
-    private String email;
+	@NotEmpty
+	@Email
+	private String email;
 
-    
-    private String token;
+	@NotEmpty
+	private String token;
 
-    @NotNull
-    private String secret;
+	@NotEmpty
+	private String secret;
 
-    @NotNull
-    @Size(min = 4,max = 20)
-    private String password;
+	@NotEmpty
+	@Size(min = 4, max = 20)
+	private String password;
 
-    @NotNull
-    @Size(min = 4, max = 20)
-    private String passwordConfirmation;
+	@NotEmpty
+	@Size(min = 4, max = 20)
+	private String passwordConfirmation;
 }

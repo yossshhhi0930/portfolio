@@ -7,7 +7,7 @@
 </head>
 
 <body>
-	<div class="users-new-wrapper" layout:fragment="contents">
+	<div layout:fragment="contents">
 		<h1 style="display: flex; align-items: center;"><span th:text="${month}" style="font-size: 50px;"></span>種まき作物</h1>
 		<div th:each="crop : ${list}">
 			<div class="card border-white" style="width: 300px; height: 300px;">

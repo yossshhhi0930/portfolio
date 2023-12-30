@@ -15,7 +15,7 @@
 						<div class="form-group">
 							<label class="form-label" for="keyword">作物名を入力:</label>
 							<input type="text" class="form-control" th:value="${keyword}" id="keyword" name="keyword">
-								<span th:if="${message}" th:text="${message}"></span>
+								<span th:if="${sarchMessage}" th:text="${sarchMessage}"></span>
 							<button type="submit" class="btn w-40 btn-success">検索</button>
 						</div>
 					</form>

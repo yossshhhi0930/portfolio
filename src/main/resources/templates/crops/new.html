@@ -9,18 +9,33 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 	<div class="topics-new-wrapper" layout:fragment="contents">
 		<div class="container">
 			<div class="row">
-				<main class="col-md-5 mx-auto">
+				<main class="col-md-8 mx-auto">
 					<h1 class="text-center">作物登録</h1>
-					<form method="post" th:action="@{/crop}" th:object="${cropform}">
+					<form method="post" th:action="@{/crop}" th:object="${form}" enctype="multipart/form-data">
 						<div layout:replace="~{layouts/common::messages}"></div>
+						<div layout:replace="~{layouts/common::notField-messages}"></div>
 						<input type="hidden" th:field="*{id}" />
+						<div class="mb-3">
+							<div id="margin_for_imagePreview">
+								<label class="form-label" for="cropTopImage">トップ画像の選択 ※1itemまで</label>
+								<input class="form-control-file" type="file" id="cropTopImage" name="topImage">
+							</div>
+							<br>
+							<p th:if="${topImageError}" class="error-message" th:text="${topImageError}"></p>
+							<div id="margin_for_imagePreview">
+								<label class="form-label" for="cropImages">その他画像の選択</label>
+								<input class="form-control-file" type="file" id="cropImages" name="images" multiple>
+							</div>
+						</div>
+						<br>
+						<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
 						<div class="mb-3">
 							<label class="form-label" for="name">作物名</label>
 							<input type="text" class="form-control" id="name" th:field="*{name}" />
 							<p th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></p>
 						</div>
 						<div class="mb-3 row">
-							<label class="form-label" 　for="sowing_period" 　>播種可能期間</label>
+							<label class="form-label" for="sowing_period">播種可能期間　※年を跨いで入力可 ※期間は1年以内で入力可</label>
 							<div class="row">
 								<div class="input-group">
 									<div class="col">
@@ -50,7 +65,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 						</div>
 						<div class="mb-3">
 							<label class="form-label" for="manual">育て方メモ</label>
-							<textarea class="form-control" id="manual" th:field="*{manual}"></textarea>
+							<textarea class="form-control" id="manual" th:field="*{manual}" th:errorclass="error-field"></textarea>
 							<p th:if="${#fields.hasErrors('manual')}" class="error-message" th:errors="*{manual}"></p>
 						</div>
 						<input type="submit" value="登録" class="btn w-100 btn-success" />

@@ -22,10 +22,4 @@ public @interface PasswordEquals {
 
     Class<? extends Payload>[] payload() default {};
 
-    @Target({ ElementType.TYPE })
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
-    public @interface List {
-        PasswordEquals[] value();
-    }
 }

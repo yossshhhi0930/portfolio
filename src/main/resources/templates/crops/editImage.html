@@ -1,0 +1,94 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="topics-new-wrapper" layout:fragment="contents">
+		<div class="container">
+			<div class="row">
+				<main class="col-md-8 mx-auto">
+					<h1 class="text-center">作物編集</h1>
+					<form method="post" th:action="@{/crops/edit-image-complete}" th:object="${form}"
+						enctype="multipart/form-data">
+						<div layout:replace="~{layouts/common::messages}"></div>
+						<div layout:replace="~{layouts/common::notField-messages}"></div>
+						<div class="mb-3">
+							<input type="hidden" th:field="*{id}" />
+							<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+								<div th:if="${image.topImage}">
+									<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
+									<a th:href="@{/crops/delete-image(imageId=${image.id}, cropId=${image.cropId})}">
+										削除する
+									</a>
+								</div>
+							</div>
+							<div class="mb-3">
+								<div id="margin_for_imagePreview">
+									<label class="form-label" for="cropTopImage">トップ画像の選択 ※1itemまで</label>
+									<input type="file" id="cropTopImage" name="topImage">
+								</div>
+								<br>
+								<p th:if="${topImageError}" class="error-message" th:text="${topImageError}"></p>
+							</div>
+							<div style="display: flex; flex-wrap: wrap;">
+								<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+									<div th:if="${!image.topImage}">
+										<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
+										<a th:href="@{/crops/delete-image(imageId=${image.id}, cropId=${image.cropId})}">
+											削除する
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="mb-3">
+								<div id="margin_for_imagePreview">
+									<label class="form-label" for="cropImages">その他画像の選択</label>
+									<input type="file" id="cropImages" name="images" multiple>
+									<br>
+									<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
+								</div>
+							</div>
+							<input type="submit" value="▼ 以下編集 ▼" class="btn w-100 btn-success" />
+							<div class="mb-3">
+								<label label class="form-label" for="name">作物名</label>
+								<input type="text" class="form-control" id="name" th:field="*{name}" disabled />
+							</div>
+							<div class="mb-3">
+								<label class="form-label" for="sowing_period">播種可能期間</label>
+								<div class="row">
+									<div class="input-group">
+										<div class="col">
+											<input type="text" class="form-control" id="sowing_period" th:field="*{sowing_start}"
+												placeholder="MM-dd" disabled />
+										</div>
+										<span class="mx-2">～</span>
+										<div class="col">
+											<input type="text" class="form-control" id="sowing_period" th:field="*{sowing_end}"
+												placeholder="MM-dd" disabled />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="mb-3">
+								<label class="form-label" for="cultivationp_period">栽培日数</label>
+								<div class="input-group">
+									<input type="number" class="form-control" id="cultivationp_period" th:field="*{cultivationp_period}"
+										disabled />
+									<span>日</span>
+								</div>
+							</div>
+							<div class="mb-3">
+								<label class="form-label" for="manual">育て方メモ</label>
+								<textarea class="form-control" id="manual" th:field="*{manual}" disabled></textarea>
+							</div>
+					</form>
+				</main>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

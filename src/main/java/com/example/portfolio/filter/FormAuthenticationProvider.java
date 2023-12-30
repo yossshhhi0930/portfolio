@@ -3,6 +3,7 @@ package com.example.portfolio.filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -18,42 +19,48 @@ import com.example.portfolio.repository.UserRepository;
 @Configuration
 public class FormAuthenticationProvider implements AuthenticationProvider {
 
-    protected static Logger log = LoggerFactory.getLogger(FormAuthenticationProvider.class);
+	protected static Logger log = LoggerFactory.getLogger(FormAuthenticationProvider.class);
 
-    @Autowired
-    private UserRepository repository;
+	@Autowired
+	private UserRepository repository;
 
-    @Autowired
-    @Lazy
-    private PasswordEncoder passwordEncoder;
+	@Autowired
+	@Lazy
+	private PasswordEncoder passwordEncoder;
 
-    @Override
-    public Authentication authenticate(Authentication auth) throws AuthenticationException {
-        String name = auth.getName();
-        String password = auth.getCredentials().toString();
+	@Value("${security.tokenValidityThreshold}")
+	int tokenValidityThreshold;
 
-        log.debug("name={}", name);
-        log.debug("password={}", password);
+	@Override
+	public Authentication authenticate(Authentication auth) throws AuthenticationException {
+		String name = auth.getName();
+		String password = auth.getCredentials().toString();
 
-        if ("".equals(name) || "".equals(password)) {
-            throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
-        }
+		log.debug("name={}", name);
+		log.debug("password={}", password);
 
-        User entity = repository.findByUsername(name);
-        if (entity == null) {
-            throw new AuthenticationCredentialsNotFoundException("ログイン情報が存在しません。");
-        }
+		if ("".equals(name) || "".equals(password)) {
+			throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
+		}
 
-        // 追加 入力されたパスワードとデータベースのパスワードを比較
-        if (!passwordEncoder.matches(password, entity.getPassword())) {
-            throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
-        }
+		User entity = repository.findByUsername(name);
+		if (entity == null) {
+			throw new AuthenticationCredentialsNotFoundException("ログイン情報が存在しません。");
+		}
 
-        return new UsernamePasswordAuthenticationToken(entity, password, entity.getAuthorities());
-    }
+		if (!passwordEncoder.matches(password, entity.getPassword())) {
+			throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
+		}
 
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-    }
+		if (!entity.isEnabled()) {
+			throw new AuthenticationCredentialsNotFoundException("このユーザーは有効ではありません。");
+		}
+
+		return new UsernamePasswordAuthenticationToken(entity, password, entity.getAuthorities());
+	}
+
+	@Override
+	public boolean supports(Class<?> authentication) {
+		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+	}
 }

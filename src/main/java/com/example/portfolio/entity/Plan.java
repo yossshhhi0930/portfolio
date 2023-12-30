@@ -1,8 +1,6 @@
 package com.example.portfolio.entity;
 
 import java.io.Serializable;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +14,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
-
 import lombok.Data;
 
 @Entity
@@ -24,6 +21,20 @@ import lombok.Data;
 @Data
 public class Plan extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public Plan() {
+		super();
+	}
+
+	public Plan(Long userId, Long cropId, Long sectionId, LocalDate sowing_date, LocalDate harvest_completion_date,
+			boolean completion) {
+		this.userId = userId;
+		this.cropId = cropId;
+		this.sectionId = sectionId;
+		this.sowing_date = sowing_date;
+		this.harvest_completion_date = harvest_completion_date;
+		this.completion = completion;
+	}
 
 	@Id
 	@SequenceGenerator(name = "plan_id_seq")
@@ -35,7 +46,7 @@ public class Plan extends AbstractEntity implements Serializable {
 
 	@Column(nullable = false)
 	private Long cropId;
-	
+
 	@Column(nullable = false)
 	private Long sectionId;
 
@@ -55,11 +66,11 @@ public class Plan extends AbstractEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "cropId", insertable = false, updatable = false)
 	private Crop crop;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "sectionId", insertable = false, updatable = false)
 	private Section section;
-	
+
 	@OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
 	private List<Diary> diarys;
 

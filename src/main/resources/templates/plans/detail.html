@@ -11,22 +11,22 @@
 			<div class="row ">
 				<main class="col-md-8 mx-auto frame">
 					<div th:if="${plan}">
-						<h1 id="dark_h1" class="text-center">栽培計画詳細</h1>
-						<h3>-- 作物名 --</h3>
+						<h1 id="dark_h" class="text-center">栽培計画詳細</h1>
+						<h3>-作物名-</h3>
 						<p th:text="${plan.crop.name}"></p>
-						<h3>-- 播種日 --</h3>
+						<h3>-播種日-</h3>
 						<p th:text="${plan.sowing_date}"></p>
-						<h3>-- 収穫完了予定日 --</h3>
+						<h3>-収穫完了予定日-</h3>
 						<p th:text="${plan.harvest_completion_date}"></p>
-						<h3>-- 栽培区画 --</h3>
+						<h3>-栽培区画-</h3>
 						<p th:text="${plan.section.name}"></p>
-						<h3>-- 栽培ステイタス --</h3>
+						<h3>-栽培ステイタス-</h3>
 						<p th:text="${plan.completion ? '終了' : '計画中'}"></p>
 						<a class="btn btn-success" th:href="@{'/plans/edit/' + ${plan.Id}}" role="button">編集する</a>
 						<a class="btn btn-success" th:href="@{'/plans/delete/' + ${plan.Id}}" role="button">削除する</a>
 						<a class="btn btn-success" th:href="@{/plans/new}" role="button">続けて作物計画を登録する</a>
 					</div>
-					<h3 id="dark_h1">--　栽培日誌一覧　--</h1>
+					<h3 id="dark_h">-栽培日誌一覧-</h1>
 					<div style="display: flex; flex-wrap: wrap;">
 						<div th:each="diary : ${list}" class="card" style="width: 18rem; margin: 10px;">
 							<div th:if="${#lists.size(diary.diaryImages) > 0}">
@@ -36,8 +36,7 @@
 							</div>
 							<div class="card-body">
 								<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
-								<p class="card-text" th:text="${diary.description}">Some quick example text to build on the card title
-									and make up the bulk of the card's content.</p>
+								<p class="card-text" th:text="${diary.description}"></p>
 								<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
 							</div>
 						</div>

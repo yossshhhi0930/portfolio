@@ -2,6 +2,7 @@ package com.example.portfolio.entity;
 
 import java.io.Serializable;
 import java.nio.file.Path;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,20 +21,29 @@ import lombok.Data;
 @Table(name = "diary_image")
 @Data
 public class DiaryImage extends AbstractEntity implements Serializable {
-    private static final long serialVersionUID = 1L; 
+	private static final long serialVersionUID = 1L;
+
+	public DiaryImage() {
+		super();
+	}
+
+	public DiaryImage(Long diaryId, String path) {
+		this.diaryId = diaryId;
+		this.path = path;
+	}
 
 	@Id
-    @SequenceGenerator(name = "diary_image_id_seq")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-	
+	@SequenceGenerator(name = "diary_image_id_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	@Column(nullable = false)
 	private Long diaryId;
-	
+
 	@Column(nullable = false)
 	private String path;
-	
+
 	@ManyToOne
-    @JoinColumn(name = "diaryId", insertable = false, updatable = false)
-    private Diary diary;
+	@JoinColumn(name = "diaryId", insertable = false, updatable = false)
+	private Diary diary;
 }

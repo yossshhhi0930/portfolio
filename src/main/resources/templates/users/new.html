@@ -15,7 +15,7 @@
 					<form method="post" th:action="@{/user}" th:object="${form}">
 						<div layout:replace="~{layouts/common::messages}"></div>
 						<div class="mb-3">
-							<label class="form-label" for="name">氏名</label>
+							<label class="form-label" for="name">ユーザー名</label>
 							<input type="text" class="form-control" id="name" th:field="*{name}" />
 							<p th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></p>
 						</div>
