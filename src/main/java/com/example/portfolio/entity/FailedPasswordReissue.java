@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "failedPassword")
+@Table(name = "failed_password")
 @Data
 public class FailedPasswordReissue extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

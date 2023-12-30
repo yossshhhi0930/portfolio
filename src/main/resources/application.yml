@@ -4,14 +4,10 @@ spring:
       filter:
         enabled: true
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:portfolio
-    username: sa
-    password: 
-
-  h2:
-    console:
-      enabled: true
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/portfolio
+    username: ${psql.user}
+    password: ${psql.password}
   mail:
     default-encoding: UTF-8
     protocol: smtp
@@ -31,5 +27,4 @@ security:
   tokenValidityThreshold: 3
   tokenLifeTimeSeconds: 60
   uploadDirectory: "uploads"
-
             
