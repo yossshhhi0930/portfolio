@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "passwordReissue")
+@Table(name = "password_reissue")
 @Data
 public class PasswordReissueInfo extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class PasswordReissueInfo extends AbstractEntity implements Serializable 
 	@Id
 	@SequenceGenerator(name = "passwordReissue_id_seq")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Id;
+	private Long id;
 
 	@Column(nullable = false)
 	private String username;

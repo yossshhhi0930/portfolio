@@ -59,6 +59,7 @@ public class User extends AbstractEntity implements UserDetails, UserInf {
 	private Authority authority;
 
 	// ユーザー本登録用URLに含めるために生成される文字列（トークン）
+	@Column
 	private String token;
 
 	// 初期値はfalse 認証が成功すると trueになる。
