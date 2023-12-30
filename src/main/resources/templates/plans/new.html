@@ -18,13 +18,13 @@
 							<div class="col-7">
 								<label class="form-label" for="cropName">作物名</label>
 								<input type="text" id="cropName" class="form-control" th:field="*{cropName}">
-								<ul class="list-group" style="height: 200px; overflow-y: scroll;" id="cropList"
-									th:each="crop : ${searchCrops}">
-									<li class="list-group-item" th:text="${crop.name}" th:attr="data-cropname=${crop.name}"
-										onclick="setCropName(this)" style="font-size: 16px;">
-										<span class="badge bg-primary rounded-pill float-end" data-bs-toggle="tooltip"></span>
-									</li>
-								</ul>
+								<div id="cropList" th:if="${not #lists.isEmpty(searchCrops)}" style="overflow-y: scroll; height: 200px; background-color: rgba(255, 255, 255, 0.8);">
+									<ul class="list-group" th:each="crop : ${searchCrops}">
+										<li class="list-group-item" th:text="${crop.name}" th:attr="data-cropname=${crop.name}"
+											onclick="setCropName(this)" style="font-size: 16px;">
+										</li>
+									</ul>
+								</div>
 							</div>
 							<div class="col-5">
 								<button type="submit" name="cmd" value="search" class="btn btn-blue"

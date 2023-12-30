@@ -11,21 +11,83 @@
 		<div layout:replace="~{layouts/common::messages}"></div>
 		<div class="container">
 			<div class="row">
-				<main class="col-md-5 mx-auto">
-					<h1 class="text-center">マイページ</h1>
-					<p >新しく栽培計画を立てましょう！</p>
-					<a class="btn btn-success" th:href="@{/crops(month='JANUARY')}" role="button">１月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='FEBRUARY')}" role="button">２月</a>
-					<a class="btn btn-success" th:href="@{/crops(month=MARCH)}" role="button">３月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='APRIL')}" role="button">４月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='MAY')}" role="button">５月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='JUNE')}" role="button">６月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='JULY')}" role="button">７月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='AUGUST')}" role="button">８月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='SEPTEMBER')}" role="button">９月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='OCTOBER')}" role="button">１０月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='NOVEMBER')}" role="button">１１月</a>
-					<a class="btn btn-success" th:href="@{/crops(month='DECEMBER')}" role="button">１２月</a>
+				<h1 class="text-center">マイページ</h1>
+				<main class="col-md-12 mx-auto">
+					<div class="frame" id="frame">
+						<h2 id="dark_h" class="text-center">新しく栽培計画を立てる</h2>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='JANUARY')}" role="button">1月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='FEBRUARY')}" role="button">２月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month=MARCH)}" role="button">３月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='APRIL')}" role="button">４月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='MAY')}" role="button">５月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='JUNE')}" role="button">６月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='JULY')}" role="button">７月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='AUGUST')}" role="button">８月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='SEPTEMBER')}" role="button">９月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='OCTOBER')}" role="button">１０月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='NOVEMBER')}" role="button">１１月</a>
+						<a class="btn btn-success scalable-element" th:href="@{/crops(month='DECEMBER')}" role="button">１２月</a>
+					</div>
+					<div class="frame" id="frame">
+						<h2 id="dark_h" class="text-center">最近の栽培日誌投稿</h2>
+						<div style="display: flex; flex-wrap: wrap;">
+							<div th:each="diary, index : ${DiaryList}" th:if="${index.index <=5}" class="card"
+								style="width: 18rem; margin: 10px;">
+								<div th:if="${#lists.size(diary.diaryImages) > 0}">
+									<div th:each="image, index : ${diary.diaryImages}" th:if="${index.index == 0}">
+										<img th:src="${image.path}" alt="Image" class="card-img-top">
+									</div>
+								</div>
+								<div class="card-body">
+									<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
+									<p class="card-text" th:text="${diary.description}"></p>
+									<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="frame" id="frame">
+						<h2 id="dark_h" class="text-center">現在栽培中の作物</h2>
+						<div style="display: flex; flex-wrap: wrap;">
+							<div th:if="${doingList}" th:each="plan : ${doingList}" class="card" style="width: 18rem; margin: 40px;">
+								<div th:if="${plan != null and plan.crop != null and #lists.size(plan.crop.cropImages) >0 }">
+									<img th:each="image : ${plan.crop.cropImages}" th:if="${image.topImage}" th:src="${image.path}"
+										alt="Image" class="card-img-top">
+								</div>
+								<div class="card-body">
+									<h5 class="card-title" th:text="${plan.crop.name}">Card title</h5>
+									<div style="display: flex; align-items: center;">
+										<p class="card-text" th:text="${plan.sowing_date}"></p>
+										<p class="card-text">　～　</p>
+										<p class="card-text" th:text="${plan.harvest_completion_date}"></p>
+									</div>
+									<a class="btn btn-primary" th:href="@{'/plans/detail/' + ${plan.id}}">詳細</a>
+								</div>
+							</div>
+						</div>
+						<br>
+						<div class="bordered-div">
+						</div>
+						<br>
+						<h2 id="dark_h" class="text-center">栽培予定の作物</h2>
+						<div style="display: flex; flex-wrap: wrap;">
+							<div th:if="${toDoList}" th:each="plan : ${toDoList}" class="card" style="width: 18rem; margin: 40px;">
+								<div th:if="${plan != null and plan.crop != null and #lists.size(plan.crop.cropImages) >0}">
+									<img th:each="image : ${plan.crop.cropImages}" th:if="${image.topImage}" th:src="${image.path}"
+										alt="Image" class="card-img-top">
+								</div>
+								<div class="card-body">
+									<h5 class="card-title" th:text="${plan.crop.name}">Card title</h5>
+									<div style="display: flex; align-items: center;">
+										<p class="card-text" th:text="${plan.sowing_date}"></p>
+										<p class="card-text">　～　</p>
+										<p class="card-text" th:text="${plan.harvest_completion_date}"></p>
+									</div>
+									<a class="btn btn-primary" th:href="@{'/plans/detail/' + ${plan.id}}">詳細</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</main>
 			</div>
 		</div>

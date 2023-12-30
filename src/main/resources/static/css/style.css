@@ -1,7 +1,9 @@
 body {
 	font-family: "Hannari";
 	background-color: burlywood;
+
 }
+
 h1,
 h2,
 h3,
@@ -94,6 +96,12 @@ label {
 	background-color: rgba(255, 192, 203, 0.8);
 }
 
+#error-topMessage {
+	color: red;
+	font-size: 20px;
+	background-color: rgba(255, 192, 203, 0.8);
+}
+
 a {
 	font-size: 25px;
 }
@@ -117,14 +125,14 @@ span {
 	/* フレーム内の余白 */
 }
 
-#dark_h1 {
+#dark_h {
 	color: rgb(101, 67, 33);
 }
 
 
 .card {
-	transition: opacity 0.3s ease-in-out;
-	background-color: seagreen;
+	transition: transform 0.3s ease;
+	background-color: white;
 }
 
 .card:hover {
@@ -154,7 +162,7 @@ span {
 	/* ホバー時のテキスト色 */
 }
 
-.description{
+.description {
 	font-size: 25px;
 	margin-bottom: 25px;
 	margin-top: 25px;
@@ -163,90 +171,142 @@ span {
 }
 
 .filepond--item {
-    width: calc(50% - 0.5em);
+	width: calc(50% - 0.5em);
 }
 
 .filepond--file-action-button {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 /* the text color of the drop label*/
 .filepond--drop-label {
-    color: #555;
+	color: #555;
 }
 
 /* underline color for "Browse" button */
 .filepond--label-action {
-    text-decoration-color: #aaa;
+	text-decoration-color: #aaa;
 }
 
 /* the background color of the filepond drop area */
 .filepond--panel-root {
-    background-color: #eee;
+	background-color: #eee;
 	padding: 250px 30px;
 }
 
 /* the border radius of the drop area */
 .filepond--panel-root {
-    border-radius: 0.5em;
+	border-radius: 0.5em;
 }
 
 /* the border radius of the file item */
 .filepond--item-panel {
-    border-radius: 0.5em;
+	border-radius: 0.5em;
 
 }
 
 /* the background color of the file and file panel (used when dropping an image) */
 .filepond--item-panel {
-    background-color: #555;
+	background-color: #555;
 }
 
 /* the background color of the drop circle */
 .filepond--drip-blob {
-    background-color: #999;
+	background-color: #999;
 }
 
 /* the background color of the black action buttons */
 .filepond--file-action-button {
-    background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* the icon color of the black action buttons */
 .filepond--file-action-button {
-    color: white;
+	color: white;
 }
 
 /* the color of the focus ring */
 .filepond--file-action-button:hover,
 .filepond--file-action-button:focus {
-    box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.9);
+	box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.9);
 }
 
 /* the text color of the file status and info labels */
 .filepond--file {
-    color: white;
+	color: white;
 }
 
 /* error state color */
 [data-filepond-item-state*='error'] .filepond--item-panel,
 [data-filepond-item-state*='invalid'] .filepond--item-panel {
-    background-color: red;
+	background-color: red;
 }
 
 [data-filepond-item-state='processing-complete'] .filepond--item-panel {
-    background-color: green;
+	background-color: green;
 }
 
 /* bordered drop area */
 .filepond--panel-root {
-    background-color: transparent;
-    border: 2px solid #2c3340;
+	background-color: transparent;
+	border: 2px solid #2c3340;
 }
-#margin_for_imagePreview{
+
+#margin_for_imagePreview {
 	height: 40vh;
 	margin-bottom: 80px;
 }
+
+#frame {
+	background-image: url('/images/87508.png');
+	background-color: white;
+	transition: transform 0.3s ease;
+	margin: 30px;
+	margin-left: 30px;
+	margin-right: 30px;
+}
+
+#frame:hover {
+	transform: scale(1.1);
+}
+
+.bordered-div {
+	border-top: 1px solid #333;
+	/* 1ピクセルの実線ボーダー、色は#333（灰色） */
+	margin: 10px 0;
+	/* 上下に10pxのマージン（隙間） */
+	padding: 0.2px;
+	/* 内部に10pxのパディング */
+	background-color: rgb(101, 67, 33);
+}
+
+.scalable-element {
+	transition: transform 0.3s ease;
+	/* スケールの変化にトランジションを追加 */
+}
+
+.scalable-element:hover {
+	transform: scale(1.1);
+	/* ホバー時のスケール変化 */
+}
+
+.faded-element {
+	transition: opacity 0.3s ease;
+	/* 透明度の変化にトランジションを追加 */
+}
+
+.faded-element:hover {
+	opacity: 0.7;
+	/* ホバー時の透明度 */
+}
+.description {
+      padding: 10px 20px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      background-color: white;
+      border: none;
+    }
 
 /*
 h1, h2, h3, h4, h5, h6 {

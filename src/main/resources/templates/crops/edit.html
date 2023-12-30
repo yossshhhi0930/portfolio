@@ -9,10 +9,24 @@
 	<div class="topics-new-wrapper" layout:fragment="contents">
 		<div class="container">
 			<div class="row">
-				<main class="col-md-5 mx-auto">
+				<main class="col-md-8 mx-auto">
 					<h1 class="text-center">作物編集</h1>
 					<form method="post" th:action="@{/crops/edit-complete}" th:object="${form}">
+						<label>トップ画像</label>
 						<div layout:replace="~{layouts/common::messages}"></div>
+						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+							<div th:if="${image.topImage}">
+								<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
+							</div>
+						</div>
+						<label>その他画像</label>
+						<div style="display: flex; flex-wrap: wrap;">
+							<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+								<div th:if="${!image.topImage}">
+									<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px; margin-right: 10px;">
+								</div>
+							</div>
+						</div>
 						<input type="hidden" th:field="*{id}" />
 						<div class="mb-3">
 							<label label class="form-label" for="name">作物名</label>

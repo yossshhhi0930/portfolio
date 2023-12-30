@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     driver-class-name: org.h2.Driver
@@ -21,5 +22,12 @@ spring:
           auth: true
           starttls:
             enable: true
-  topImage: false
 debug: true
+
+app:
+  base-url: http://localhost:8080
+security:
+  tokenValidityThreshold: 3
+  tokenLifeTimeSeconds: 60
+  uploadDirectory: "uploads"
+

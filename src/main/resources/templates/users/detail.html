@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div layout:fragment="contents">
+		<div class="container">
+			<div class="row ">
+				<main class="col-md-7 mx-auto frame">
+					<div th:if="${user}">
+						<h1 id="dark_h" class="text-center">ユーザー詳細</h1>
+						<h3>-ユーザー名-</h3>
+						<p th:text="${user.name}"></p>
+						<h3>-メールアドレス-</h3>
+						<p th:text="${user.username}"></p>
+						<h3>-パスワード-</h3>
+						<p>-----------</p>
+						<a class="btn btn-success" th:href="@{/users/edit}" role="button">編集する</a>
+						<a class="btn btn-success" th:href="@{/users/delete}" role="button">削除する</a>
+					</div>
+				</main>
+			</div>
+		</div>
+
+		<body>
+
+</html>

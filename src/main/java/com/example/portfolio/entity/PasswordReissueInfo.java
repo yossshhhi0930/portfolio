@@ -10,33 +10,43 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.example.portfolio.entity.User.Authority;
-
 import lombok.Data;
 
 @Entity
-@Table(name = "passwordReissueInfo")
+@Table(name = "passwordReissue")
 @Data
 public class PasswordReissueInfo extends AbstractEntity implements Serializable {
-    private static final long serialVersionUID = 1L; 
+	private static final long serialVersionUID = 1L;
 
-	
+	public PasswordReissueInfo() {
+		super();
+	}
+
+	public PasswordReissueInfo(String username, String token, String secret, LocalDateTime expiryDate) {
+		this.username = username;
+		this.token = token;
+		this.secret = secret;
+		this.expiryDate = expiryDate;
+	}
+
 	@Id
-    @SequenceGenerator(name = "users_id_seq")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "passwordReissue_id_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
-	
-	//パスワード再発行対象のユーザ名
+
 	@Column(nullable = false)
-	private String username; // (1)
+	private String username;
 
-    //パスワード再発行用URLに含めるために生成される文字列（トークン）
-    private String token; // (2)
+	// パスワード再発行用URLに含めるために生成される文字列（トークン）
+	@Column(nullable = false)
+	private String token;
 
-    //パスワード再発行時にユーザを確認するための文字列（秘密情報）
-    private String secret; // (3)
+	// パスワード再発行時にユーザを確認するための文字列（秘密情報）
+	@Column(nullable = false)
+	private String secret;
 
-    //パスワード再発行のための認証情報の有効期限
-    private LocalDateTime expiryDate; // (4)
+	// パスワード再発行のための認証情報の有効期限
+	@Column(nullable = false)
+	private LocalDateTime expiryDate;
 
 }

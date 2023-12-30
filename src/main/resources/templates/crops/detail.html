@@ -9,15 +9,23 @@
 	<div layout:fragment="contents">
 		<div class="container">
 			<div class="row ">
-				<main class="col-md-7 mx-auto frame">
+				<main class="col-md-8 mx-auto frame">
 					<div th:if="${crop}">
-						<h1 id="dark_h1" class="text-center">作物詳細</h1>
+						<h1 id="dark_h" class="text-center">作物詳細</h1>
 						<h3>-作物名-</h3>
 						<p th:text="${crop.name}"></p>
-						<!-- 画像がアップロードされたらトップ画像をここに表示 -->
 						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
 							<div th:if="${image.topImage}">
-								<img th:src="${image.path}" alt="Image" class="img-full-width">
+								<img th:src="${image.path}" alt="Image" class="img-full-width" style="margin-bottom: 30px;">
+							</div>
+						</div>
+						<div style="display: flex; flex-wrap: wrap;">
+							<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
+								<div class="d-inline-block">
+									<div th:if="${!image.topImage}">
+										<img th:src="${image.path}" alt="Image" style="width: 250px; height: 250px; margin-right: 10px;">
+									</div>
+								</div>
 							</div>
 						</div>
 						<br><br><br>
@@ -34,16 +42,7 @@
 						</div>
 						<h3>-育て方メモ-</h3>
 						<pre class="description" th:text="${crop.manual}"></pre>
-						<h3>-画像-</h3>
-						<!-- 画像がアップロードされたらトップ画像以外の画像をここに表示 -->
-						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
-							<div class="d-inline-block">
-								<div th:if="${!image.topImage}">
-									<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
-								</div>
-							</div>
-						</div>
-						<a class="btn btn-success" th:href="@{'/crops/edit/' + ${crop.Id}}" role="button">編集する</a>
+						<a class="btn btn-success" th:href="@{'/crops/edit-image/' + ${crop.Id}}" role="button">編集する</a>
 						<a class="btn btn-success" th:href="@{'/crops/delete/' + ${crop.Id}}" role="button">削除する</a>
 						<a class="btn btn-success" th:href="@{/plans/new/(cropId=${crop.Id})}" role="button">この作物で作物計画を作成する</a>
 					</div>

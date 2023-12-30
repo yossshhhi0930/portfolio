@@ -1,17 +1,7 @@
 package com.example.portfolio.form;
 
 import java.time.LocalDate;
-import java.time.MonthDay;
-import java.util.Date;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.example.portfolio.entity.User.Authority;
-import com.example.portfolio.form.UserForm;
-
 import lombok.Data;
 
 @Data
@@ -21,8 +11,8 @@ public class PlanForm {
 		super();
 	}
 
-	public PlanForm(Long id, String cropName, String sectionName, LocalDate sowing_date, LocalDate harvest_completion_date,
-			boolean completion) {
+	public PlanForm(Long id, String cropName, String sectionName, LocalDate sowing_date,
+			LocalDate harvest_completion_date, boolean completion) {
 		this.id = id;
 		this.cropName = cropName;
 		this.sectionName = sectionName;

@@ -1,17 +1,22 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layouts/layout}">
-  <head>
-    <title>Portfolio</title>
-  </head>
-  <body>
-		<div class="users-new-wrapper" layout:fragment="contents">
-		<div layout:replace="~{layouts/common::messages}"></div>
-  <h1> </h1>
-  <p1
->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Portfolio</title>
+</head>
+
+<body>
+	<div class="users-new-wrapper" layout:fragment="contents">
+		<div class="container">
+			<div class="row ">
+				<main class="col-md-7 mx-auto frame">
+					<div layout:replace="~{layouts/common::messages}"></div>
+					<p th:text="${uniqueMessage}"></p>
+			</div>
+			</main>
 		</div>
-  </body>
+	</div>
+</body>
+
 </html>

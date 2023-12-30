@@ -1,10 +1,7 @@
 package com.example.portfolio.entity;
 
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,10 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import com.example.portfolio.entity.User;
-import com.example.portfolio.entity.AbstractEntity;
 import java.time.MonthDay;
-
 import lombok.Data;
 
 @Entity
@@ -28,6 +22,20 @@ import lombok.Data;
 @Data
 public class Crop extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public Crop() {
+		super();
+	}
+
+	public Crop(Long userId, String name, MonthDay sowing_start, MonthDay sowing_end, int cultivationp_period,
+			String manual) {
+		this.userId = userId;
+		this.name = name;
+		this.sowing_start = sowing_start;
+		this.sowing_end = sowing_end;
+		this.cultivationp_period = cultivationp_period;
+		this.manual = manual;
+	}
 
 	@Id
 	@SequenceGenerator(name = "crop_id_seq")
@@ -37,7 +45,7 @@ public class Crop extends AbstractEntity implements Serializable {
 	@Column(nullable = false)
 	private Long userId;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String name;
 
 	@Column(nullable = false)
@@ -48,7 +56,7 @@ public class Crop extends AbstractEntity implements Serializable {
 
 	@Column(nullable = false)
 	private int cultivationp_period;
-	
+
 	@Column
 	private String manual;
 
@@ -61,5 +69,5 @@ public class Crop extends AbstractEntity implements Serializable {
 
 	@OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)
 	private List<Plan> plans;
-	
+
 }

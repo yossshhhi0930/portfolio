@@ -1,11 +1,8 @@
 package com.example.portfolio.form;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
 import com.example.portfolio.validation.constraints.PasswordEquals;
-
 import lombok.Data;
 
 @Data
@@ -13,7 +10,7 @@ import lombok.Data;
 public class UserForm {
 
 	@NotEmpty
-    @Size(max = 100)
+    @Size(min = 1, max = 20)
     private String name;
     
 	@NotEmpty

@@ -1,31 +1,36 @@
 package com.example.portfolio.repository;
-import java.util.List;
-import java.util.Optional;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.example.portfolio.entity.Crop;
 import com.example.portfolio.entity.Plan;
 
 @Repository
 public interface PlanRepository extends JpaRepository<Plan, Long> {
-	//Iterable<Crop>findAllByUserIdOrderByUpdatedAtDesc(Long userId);
-	//Crop findByCropId(String cropId);
-	//Optional<Crop> findById(Long Id);
-	//List<Crop>findByNameContaining(String keyword);
-	//void saveAndFlush(Optional<Crop> entity);
-	List<Plan>findAllByUserIdOrderByUpdatedAtDesc(Long userId);
-	List<Plan>findAllBySectionIdOrderByUpdatedAtDesc(Long sectionId);
-	List<Plan>findAllByUserIdAndCompletionTrueOrderByUpdatedAtDesc(Long userId);
-	List<Plan>findAllByUserIdAndCompletionFalseOrderByUpdatedAtDesc(Long userId);
-	List<Plan>findAllByUserIdAndCropNameContainingOrderByUpdatedAtDesc(Long userId, String keyword);
-	List<Plan>findAllByUserIdAndCompletionTrueAndCropNameContainingOrderByUpdatedAtDesc(Long userId, String keyword);
-	List<Plan>findAllByUserIdAndCompletionFalseAndCropNameContainingOrderByUpdatedAtDesc(Long userId, String keyword);
-	List<Plan>findAllByUserIdAndCompletionFalseAndSectionNameOrderByUpdatedAtDesc(Long userId, String sectionName);
-	List<Plan>findAllByUserIdAndCompletionTrueAndSectionNameOrderByUpdatedAtDesc(Long userId, String sectionName);
-	List<Plan>findAllByUserIdAndSectionNameOrderByUpdatedAtDesc(Long userId, String sectionName);
-	List<Plan>findAllByUserIdAndCropNameContainingAndSectionNameOrderByUpdatedAtDesc(Long userId, String keyword , String sectionName);
-	List<Plan>findAllByUserIdAndCompletionTrueAndCropNameContainingAndSectionNameOrderByUpdatedAtDesc(Long userId, String keyword , String sectionName);
-	List<Plan>findAllByUserIdAndCompletionFalseAndCropNameContainingAndSectionNameOrderByUpdatedAtDesc(Long userId, String keyword , String sectionName);
+	List<Plan> findAllByUserIdAndCompletionFalseOrderByUpdatedAtAsc(Long userId);
+
+	List<Plan> findAllByUserIdAndCompletionTrueOrderByUpdatedAtAsc(Long userId);
+
+	List<Plan> findAllByUserIdOrderByUpdatedAtAsc(Long userId);
+
+	List<Plan> findAllByUserIdAndCompletionFalseAndCropNameContainingOrderByUpdatedAtAsc(Long userId, String keyword);
+
+	List<Plan> findAllByUserIdAndCompletionTrueAndCropNameContainingOrderByUpdatedAtAsc(Long userId, String keyword);
+
+	List<Plan> findAllByUserIdAndCropNameContainingOrderByUpdatedAtAsc(Long userId, String keyword);
+
+	List<Plan> findAllByUserIdAndCompletionFalseAndSectionNameOrderByUpdatedAtAsc(Long userId, String sectionName);
+
+	List<Plan> findAllByUserIdAndCompletionTrueAndSectionNameOrderByUpdatedAtAsc(Long userId, String sectionName);
+
+	List<Plan> findAllByUserIdAndSectionNameOrderByUpdatedAtAsc(Long userId, String sectionName);
+
+	List<Plan> findAllByUserIdAndCompletionFalseAndCropNameContainingAndSectionNameOrderByUpdatedAtAsc(Long userId,
+			String keyword, String sectionName);
+
+	List<Plan> findAllByUserIdAndCompletionTrueAndCropNameContainingAndSectionNameOrderByUpdatedAtAsc(Long userId,
+			String keyword, String sectionName);
+
+	List<Plan> findAllByUserIdAndCropNameContainingAndSectionNameOrderByUpdatedAtAsc(Long userId, String keyword,
+			String sectionName);
 }

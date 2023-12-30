@@ -44,10 +44,37 @@
 		}
 
 		FilePond.registerPlugin(FilePondPluginImagePreview);
-		const inputElement = document.querySelector('input[type="file"]');
+		const inputElement_daiary = document.querySelector('input[id="images"]');
 
 		// 第二引数のオプションを追加
-		var pond = FilePond.create(inputElement, {
+		var pond = FilePond.create(inputElement_daiary, {
+			acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+			storeAsFile: true,
+			allowMultiple: true,
+			maxFiles: 10, // 最大アップロードファイル数
+			allowImagePreview: true,
+			imagePreviewHeight: 200,
+		});
+
+		FilePond.registerPlugin(FilePondPluginImagePreview);
+		const inputElement_cropTop = document.querySelector('input[id="cropTopImage"]');
+
+		// 第二引数のオプションを追加
+		var pond = FilePond.create(inputElement_cropTop, {
+			acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+			storeAsFile: true,
+			allowMultiple: true,
+			maxFiles: 1, // 最大アップロードファイル数
+			allowImagePreview: true,
+			imagePreviewHeight: 200,
+		});
+
+		FilePond.registerPlugin(FilePondPluginImagePreview);
+		const inputElement_crop = document.querySelector('input[id="cropImages"]');
+
+		// 第二引数のオプションを追加
+		var pond = FilePond.create(inputElement_crop, {
+			acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
 			storeAsFile: true,
 			allowMultiple: true,
 			maxFiles: 10, // 最大アップロードファイル数
@@ -56,6 +83,7 @@
 		});
 
 	</script>
+
 </body>
 
 </html>
