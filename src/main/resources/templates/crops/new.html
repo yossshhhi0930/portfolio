@@ -6,7 +6,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 </head>
 
 <body>
-	<div class="topics-new-wrapper" layout:fragment="contents">
+	<div layout:fragment="contents">
 		<div class="container">
 			<div class="row">
 				<main class="col-md-8 mx-auto">
@@ -22,13 +22,15 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 							</div>
 							<br>
 							<p th:if="${topImageError}" class="error-message" th:text="${topImageError}"></p>
+						</div>
+						<div class="mb-3">
 							<div id="margin_for_imagePreview">
-								<label class="form-label" for="cropImages">その他画像の選択</label>
+								<label class="form-label" for="cropImages">その他画像の選択 ※10itemまで</label>
 								<input class="form-control-file" type="file" id="cropImages" name="images" multiple>
 							</div>
+							<br>
+							<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
 						</div>
-						<br>
-						<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
 						<div class="mb-3">
 							<label class="form-label" for="name">作物名</label>
 							<input type="text" class="form-control" id="name" th:field="*{name}" />
@@ -39,13 +41,13 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 							<div class="row">
 								<div class="input-group">
 									<div class="col">
-										<input type="text" class="form-control" 　id="sowing_period" th:field="*{sowing_start}"
-											placeholder="MM-dd" />
+										<input type="text" class="form-control" id="sowing_period" th:field="*{sowing_start}"
+											placeholder="MM-dd" pattern="(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])" />
 									</div>
 									<span class="mx-2">～</span>
 									<div class="col">
-										<input type="text" class="form-control" 　id="sowing_period" th:field="*{sowing_end}"
-											placeholder="MM-dd" />
+										<input type="text" class="form-control" id="sowing_period" th:field="*{sowing_end}"
+											placeholder="MM-dd" pattern="(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])" />
 									</div>
 								</div>
 							</div>

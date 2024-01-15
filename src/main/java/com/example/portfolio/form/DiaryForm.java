@@ -18,7 +18,7 @@ public class DiaryForm {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate record_date;
 
-	@Size(max = 255)
+	@Size(max = 1000)
 	private String description;
 
 }

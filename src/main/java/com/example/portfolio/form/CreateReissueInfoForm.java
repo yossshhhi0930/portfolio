@@ -11,5 +11,5 @@ public class CreateReissueInfoForm {
 
 	@NotEmpty
 	@Email
-	private String Email;
+	private String email;
 }

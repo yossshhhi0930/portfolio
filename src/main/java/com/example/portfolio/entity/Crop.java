@@ -1,6 +1,7 @@
 package com.example.portfolio.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.time.MonthDay;
 import lombok.Data;
 
 @Entity
@@ -27,8 +27,7 @@ public class Crop extends AbstractEntity implements Serializable {
 		super();
 	}
 
-	public Crop(Long userId, String name, MonthDay sowing_start, MonthDay sowing_end, int cultivationp_period,
-			String manual) {
+	public Crop(Long userId, String name, Date sowing_start, Date sowing_end, int cultivationp_period, String manual) {
 		this.userId = userId;
 		this.name = name;
 		this.sowing_start = sowing_start;
@@ -49,10 +48,10 @@ public class Crop extends AbstractEntity implements Serializable {
 	private String name;
 
 	@Column(nullable = false)
-	private MonthDay sowing_start;
+	private Date sowing_start;
 
 	@Column(nullable = false)
-	private MonthDay sowing_end;
+	private Date sowing_end;
 
 	@Column(nullable = false)
 	private int cultivationp_period;

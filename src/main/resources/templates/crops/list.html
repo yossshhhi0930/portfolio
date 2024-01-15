@@ -41,9 +41,9 @@
 								<td th:text="${crop.name}"></td>
 								<td>
 									<div style="display: flex; align-items: center;">
-										<div th:text="${crop.sowing_start}"></div>
+										<div th:text="${#strings.substring(crop.sowing_start, 5, 10)}"></div>
 										<div>　～　</div>
-										<div th:text="${crop.sowing_end}"></div>
+										<div th:text="${#strings.substring(crop.sowing_end, 5, 10)}"></div>
 									</div>
 								</td>
 								<td>

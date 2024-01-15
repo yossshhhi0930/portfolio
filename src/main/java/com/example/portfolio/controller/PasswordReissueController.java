@@ -65,8 +65,9 @@ public class PasswordReissueController {
 	// メールアドレスを入力する画面を表示
 	@GetMapping(path = "/reissue")
 	public String showCreateReissueInfoForm(Model model) {
-		model.addAttribute("form", new CreateReissueInfoForm());
-		return "passwordreissue/createReissueInfoForm";
+		CreateReissueInfoForm form = new CreateReissueInfoForm();
+		model.addAttribute("form", form);
+		return "passwordReissue/createReissueInfoForm";
 	}
 
 	// パスワード再設定用認証情報の生成、登録、メール送信
@@ -84,7 +85,7 @@ public class PasswordReissueController {
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("class", "alert-danger");
 			model.addAttribute("message", "パスワード再設定用メール送信に失敗しました。");
-			return "passwordreissue/createReissueInfoForm";
+			return "passwordReissue/createReissueInfoForm";
 		}
 		String secret = RandomString.make(10);
 		String token = UUID.randomUUID().toString();
@@ -134,7 +135,7 @@ public class PasswordReissueController {
 		form.setEmail(info.getUsername());
 		form.setToken(token);
 		model.addAttribute("form", form);
-		return "passwordreissue/passwordResetForm";
+		return "passwordReissue/passwordResetForm";
 	}
 
 	// パスワードの再設定
@@ -165,7 +166,7 @@ public class PasswordReissueController {
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("class", "alert-danger");
 			model.addAttribute("message", "パスワード再設定に失敗しました。");
-			return "passwordreissue/passwordResetForm";
+			return "passwordReissue/passwordResetForm";
 		}
 		passwordReissueInfoRepository.delete(info);
 		User user = repository.findByUsername(email);

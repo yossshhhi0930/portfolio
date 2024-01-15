@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -145,7 +144,7 @@ public class UsersController {
 			return "users/edit";
 		}
 		// メールアドレスに変更がある場合の処理
-		if (!email.equals(user.getUsername())) {
+		if (!email.equals(entity.getUsername())) {
 			entity.setName(name);
 			repository.saveAndFlush(entity);
 			// 新しいメールアドレス一時保存用にUserEmailChangeエンティティを生成
@@ -154,14 +153,12 @@ public class UsersController {
 			UserEmailChange emailChangeEntity = new UserEmailChange(entity.getUserId(), token, expiryDate, email);
 			emailChangeRepository.saveAndFlush(emailChangeEntity);
 			userService.sendEmailVerifMail(name, email, token);
-			redirAttrs.addFlashAttribute("hasMessage", true);
-			redirAttrs.addFlashAttribute("class", "alert-info");
-			redirAttrs.addFlashAttribute("message", "ユーザー名の変更及び、メールアドレス変更仮手続きが完了しました。");
-			redirAttrs.addFlashAttribute("uniqueMessage",
+			model.addAttribute("hasMessage", true);
+			model.addAttribute("class", "alert-info");
+			model.addAttribute("message", "ユーザー名の変更及び、メールアドレス変更仮手続きが完了しました。");
+			model.addAttribute("uniqueMessage",
 					"ご登録いただいた新しいメールアドレスに、メールアドレス変更本手続き案内メールをお送りいたしました。メール添付リンクにアクセスし、手続きの完了をお願いいたします。");
-			// リダイレクト先で再認証をするため、現在保持している認証情報をクリア
-			SecurityContextHolder.clearContext();
-			return "redirect:/users/recertification";
+			return "pages/default";
 		}
 		// メールアドレスに変更がない場合の処理
 		entity.setName(name);
@@ -172,18 +169,10 @@ public class UsersController {
 		return "redirect:/users/detail";
 	}
 
-	// メールアドレス変更前の再認証
-	@GetMapping(path = "/users/recertification")
-	public String recertification() {
-		return "pages/default";
-	}
-
 	// メールアドレス変更本登録用パスワード確認画面表示
 	@GetMapping(path = "/email-verify/{token}")
 	public String emailVerify(@PathVariable String token, Model model, RedirectAttributes redirAttrs)
 			throws IOException {
-		// 現在保持している認証情報をクリア
-		SecurityContextHolder.clearContext();
 		UserEmailChange userEmailChange = emailChangeRepository.findByToken(token);
 		// URLに含まれる、verificationCodeに誤りがある場合にエラーを返す
 		if (userEmailChange == null) {

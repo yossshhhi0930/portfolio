@@ -1,5 +1,8 @@
 
 spring:
+  h2:
+    console:
+      enabled: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/portfolio
@@ -22,7 +25,10 @@ debug: true
 app:
   base-url: http://localhost:8080
 security:
-  tokenValidityThreshold: 3
+  tokenValidityThreshold: 4
   tokenLifeTimeSeconds: 60
-  uploadDirectory: "uploads"
-
+  
+upload:
+  path: "/Users/user/workspace/portfolio/src/main/resources/static/images/uploads/"
+set:
+ path : "images/uploads/"

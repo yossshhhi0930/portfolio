@@ -31,9 +31,9 @@
 						<br><br><br>
 						<h3>-播種可能期間-</h3>
 						<div style="display: flex; align-items: center;">
-							<p th:text="${crop.sowing_start}"></p>
+							<p th:text="${#strings.substring(crop.sowing_start, 5, 10)}"></p>
 							<p>　～　</p>
-							<p th:text="${crop.sowing_end}"></p>
+							<p th:text="${#strings.substring(crop.sowing_end, 5, 10)}"></p>
 						</div>
 						<h3>-栽培日数-</h3>
 						<div style="display: flex; align-items: center;">

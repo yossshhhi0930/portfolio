@@ -3,10 +3,10 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <body>
-	<nav class="navbar navba-bg-body-tertiary" layout:fragment="nav">
+	<nav class="navbar navba-bg-body-tertiary" style="background-image:url('/app/images/kateisaien.jpg');" layout:fragment=="nav">
 		<div class="container">
 			<a class="navbar-brand faded-element" th:href="@{/mypage}">
-				<img src="/images/icons/logo.png" th:src="@{/images/icons/logo.png}">
+				<img th:src="@{/images/icons/logo.png}">
 			</a>
 			<ul class="nav justify-content-end nav-pills">
 				<th:block sec:authorize="isAuthenticated()">
@@ -27,7 +27,6 @@
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" th:href="@{/plans/list}">栽培計画一覧</a></li>
 							<li><a class="dropdown-item" th:href="@{/plans/new}">栽培計画登録</a></li>
-							<li><a class="dropdown-item" th:href="@{/confirmation}">栽培状況確認</a></li>
 							<li>
 								<hr class="dropdown-divider">
 							</li>

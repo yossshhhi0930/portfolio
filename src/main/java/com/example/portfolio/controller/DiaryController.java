@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -55,8 +56,11 @@ public class DiaryController {
 	@Autowired
 	PlanRepository planRepository;
 
-	@Value("${security.uploadDirectory}")
-	String UPLOAD_DIR;
+	@Value("${upload.path}")
+	private String UPLOAD_DIR;
+	
+	@Value("${set.path}")
+	private String SET_PATH;
 
 	// 栽培日誌登録画面表示
 	@GetMapping(path = "/diarys/new/{planId}")
@@ -106,12 +110,12 @@ public class DiaryController {
 		Diary entity = new Diary(userId, planId, record_date, description);
 		repository.saveAndFlush(entity);
 		String formattedDateTime = getFormattedDateTime();
-		Path uploadPath = Path.of("images", UPLOAD_DIR);
+		Path uploadPath = Path.of(SET_PATH);
 		if (images != null && images.length > 0 && !images[0].isEmpty()) {
 			for (MultipartFile image : images) {
 				Path filePath = uploadPath.resolve(formattedDateTime + image.getOriginalFilename());
 				Long diaryId = entity.getId();
-				String path = "/" + filePath.toString().replace("\\", "/");
+				String path = StringUtils.cleanPath("/" + filePath.toString());
 				saveFile(image, formattedDateTime);
 				DiaryImage imageEntiy = new DiaryImage(diaryId, path);
 				imageRepository.saveAndFlush(imageEntiy);
@@ -197,12 +201,12 @@ public class DiaryController {
 		repository.saveAndFlush(entity);
 		String formattedDateTime = getFormattedDateTime();
 		if (images != null && images.length > 0 && !images[0].isEmpty()) {
-			Path uploadPath = Path.of("images", UPLOAD_DIR);
+			Path uploadPath = Path.of(SET_PATH);
 			for (MultipartFile image : images) {
 				DiaryImage imageEntiy = new DiaryImage();
 				Path filePath = uploadPath.resolve(formattedDateTime + image.getOriginalFilename());
 				imageEntiy.setDiaryId(entity.getId());
-				imageEntiy.setPath("/" + filePath.toString().replace("\\", "/"));
+				imageEntiy.setPath(StringUtils.cleanPath("/" + filePath.toString()));
 				saveFile(image, formattedDateTime);
 				imageRepository.saveAndFlush(imageEntiy);
 			}
@@ -302,7 +306,7 @@ public class DiaryController {
 
 	// 画像の保存
 	private void saveFile(MultipartFile image, String formattedDateTime) throws IOException {
-		Path uploadPath = Path.of("src", "main", "resources", "static", "images", UPLOAD_DIR);
+		Path uploadPath = Path.of(UPLOAD_DIR);
 		// ディレクトリが存在しない場合は作成
 		if (!Files.exists(uploadPath)) {
 			Files.createDirectories(uploadPath);

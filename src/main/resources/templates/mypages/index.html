@@ -7,7 +7,7 @@
 </head>
 
 <body>
-	<div class="users-new-wrapper" layout:fragment="contents">
+	<div layout:fragment="contents">
 		<div layout:replace="~{layouts/common::messages}"></div>
 		<div class="container">
 			<div class="row">
@@ -40,7 +40,7 @@
 								</div>
 								<div class="card-body">
 									<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
-									<p class="card-text" th:text="${diary.description}"></p>
+									<p class="card-text"></p>
 									<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
 								</div>
 							</div>
