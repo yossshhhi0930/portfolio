@@ -1,7 +1,6 @@
 package com.example.portfolio.form;
 
 import java.time.LocalDate;
-import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
 
 @Data
@@ -27,10 +26,8 @@ public class PlanForm {
 
 	private String sectionName;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate sowing_date;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate harvest_completion_date;
 
 	private boolean completion;

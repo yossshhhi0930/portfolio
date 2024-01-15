@@ -1,6 +1,6 @@
 package com.example.portfolio.form;
 
-import java.time.MonthDay;
+import java.util.Date;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -18,15 +18,14 @@ public class CropForm {
 	private String name;
 
 	@NotNull
-	private MonthDay sowing_start;
+	private Date sowing_start;
 
 	@NotNull
-	private MonthDay sowing_end;
+	private Date sowing_end;
 
 	@Min(value = 1)
 	private int cultivationp_period;
 
-	@Size(max = 255)
+	@Size(max = 1000)
 	private String manual;
-
 }

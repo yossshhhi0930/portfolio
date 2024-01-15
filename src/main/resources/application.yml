@@ -6,11 +6,21 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/portfolio
+#    username: portfolio
+#    password: password
     username: ${psql.user}
     password: ${psql.password}
+
+  h2:
+    console:
+      enabled: true
   mail:
     default-encoding: UTF-8
     protocol: smtp
+#    host: smtp.gmail.com
+#    port: 587
+#    username: yossshhhi@gmail.com
+#    password: erqh ncdw kyke xcnr
     host: ${spring.mail.host}
     port: ${spring.mail.port}
     username: ${spring.mail.username}
@@ -22,9 +32,15 @@ spring:
           starttls:
             enable: true
 app:
-  base-url: http://localhost:8080
+#  base-url: https://saibaitecho.mydns.jp/app
+  base-url: ${app.url}
 security:
-  tokenValidityThreshold: 3
-  tokenLifeTimeSeconds: 60
-  uploadDirectory: "uploads"
+  tokenValidityThreshold: 4
+  tokenLifeTimeSeconds: 3600
+  
+upload:
+#  path: "/var/lib/tomcat/webapps/app/WEB-INF/classes/static/images/uploads/"
+  path: ${upload.path}
+set:
+ path : ${set.path}
             

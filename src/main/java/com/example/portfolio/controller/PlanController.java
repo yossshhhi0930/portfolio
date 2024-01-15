@@ -406,7 +406,7 @@ public class PlanController {
 				model.addAttribute("searchSections", searchSections);
 				model.addAttribute("hasMessage", true);
 				model.addAttribute("class", "alert-danger");
-				model.addAttribute("message", "作物栽培計画の編集に失敗しました。");
+				model.addAttribute("message", "栽培計画の編集に失敗しました。");
 				return "plans/edit";
 			}
 			Optional<Plan> optionalPlan = repository.findById(id);
@@ -435,7 +435,7 @@ public class PlanController {
 		repository.deleteById(planId);
 		redirAttrs.addFlashAttribute("hasMessage", true);
 		redirAttrs.addFlashAttribute("class", "alert-info");
-		redirAttrs.addFlashAttribute("message", "作物データの削除に成功しました。");
+		redirAttrs.addFlashAttribute("message", "栽培計画の削除に成功しました。");
 		return "redirect:/plans/list";
 	}
 
@@ -596,8 +596,17 @@ public class PlanController {
 			LocalDate endDate = LocalDate.ofYearDay(year, dayOfYear);
 			PlanForm start_end = new PlanForm((long) 1000, "start", "", startDate, endDate, true);
 			gantList.add(start_end);
+			for (PlanForm planForm : gantList) {
+				if (planForm.getSowing_date().isBefore(startDate)) {
+					planForm.setSowing_date(startDate);
+				}
+				if (planForm.getHarvest_completion_date().isAfter(endDate)) {
+					planForm.setHarvest_completion_date(endDate);
+				}
+			}
 		}
 		return gantList;
+
 	}
 
 	// PlanListからYearList<Integer>（検索formに表示する年のリスト）を取得

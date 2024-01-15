@@ -9,4 +9,6 @@ public interface PasswordReissueInfoRepository extends JpaRepository<PasswordRei
 	PasswordReissueInfo findByToken(String token);
 
 	PasswordReissueInfo findBySecret(String secret);
+
+	void deleteAllByUsername(String username);
 }

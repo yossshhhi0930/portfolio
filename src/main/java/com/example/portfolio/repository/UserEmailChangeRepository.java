@@ -7,4 +7,6 @@ import com.example.portfolio.entity.UserEmailChange;
 @Repository
 public interface UserEmailChangeRepository extends JpaRepository<UserEmailChange, String> {
 	UserEmailChange findByToken(String token);
+
+	void deleteAllByUserId(Long userId);
 }

@@ -8,11 +8,12 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.MonthDay;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -20,8 +21,10 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -54,7 +57,11 @@ public class CropController {
 	@Autowired
 	CropImageReposiory imageRepository;
 
-	private static final String UPLOAD_DIR = "uploads";
+	@Value("${upload.path}")
+	private String UPLOAD_DIR;
+	
+	@Value("${set.path}")
+	private String SET_PATH;
 
 	// 月ごとの作物表示
 	@GetMapping(path = "/crops")
@@ -71,12 +78,12 @@ public class CropController {
 		List<Crop> allCrops = repository.findAllByUserIdOrderByUpdatedAtAsc(user.getUserId());
 		// 作物が該当月に種まき時期が含まれていれば、monthCropsに追加
 		for (Crop crop : allCrops) {
-			LocalDate sowing_start_localDate = crop.getSowing_start().atYear(year);
-			LocalDate sowing_end_localDate = crop.getSowing_end().atYear(year);
+			LocalDate sowing_start_localDate = getLocalDate(crop.getSowing_start(), year);
+			LocalDate sowing_end_localDate = getLocalDate(crop.getSowing_end(), year);
 			// 栽培期間が年を跨ぐ場合の処理
 			if (sowing_end_localDate.isBefore(sowing_start_localDate)) {
 				int nextYear = LocalDate.now().getYear() + 1;
-				sowing_end_localDate = crop.getSowing_end().atYear(nextYear);
+				sowing_end_localDate = getLocalDate(crop.getSowing_end(), nextYear);
 				int sowing_end_month = sowing_end_localDate.getMonthValue();
 				for (int i = 1; i <= sowing_end_month; i++) {
 					if (Month.valueOf(month).getValue() == i) {
@@ -115,8 +122,8 @@ public class CropController {
 		UserInf user = (UserInf) authentication.getPrincipal();
 		Long userId = user.getUserId();
 		String name = form.getName();
-		MonthDay sowing_start = form.getSowing_start();
-		MonthDay sowing_end = form.getSowing_end();
+		Date sowing_start = form.getSowing_start();
+		Date sowing_end = form.getSowing_end();
 		int cultivationp_period = form.getCultivationp_period();
 		String manual = form.getManual();
 		// formのフィールドエラー以外のエラー（今回は画像のエラー）リストのカウンター
@@ -154,12 +161,12 @@ public class CropController {
 		Crop entity = new Crop(userId, name, sowing_start, sowing_end, cultivationp_period, manual);
 		repository.saveAndFlush(entity);
 		String formattedDateTime = getFormattedDateTime();
-		Path uploadPath = Path.of("images", UPLOAD_DIR);
+		Path uploadPath = Path.of(SET_PATH);
 		// トップ画像の保存、エンティティ登録
 		if (topImage != null && !topImage.isEmpty()) {
 			Path filePath = uploadPath.resolve(formattedDateTime + topImage.getOriginalFilename());
 			Long cropId = entity.getId();
-			String path = "/" + filePath.toString().replace("\\", "/");
+			String path = StringUtils.cleanPath("/" + filePath.toString());
 			CropImage imageEntiy = new CropImage(cropId, path, true);
 			saveFile(topImage, formattedDateTime);
 			imageRepository.saveAndFlush(imageEntiy);
@@ -169,7 +176,7 @@ public class CropController {
 			for (MultipartFile image : images) {
 				Path filePath = uploadPath.resolve(formattedDateTime + image.getOriginalFilename());
 				Long cropId = entity.getId();
-				String path = "/" + filePath.toString().replace("\\", "/");
+				String path = StringUtils.cleanPath("/" + filePath.toString());
 				CropImage imageEntiy = new CropImage(cropId, path, false);
 				saveFile(image, formattedDateTime);
 				imageRepository.saveAndFlush(imageEntiy);
@@ -248,12 +255,12 @@ public class CropController {
 			return "crops/editImage";
 		}
 		String formattedDateTime = getFormattedDateTime();
-		Path uploadPath = Path.of("images", UPLOAD_DIR);
+		Path uploadPath = Path.of(SET_PATH);
 		// トップ画像の保存、エンティティ登録
 		if (topImage != null && !topImage.isEmpty()) {
 			Path filePath = uploadPath.resolve(formattedDateTime + topImage.getOriginalFilename());
-			Long cropId = form.getId();
-			String path = "/" + filePath.toString().replace("\\", "/");
+			Long cropId = entity.getId();
+			String path = StringUtils.cleanPath("/" + filePath.toString());
 			CropImage imageEntiy = new CropImage(cropId, path, true);
 			saveFile(topImage, formattedDateTime);
 			imageRepository.saveAndFlush(imageEntiy);
@@ -262,8 +269,8 @@ public class CropController {
 		if (images != null && images.length > 0 && !images[0].isEmpty()) {
 			for (MultipartFile image : images) {
 				Path filePath = uploadPath.resolve(formattedDateTime + image.getOriginalFilename());
-				Long cropId = form.getId();
-				String path = "/" + filePath.toString().replace("\\", "/");
+				Long cropId = entity.getId();
+				String path = StringUtils.cleanPath("/" + filePath.toString());
 				CropImage imageEntiy = new CropImage(cropId, path, false);
 				saveFile(image, formattedDateTime);
 				imageRepository.saveAndFlush(imageEntiy);
@@ -307,8 +314,8 @@ public class CropController {
 		Long userId = user.getUserId();
 		Long id = form.getId();
 		String name = form.getName();
-		MonthDay sowing_start = form.getSowing_start();
-		MonthDay sowing_end = form.getSowing_end();
+		Date sowing_start = form.getSowing_start();
+		Date sowing_end = form.getSowing_end();
 		int cultivationp_period = form.getCultivationp_period();
 		String manual = form.getManual();
 		Optional<Crop> optionalCrop = repository.findById(id);
@@ -379,7 +386,16 @@ public class CropController {
 
 	}
 
-	// CropエンティティからCropFormエンティティの取得
+	// Date型をLocalDate型に変換
+	public LocalDate getLocalDate(Date date, int year) throws IOException {
+		// DateをInstantに変換
+		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		// 年を変更
+		localDate = localDate.withYear(year);
+		return localDate;
+	}
+
+	// Crop型からCropForm型の取得
 	public CropForm getCropForm(Crop crop) throws IOException {
 		modelMapper.getConfiguration().setAmbiguityIgnored(true);
 		modelMapper.typeMap(Crop.class, CropForm.class);
@@ -404,7 +420,7 @@ public class CropController {
 
 	// 画像の保存
 	private void saveFile(MultipartFile image, String formattedDateTime) throws IOException {
-		Path uploadPath = Path.of("src", "main", "resources", "static", "images", UPLOAD_DIR);
+		Path uploadPath = Path.of(UPLOAD_DIR);
 		// ディレクトリが存在しない場合は作成
 		if (!Files.exists(uploadPath)) {
 			Files.createDirectories(uploadPath);

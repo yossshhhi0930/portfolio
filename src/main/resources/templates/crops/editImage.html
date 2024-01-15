@@ -28,7 +28,7 @@
 							<div class="mb-3">
 								<div id="margin_for_imagePreview">
 									<label class="form-label" for="cropTopImage">トップ画像の選択 ※1itemまで</label>
-									<input type="file" id="cropTopImage" name="topImage">
+									<input class="form-control-file" type="file" id="cropTopImage" name="topImage">
 								</div>
 								<br>
 								<p th:if="${topImageError}" class="error-message" th:text="${topImageError}"></p>
@@ -46,10 +46,10 @@
 							<div class="mb-3">
 								<div id="margin_for_imagePreview">
 									<label class="form-label" for="cropImages">その他画像の選択</label>
-									<input type="file" id="cropImages" name="images" multiple>
-									<br>
-									<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
+									<input class="form-control-file" type="file" id="cropImages" name="images" multiple>
 								</div>
+								<br>
+								<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
 							</div>
 							<input type="submit" value="▼ 以下編集 ▼" class="btn w-100 btn-success" />
 							<div class="mb-3">
