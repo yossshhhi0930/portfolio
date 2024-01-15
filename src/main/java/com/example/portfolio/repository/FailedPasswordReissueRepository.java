@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.example.portfolio.entity.FailedPasswordReissue;
 
 @Repository
-public interface FailedPasswordReissueRepository extends JpaRepository<FailedPasswordReissue, String> {
+public interface FailedPasswordReissueRepository extends JpaRepository<FailedPasswordReissue, Long> {
 	int countByEmail(String email);
 
 	void deleteByCreatedAtBefore(Date cutoffDate);

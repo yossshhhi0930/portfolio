@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.example.portfolio.entity.PasswordReissueInfo;
 
 @Repository
-public interface PasswordReissueInfoRepository extends JpaRepository<PasswordReissueInfo, String> {
+public interface PasswordReissueInfoRepository extends JpaRepository<PasswordReissueInfo, Long> {
 	PasswordReissueInfo findByToken(String token);
 
 	PasswordReissueInfo findBySecret(String secret);
