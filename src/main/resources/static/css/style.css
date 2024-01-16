@@ -189,8 +189,10 @@ span {
 
 /* the background color of the filepond drop area */
 .filepond--panel-root {
+	max-width: 100%; 
+	height: auto;
 	background-color: #eee;
-	padding: 250px 30px;
+	padding: 20%; 
 }
 
 /* the border radius of the drop area */
@@ -252,8 +254,9 @@ span {
 }
 
 #margin_for_imagePreview {
-	height: 40vh;
-	margin-bottom: 100px;
+	max-width: 100%; 
+	height: auto;
+	margin-bottom: 40%;
 }
 
 #frame {
