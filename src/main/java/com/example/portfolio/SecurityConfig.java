@@ -15,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import com.example.portfolio.filter.FormAuthenticationProvider;
 
+/**
+ * セキュリティの設定を行うクラス
+ */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -26,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	UserDetailsService service;
 
-	private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**", "/h2-console/**","/favicon.ico" };
+	private static final String[] URLS = { "/css/**", "/images/**", "/scripts/**", "/h2-console/**", "/favicon.ico" };
 
 	/**
 	 * 認証から除外する
@@ -55,11 +58,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 }
         // @formatter:on
 
+	/**
+	 * 認証マネージャーの設定を行う
+	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider);
 	}
 
+	/**
+	 * パスワードエンコーダーのBeanを提供する
+	 *
+	 * @return BCryptPasswordEncoderのBeanインスタンス
+	 */
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();

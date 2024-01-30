@@ -1,9 +1,12 @@
 package com.example.portfolio.entity;
 
+/**
+ * ユーザー情報のインターフェース
+ */
 public interface UserInf {
 
-    Long getUserId();
+	Long getUserId();
 
-    String getUsername();
+	String getUsername();
 
 }

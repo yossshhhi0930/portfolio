@@ -5,81 +5,98 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
+	<!-- BootstrapのCSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+	<!-- カスタムのCSS -->
 	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<!-- FilePond関連のCSS -->
 	<link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
 	<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 </head>
 
 <body>
-	<div th:if="${hasMessage}" s class="alert alert-dismissible fade show" th:classappend="${class}" role='alert'>
+	<!-- アラートメッセージの表示 -->
+	<div th:if="${hasMessage}" class="alert alert-dismissible fade show" th:classappend="${class}" role='alert'>
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span
 			th:text="${message}"></span>
 	</div>
+	<!-- 共通のナビゲーションの表示 -->
 	<nav layout:replace="~{layouts/common :: nav}"></nav>
+	<!-- コンテンツの挿入箇所 -->
 	<div layout:fragment="contents"></div>
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<!-- jQuery UI -->
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<!-- Bootstrap -->
+	<!-- BootstrapのJavaScript -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
 		crossorigin="anonymous"></script>
+	<!-- カスタムのJavaScript -->
 	<script src="/scripts/method-convert.js" th:src="@{/scripts/method-convert.js}"></script>
-	<!-- FilePondをCDNでインストール -->
+	<!-- FilePond関連のJavaScript -->
 	<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 	<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
 	<script>
+		// アラートメッセージの設定
 		$(function () {
+			// ページが読み込まれた際に実行される処理
 			convertMethod('.convert');
-			$(".alert").fadeOut(5000);
+			$(".alert").fadeOut(5000);// アラートメッセージの自動非表示
 		});
+
+		// 栽培計画で作物検索の際に、選択肢の中の作物をクリックすると、その作物名がインプットタグの値に入力される処理
 		function setCropName(element) {
+			// イベント発生元のdata-cropname属性から作物名を取得
 			var cropName = element.getAttribute('data-cropname');
+			// 作物名を表示するinputタグの値を設定
 			document.getElementById('cropName').value = cropName;
+			// 作物名の選択肢の一覧を非表示にする
 			cropList.style.display = 'none';
 		}
 
+		// FilePondを設定する処理（栽培日誌画像）
 		FilePond.registerPlugin(FilePondPluginImagePreview);
 		const inputElement_daiary = document.querySelector('input[id="images"]');
 
-		// 第二引数のオプションを追加
+		// 第二引数のオプションを追加（栽培日誌画像）
 		var pond = FilePond.create(inputElement_daiary, {
-			acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
-			storeAsFile: true,
-			allowMultiple: true,
+			acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'], // アップロード可能なファイル形式の指定
+			storeAsFile: true, // アップロードされたファイルをディスクに保存
+			allowMultiple: true, // 複数のファイルのアップロードを許可
 			maxFiles: 10, // 最大アップロードファイル数
-			allowImagePreview: true,
-			imagePreviewHeight: 200,
+			allowImagePreview: true, // 画像プレビューを設定
+			imagePreviewHeight: 200, // 画像プレビュー表示の高さを指定
 		});
 
+		// FilePondを設定する処理（作物トップ画像）
 		FilePond.registerPlugin(FilePondPluginImagePreview);
 		const inputElement_cropTop = document.querySelector('input[id="cropTopImage"]');
 
-		// 第二引数のオプションを追加
+		// 第二引数のオプションを追加（作物トップ画像）
 		var pond = FilePond.create(inputElement_cropTop, {
-			acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
-			storeAsFile: true,
-			allowMultiple: true,
+			acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'], // アップロード可能なファイル形式の指定
+			storeAsFile: true, // アップロードされたファイルをディスクに保存
+			allowMultiple: true, // 複数のファイルのアップロードを許可
 			maxFiles: 1, // 最大アップロードファイル数
-			allowImagePreview: true,
-			imagePreviewHeight: 200,
+			allowImagePreview: true, // 画像プレビューを設定
+			imagePreviewHeight: 200, // 画像プレビュー表示の高さを指定
 		});
 
+		// FilePondを設定する処理（作物その他画像）
 		FilePond.registerPlugin(FilePondPluginImagePreview);
-		const inputElement_crop = document.querySelector('input[id="cropImages"]');
+		const inputElement_crop = document.querySelector('input[id="cropImages"]'); // アップロード可能なファイル形式の指定
 
-		// 第二引数のオプションを追加
+		// 第二引数のオプションを追加（作物その他画像）
 		var pond = FilePond.create(inputElement_crop, {
 			acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
-			storeAsFile: true,
-			allowMultiple: true,
+			storeAsFile: true, // アップロードされたファイルをディスクに保存
+			allowMultiple: true, // 複数のファイルのアップロードを許可
 			maxFiles: 10, // 最大アップロードファイル数
-			allowImagePreview: true,
-			imagePreviewHeight: 200,
+			allowImagePreview: true, // 画像プレビューを設定
+			imagePreviewHeight: 200, // 画像プレビュー表示の高さを指定
 		});
 
 	</script>

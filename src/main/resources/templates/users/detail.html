@@ -10,21 +10,29 @@
 		<div class="container">
 			<div class="row ">
 				<main class="col-md-7 mx-auto frame">
+					<!-- 作物詳細表示 -->
 					<div th:if="${user}">
+						<!-- タイトル表示 -->
 						<h1 id="dark_h" class="text-center">ユーザー詳細</h1>
+						<!-- ユーザー名表示 -->
 						<h3>-ユーザー名-</h3>
 						<p th:text="${user.name}"></p>
+						<!-- メールアドレス表示 -->
 						<h3>-メールアドレス-</h3>
 						<p th:text="${user.username}"></p>
+						<!-- パスワードの表示は不可 -->
 						<h3>-パスワード-</h3>
 						<p>-----------</p>
+						<!-- 編集ボタン -->
 						<a class="btn btn-success" th:href="@{/users/edit}" role="button">編集する</a>
+						<!-- 削除ボタン -->
 						<a class="btn btn-success" th:href="@{/users/delete}" role="button">削除する</a>
 					</div>
 				</main>
 			</div>
 		</div>
+	</div>
 
-		<body>
+	<body>
 
 </html>

@@ -10,15 +10,20 @@
 		<div class="container">
 			<div class="row">
 				<main class="col-md-5 mx-auto">
+					<!-- タイトル表示 -->
 					<h1 class="text-center">栽培計画登録</h1>
+					<!-- 栽培計画登録フォーム -->
 					<form method="post" th:action="@{/plan}" th:object="${form}" id="form">
+						<!-- エラーメッセージの表示 -->
 						<div layout:replace="~{layouts/common::messages}"></div>
-						<input type="hidden" th:field="*{id}" />
+						<!-- 作物名入力フォーム -->
 						<div class="row mb-3">
 							<div class="col-7">
 								<label class="form-label" for="cropName">作物名</label>
 								<input type="text" id="cropName" class="form-control" th:field="*{cropName}">
-								<div id="cropList" th:if="${not #lists.isEmpty(searchCrops)}" style="overflow-y: scroll; height: 200px; background-color: rgba(255, 255, 255, 0.8);">
+								<!-- 作物名の検索結果の作物リストを選択肢として表示 -->
+								<div id="cropList" th:if="${not #lists.isEmpty(searchCrops)}"
+									style="overflow-y: scroll; height: 200px; background-color: rgba(255, 255, 255, 0.8);">
 									<ul class="list-group" th:each="crop : ${searchCrops}">
 										<li class="list-group-item" th:text="${crop.name}" th:attr="data-cropname=${crop.name}"
 											onclick="setCropName(this)" style="font-size: 16px;">
@@ -26,13 +31,16 @@
 									</ul>
 								</div>
 							</div>
+							<!-- 作物名の検索ボタン -->
 							<div class="col-5">
 								<button type="submit" name="cmd" value="search" class="btn btn-blue"
 									style="margin-top: 62px;">作物を検索する</button>
 							</div>
+							<!-- 検索結果の作物がない場合にメッセージを表示 -->
 							<p style="font-size: 20px;" th:if="${searchCropsMessage}" th:text="${searchCropsMessage}"></p>
 							<p th:if="${#fields.hasErrors('cropName')}" class="error-message" th:errors="*{cropName}"></p>
 						</div>
+						<!-- 播種日入力フォーム -->
 						<div class="mb-3">
 							<div class="row">
 								<div class="col">
@@ -42,27 +50,34 @@
 								</div>
 							</div>
 						</div>
+						<!-- 収穫完了予定日入力フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="harvest_completion_date">収穫完了予定日</label>
 							<input type="date" id="harvest_completion_date" class="form-control"
 								th:field="*{harvest_completion_date}" />
 							<p th:if="${#fields.hasErrors('harvest_completion_date')}" class="error-message"
 								th:errors="*{harvest_completion_date}"></p>
+							<!-- 収穫完了予定日の算出ボタン -->
 							<button type="submit" name="cmd" value="calculate" class="btn btn-blue"
 								style="margin-top: 0px;">収穫完了予定日を算出する</button>
 						</div>
+						<!-- 栽培区画選択フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="selectBox">栽培区画</label>
+							<!-- セレクトボックスに取得した利用可能な区画を表示 -->
 							<select id="selectBox" class="form-control" th:field="*{sectionName}">
 								<option value="">--区画を選択してください--</option>
 								<option th:each="section : ${searchSections}" th:value="${section.name}" th:text="${section.name}"
 									th:selected="${section.name == form.sectionName}"></option>
 							</select>
+							<!-- 利用可能な区画がない場合にメッセージを表示 -->
 							<p style="font-size: 20px;" th:if="${searchSectionsMessage}" th:text="${searchSectionsMessage}"></p>
 							<p th:if="${#fields.hasErrors('sectionName')}" class="error-message" th:errors="*{sectionName}"></p>
+							<!-- 利用可能な区画を取得するボタン -->
 							<button type="submit" name="cmd" value="select" class="btn-blue"
 								style="margin-top: 0px;">利用可能な区画を取得する</button>
 						</div>
+						<!-- 栽培終了のチェックボックス -->
 						<div class="mb-3">
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox" id="customCheckbox" th:field="*{completion}"
@@ -70,6 +85,7 @@
 								<label class="form-check-label" for="customCheckbox">栽培終了</label>
 							</div>
 						</div>
+						<!-- 登録ボタン -->
 						<button type="submit" name="cmd" value="register" class="btn w-100 btn-success">登録</button>
 					</form>
 				</main>
