@@ -12,16 +12,30 @@ import java.time.LocalDateTime;
 
 import lombok.Data;
 
+/**
+ * メールアドレス変更エンティティクラス
+ */
 @Entity
 @Table(name = "user_email_changes")
 @Data
 public class UserEmailChange extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * デフォルトコンストラクタ
+	 */
 	public UserEmailChange() {
 		super();
 	}
 
+	/**
+	 * コンストラクタ
+	 *
+	 * @param userId     ユーザーID
+	 * @param token      トークン
+	 * @param expiryDate 有効期限
+	 * @param newEmail   新しいメールアドレス
+	 */
 	public UserEmailChange(Long userId, String token, LocalDateTime expiryDate, String newEmail) {
 		this.userId = userId;
 		this.token = token;
@@ -29,21 +43,33 @@ public class UserEmailChange extends AbstractEntity implements Serializable {
 		this.newEmail = newEmail;
 	}
 
+	/** メールアドレス変更ID */
 	@Id
 	@SequenceGenerator(name = "user_email_change_id_seq")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
 
+	/**
+	 * ユーザーID<br>
+	 * メールアドレスの再設定を行うユーザー
+	 */
 	@Column(nullable = false)
 	private Long userId;
 
-	// ユーザーメールアドレス変更用URLに含めるために生成される文字列（トークン）
+	/**
+	 * トークン<br>
+	 * ユーザーメールアドレス変更URLに含め、認証に使用する文字列
+	 */
 	@Column(nullable = false)
 	private String token;
 
-	// ユーザーメールアドレス変更のためのURLの有効期限
+	/**
+	 * 有効期限<br>
+	 * ユーザーメールアドレス変更URLの有効期限
+	 */
 	private LocalDateTime expiryDate;
 
+	/** 新しいメールアドレス */
 	@Column(nullable = false)
 	private String newEmail;
 

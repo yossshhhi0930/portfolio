@@ -10,17 +10,24 @@
 		<div class="container">
 			<div class="row ">
 				<main class="col-md-7 mx-auto frame">
-		<div th:if="${section}">
-			<h1 id="dark_h" class="text-center">区画詳細</h1>
-			<h3>-区画名-</h3>
-			<p th:text="${section.name}"></p>
-			<h3>-説明-</h3>
-			<pre class="description" th:text="${section.description}"></pre>
-		<a class="btn btn-success" th:href="@{'/sections/edit/' + ${section.id}}" role="button">編集する</a>
-		<a class="btn btn-success" th:href="@{'/sections/delete/' + ${section.id}}" role="button">削除する</a>
-		<a class="btn btn-success" th:href="@{/sections/new}" role="button">続けて区画を登録する</a>
-	</div>
-	</div>
+					<!-- 区画詳細表示 -->
+					<div th:if="${section}">
+						<!-- タイトル表示 -->
+						<h1 id="dark_h" class="text-center">区画詳細</h1>
+						<!-- 区画名表示 -->
+						<h3>-区画名-</h3>
+						<p th:text="${section.name}"></p>
+						<!-- 説明表示 -->
+						<h3>-説明-</h3>
+						<pre class="description" th:text="${section.description}"></pre>
+						<!-- 編集ボタン -->
+						<a class="btn btn-success" th:href="@{'/sections/edit/' + ${section.id}}" role="button">編集する</a>
+						<!-- 削除ボタン -->
+						<a class="btn btn-success" th:href="@{'/sections/delete/' + ${section.id}}" role="button">削除する</a>
+						<!-- 続けて別の区画を登録するボタン -->
+						<a class="btn btn-success" th:href="@{/sections/new}" role="button">続けて区画を登録する</a>
+					</div>
+			</div>
 </body>
 
 </html>

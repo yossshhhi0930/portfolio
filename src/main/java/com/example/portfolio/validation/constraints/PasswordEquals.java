@@ -9,6 +9,9 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
 
+/**
+ * パスワードと確認用パスワードが一致するかを検証するためのカスタムバリデーションアノテーション
+ */
 @Documented
 @Constraint(validatedBy = PasswordEqualsValidator.class)
 @Target({ ElementType.TYPE })
@@ -16,10 +19,13 @@ import javax.validation.ReportAsSingleViolation;
 @ReportAsSingleViolation
 public @interface PasswordEquals {
 
-    String message() default "パスワードと確認用パスワードが一致しません。";
+	/**
+	 * バリデーションエラー時のメッセージの設定
+	 */
+	String message() default "パスワードと確認用パスワードが一致しません。";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+	Class<? extends Payload>[] payload() default {};
 
 }

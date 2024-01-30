@@ -11,29 +11,37 @@
 		<div class="container">
 			<div class="row">
 				<main class="col-md-5 mx-auto">
+					<!-- タイトル表示 -->
 					<h1 class="text-center">ログイン</h1>
+					<!-- ログインフォーム -->
 					<form method="post" th:action="@{/login}">
+						<!-- エラーメッセージの表示 -->
 						<div layout:replace="~{layouts/common::messages}"></div>
+						<!-- メールアドレス入力フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="email">メールアドレス</label>
 							<input class="form-control" type="text" name="username" id="email" />
 						</div>
+						<!-- パスワード入力フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="password">パスワード</label>
 							<input class="form-control" type="password" name="password" id="password" />
 						</div>
+						<!-- ログインボタン -->
 						<input type="submit" value="ログイン" class="btn w-100 btn-success" />
 					</form>
+					<!-- パスワード再発行リンク -->
 					<a th:href="@{/reissue}">パスワードを忘れた</a>
+					<!-- テストユーザーアカウントの表示 -->
 					<h3 style="margin-top: 80px; font-weight: bold;">※テストユーザーアカウント※</h3>
-						<div style="display: flex;">
-							<p style="font-weight: bold;">・ユーザー名：</p>
-							<p>testuser@test</p>
-						</div>
-						<div style="display: flex;">
-							<p style="font-weight: bold; margin-top: 0px;">・パスワード：</p>
-							<p style="margin-top: 0px;">1111</p>
-						</div>
+					<div style="display: flex;">
+						<p style="font-weight: bold;">・ユーザー名：</p>
+						<p>testuser@test</p>
+					</div>
+					<div style="display: flex;">
+						<p style="font-weight: bold; margin-top: 0px;">・パスワード：</p>
+						<p style="margin-top: 0px;">1111</p>
+					</div>
 				</main>
 			</div>
 		</div>

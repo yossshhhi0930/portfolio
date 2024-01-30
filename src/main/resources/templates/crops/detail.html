@@ -10,15 +10,20 @@
 		<div class="container">
 			<div class="row ">
 				<main class="col-md-8 mx-auto frame">
+					<!-- 作物詳細表示 -->
 					<div th:if="${crop}">
+						<!-- タイトル表示 -->
 						<h1 id="dark_h" class="text-center">作物詳細</h1>
+						<!-- 作物名表示 -->
 						<h3>-作物名-</h3>
 						<p th:text="${crop.name}"></p>
+						<!-- トップ画像表示 -->
 						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
 							<div th:if="${image.topImage}">
 								<img th:src="${image.path}" alt="Image" class="img-full-width" style="margin-bottom: 30px;">
 							</div>
 						</div>
+						<!-- その他画像表示 -->
 						<div style="display: flex; flex-wrap: wrap;">
 							<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
 								<div class="d-inline-block">
@@ -29,27 +34,33 @@
 							</div>
 						</div>
 						<br><br><br>
+						<!-- 播種可能期間表示 -->
 						<h3>-播種可能期間-</h3>
 						<div style="display: flex; align-items: center;">
 							<p th:text="${#strings.substring(crop.sowing_start, 5, 10)}"></p>
 							<p>　～　</p>
 							<p th:text="${#strings.substring(crop.sowing_end, 5, 10)}"></p>
 						</div>
+						<!-- 栽培日数表示 -->
 						<h3>-栽培日数-</h3>
 						<div style="display: flex; align-items: center;">
 							<p th:text="${crop.cultivationp_period}"></p>
 							<p>　日　</p>
 						</div>
+						<!-- 栽培手順説明文表示 -->
 						<h3>-育て方メモ-</h3>
 						<pre class="description" th:text="${crop.manual}"></pre>
+						<!-- 編集ボタン -->
 						<a class="btn btn-success" th:href="@{'/crops/edit-image/' + ${crop.Id}}" role="button">編集する</a>
+						<!-- 削除ボタン -->
 						<a class="btn btn-success" th:href="@{'/crops/delete/' + ${crop.Id}}" role="button">削除する</a>
+						<!-- 作物計画作成ボタン -->
 						<a class="btn btn-success" th:href="@{/plans/new/(cropId=${crop.Id})}" role="button">この作物で作物計画を作成する</a>
 					</div>
 				</main>
 			</div>
 		</div>
-
-		<body>
+	</div>
+</body>
 
 </html>

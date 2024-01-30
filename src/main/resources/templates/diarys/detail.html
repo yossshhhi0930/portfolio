@@ -10,22 +10,33 @@
 		<div class="container">
 			<div class="row ">
 				<main class="col-md-8 mx-auto frame">
+					<!-- 栽培日誌詳細表示 -->
 					<div th:if="${diary}">
+						<!-- タイトル表示 -->
 						<h1 id="dark_h" class="text-center">栽培日誌詳細</h1>
+						<!-- 栽培計画ID表示 -->
 						<h3>-栽培計画ID-</h3>
 						<p th:text="${diary.planId}"></p>
+						<!-- 作物名表示 -->
 						<h3>-作物名-</h3>
 						<p th:text="${diary.plan.crop.name}"></p>
+						<!-- 栽培日誌画像表示 -->
 						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
 							<img th:src="${image.path}" alt="Image" class="img-full-width" style="margin-bottom: 30px;">
 						</div>
+						<!-- 記録日表示 -->
 						<h3>-記録日-</h3>
 						<p th:text="${diary.record_date}"></p>
+						<!-- 説明表示 -->
 						<h3>-説明-</h3>
 						<pre class="description" th:text="${diary.description}"></pre>
+						<!-- 編集ボタン -->
 						<a class="btn btn-success" th:href="@{'/diarys/edit/' + ${diary.Id}}" role="button">編集する</a>
+						<!-- 削除ボタン -->
 						<a class="btn btn-success" th:href="@{'/diarys/delete/' + ${diary.Id}}" role="button">削除する</a>
+						<!-- 続けて栽培日誌を登録するボタン -->
 						<a class="btn btn-success" th:href="@{/plans/list}" role="button">続けて栽培日誌を登録する</a>
+						<!-- この栽培計画が紐づく栽培計画へ移動ボタン -->
 						<a class="btn btn-success" th:href="@{'/plans/detail/' + ${diary.planId}}" role="button">栽培計画へ移動</a>
 					</div>
 				</main>
