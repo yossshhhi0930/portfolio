@@ -2,7 +2,7 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -10,13 +10,18 @@
 		<div class="container">
 			<div class="row">
 				<main class="col-md-8 mx-auto">
+					<!-- タイトル表示 -->
 					<h1 class="text-center">作物編集</h1>
+					<!-- 作物編集フォーム -->
 					<form method="post" th:action="@{/crops/edit-image-complete}" th:object="${form}"
 						enctype="multipart/form-data">
+						<!-- エラーメッセージの表示 -->
 						<div layout:replace="~{layouts/common::messages}"></div>
 						<div layout:replace="~{layouts/common::notField-messages}"></div>
+						<!-- 作物IDの隠しフィールド -->
 						<div class="mb-3">
 							<input type="hidden" th:field="*{id}" />
+							<!-- トップ画像の表示と削除リンク -->
 							<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
 								<div th:if="${image.topImage}">
 									<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
@@ -25,6 +30,7 @@
 									</a>
 								</div>
 							</div>
+							<!-- トップ画像選択フォーム -->
 							<div class="mb-3">
 								<div id="margin_for_imagePreview">
 									<label class="form-label" for="cropTopImage">トップ画像の選択 ※1itemまで</label>
@@ -33,6 +39,7 @@
 								<br>
 								<p th:if="${topImageError}" class="error-message" th:text="${topImageError}"></p>
 							</div>
+							<!-- その他画像の表示と削除リンク -->
 							<div style="display: flex; flex-wrap: wrap;">
 								<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
 									<div th:if="${!image.topImage}">
@@ -43,6 +50,7 @@
 									</div>
 								</div>
 							</div>
+							<!-- その他画像選択フォーム -->
 							<div class="mb-3">
 								<div id="margin_for_imagePreview">
 									<label class="form-label" for="cropImages">その他画像の選択</label>
@@ -51,9 +59,11 @@
 								<br>
 								<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
 							</div>
+							<!-- 編集フォームの送信ボタン -->
 							<input type="submit" value="▼ 以下編集 ▼" class="btn w-100 btn-success" />
+							<!-- 以下、表示用のため編集不可の作物情報 -->
 							<div class="mb-3">
-								<label label class="form-label" for="name">作物名</label>
+								<label class="form-label" for="name">作物名</label>
 								<input type="text" class="form-control" id="name" th:field="*{name}" disabled />
 							</div>
 							<div class="mb-3">

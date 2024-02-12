@@ -2,7 +2,7 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -10,38 +10,53 @@
 		<div class="container">
 			<div class="row ">
 				<main class="col-md-8 mx-auto frame">
+					<!-- 栽培計画詳細表示 -->
 					<div th:if="${plan}">
+						<!-- タイトル表示 -->
 						<h1 id="dark_h" class="text-center">栽培計画詳細</h1>
+						<!-- 作物名表示 -->
 						<h3>-作物名-</h3>
 						<p th:text="${plan.crop.name}"></p>
+						<!-- 播種日表示 -->
 						<h3>-播種日-</h3>
 						<p th:text="${plan.sowing_date}"></p>
+						<!-- 収穫完了予定日表示 -->
 						<h3>-収穫完了予定日-</h3>
 						<p th:text="${plan.harvest_completion_date}"></p>
+						<!-- 栽培区画表示 -->
 						<h3>-栽培区画-</h3>
 						<p th:text="${plan.section.name}"></p>
+						<!-- 栽培ステイタス表示 -->
 						<h3>-栽培ステイタス-</h3>
 						<p th:text="${plan.completion ? '終了' : '計画中'}"></p>
+						<!-- 編集ボタン -->
 						<a class="btn btn-success" th:href="@{'/plans/edit/' + ${plan.Id}}" role="button">編集する</a>
+						<!-- 削除ボタン -->
 						<a class="btn btn-success" th:href="@{'/plans/delete/' + ${plan.Id}}" role="button">削除する</a>
+						<!-- 続けて栽培計画を登録するボタン -->
 						<a class="btn btn-success" th:href="@{/plans/new}" role="button">続けて作物計画を登録する</a>
 					</div>
+					<!-- 栽培計画に紐づく栽培日誌をカード形式で全て表示 -->
 					<h3 id="dark_h">-栽培日誌一覧-</h1>
-					<div style="display: flex; flex-wrap: wrap;">
-						<div th:each="diary : ${list}" class="card" style="width: 18rem; margin: 10px;">
-							<div th:if="${#lists.size(diary.diaryImages) > 0}">
-								<div th:each="image, index : ${diary.diaryImages}" th:if="${index.index == 0}">
-									<img th:src="${image.path}" alt="Image" class="card-img-top">
+						<div style="display: flex; flex-wrap: wrap;">
+							<div th:each="diary : ${list}" class="card" style="width: 18rem; margin: 10px;">
+								<!-- 栽培日誌の一番最初に登録した画像を表示 -->
+								<div th:if="${#lists.size(diary.diaryImages) > 0}">
+									<div th:each="image, index : ${diary.diaryImages}" th:if="${index.index == 0}">
+										<img th:src="${image.path}" alt="Image" class="card-img-top">
+									</div>
+								</div>
+								<div class="card-body">
+									<!-- 栽培日誌の記録日をカードタイトルとして表示 -->
+									<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
+									<p class="card-text"></p>
+									<!-- 栽培日誌詳細表示ボタン -->
+									<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
 								</div>
 							</div>
-							<div class="card-body">
-								<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
-								<p class="card-text"></p>
-								<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
-							</div>
 						</div>
-					</div>
-					<a class="btn btn-success" th:href="@{'/diarys/new/' + ${plan.Id}}" role="button">作物日誌を作成する</a>
+						<!-- この栽培計画に紐づく栽培日誌を新しく作成するボタン -->
+						<a class="btn btn-success" th:href="@{'/diarys/new/' + ${plan.Id}}" role="button">栽培日誌を作成する</a>
 				</main>
 			</div>
 		</div>

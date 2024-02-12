@@ -2,7 +2,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -10,15 +10,21 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 		<div class="container">
 			<div class="row">
 				<main class="col-md-8 mx-auto">
+					<!-- タイトル表示 -->
 					<h1 class="text-center">栽培日誌編集</h1>
+					<!-- 栽培日誌編集フォーム -->
 					<form method="post" th:action="@{/diarys/edit-complete}" th:object="${form}" enctype="multipart/form-data">
+						<!-- エラーメッセージの表示 -->
 						<div layout:replace="~{layouts/common::messages}"></div>
 						<div layout:replace="~{layouts/common::notField-messages}"></div>
+						<!-- 栽培日誌IDの隠しフィールド -->
 						<input type="hidden" th:field="*{id}" />
+						<!-- 栽培計画ID表示フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="planId">栽培計画ID</label>
 							<input type="text" class="form-control" id="planId" th:field="*{planId}" readonly />
 						</div>
+						<!-- 栽培日誌画像の表示と削除リンク -->
 						<div class="mb-3">
 							<div style="display: flex; flex-wrap: wrap;">
 								<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
@@ -32,6 +38,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 								</div>
 							</div>
 						</div>
+						<!-- 栽培日誌画像選択フォーム -->
 						<div class="mb-3">
 							<div id="margin_for_imagePreview">
 								<label class="form-label" for="images">画像の選択</label>
@@ -40,16 +47,19 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 							<br>
 							<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
 						</div>
+						<!-- 記録日入力フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="record_date">記録日</label>
 							<input type="date" id="record_date" class="form-control" th:field="*{record_date}" />
 							<p th:if="${#fields.hasErrors('record_date')}" class="error-message" th:errors="*{record_date}"></p>
 						</div>
+						<!-- 説明入力フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="description">説明</label>
 							<textarea class="form-control" id="description" th:field="*{description}"></textarea>
 							<p th:if="${#fields.hasErrors('description')}" class="error-message" th:errors="*{description}"></p>
 						</div>
+						<!-- 編集ボタン -->
 						<input type="submit" value="編集" class="btn w-100 btn-success" />
 					</form>
 				</main>

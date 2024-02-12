@@ -3,7 +3,7 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -11,17 +11,23 @@
 		<div class="container mt-4">
 			<div class="row">
 				<main class="col-md-5 mx-auto">
+					<!-- 区画名での検索フォーム -->
 					<form id="searchForm" method="post" th:action="@{/sections/search}">
 						<div class="form-group">
+							<!-- 区画名を入力 -->
 							<label class="form-label" for="keyword">区画名を入力:</label>
 							<input type="text" class="form-control" th:value="${keyword}" id="keyword" name="keyword">
+							<!-- 検索結果がない場合にメッセージを表示する -->
 							<span th:if="${message}" th:text="${message}"></span>
+							<!-- 検索ボタン -->
 							<button type="submit" class="btn w-40 btn-success">検索</button>
 					</form>
 				</main>
 			</div>
 			<div class="row">
 				<main class="col-md-10 mx-auto">
+					<!-- 検索結果の区画一覧を表示するテーブル -->
+					<!-- テーブルタイトル -->
 					<h1>区画一覧</h1>
 					<table class="table">
 						<thead>
@@ -43,6 +49,7 @@
 							</tr>
 						</tbody>
 					</table>
+					<!-- 新しい区画を登録するボタン -->
 					<a class="btn btn-success" th:href="@{/sections/new}" role="button">新しい区画を登録</a>
 				</main>
 			</div>

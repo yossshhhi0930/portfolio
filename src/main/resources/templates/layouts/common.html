@@ -3,13 +3,19 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <body>
-	<nav class="navbar navba-bg-body-tertiary" style="background-image:url('/app/images/kateisaien.jpg');" layout:fragment=="nav">
+	<!-- ナビゲーションの設定 -->
+	<nav class="navbar navba-bg-body-tertiary"
+		style="background-image:url('/app/images/kateisaien.jpg'); max-width: 100%; height: auto;" layout:fragment="nav">
 		<div class="container">
+			<!-- ロゴ（マイページリンク設定） -->
 			<a class="navbar-brand faded-element" th:href="@{/mypage}">
 				<img th:src="@{/images/icons/logo.png}">
 			</a>
+			<!-- ナビゲーションメニュー -->
 			<ul class="nav justify-content-end nav-pills">
+				<!-- 認証済みの場合 -->
 				<th:block sec:authorize="isAuthenticated()">
+					<!-- 作物管理メニュー -->
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
 							aria-expanded="false">作物管理</a>
@@ -21,6 +27,7 @@
 							</li>
 						</ul>
 					</li>
+					<!-- 栽培計画管理メニュー -->
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
 							aria-expanded="false">栽培計画管理</a>
@@ -32,6 +39,7 @@
 							</li>
 						</ul>
 					</li>
+					<!-- 栽培日誌管理メニュー -->
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
 							aria-expanded="false">栽培日誌管理</a>
@@ -43,6 +51,7 @@
 							</li>
 						</ul>
 					</li>
+					<!-- 区画管理メニュー -->
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
 							aria-expanded="false">区画管理</a>
@@ -54,6 +63,7 @@
 							</li>
 						</ul>
 					</li>
+					<!-- ユーザー管理メニュー -->
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
 							aria-expanded="false">ユーザー管理</a>
@@ -65,6 +75,7 @@
 							</li>
 						</ul>
 					</li>
+					<!-- ログアウト -->
 					<li class="nav-item">
 						<form id="logout-form" th:action="@{/logout}" method="post">
 							<!-- CSRFトークンの追加 -->
@@ -74,20 +85,25 @@
 						</form>
 					</li>
 				</th:block>
+				<!-- 未認証の場合 -->
 				<th:block sec:authorize="!isAuthenticated()">
+					<!-- ユーザー登録 -->
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/users/new}">ユーザー登録</a>
+						<!-- ログイン -->
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/login}">ログイン</a>
 				</th:block>
 			</ul>
 		</div>
 	</nav>
+	<!-- エラーメッセージ -->
 	<div id="messages" layout:fragment="messages" th:if="!${#lists.isEmpty(#fields.detailedErrors())}">
 		<ul>
 			<li th:each="error : ${#fields.detailedErrors()}" class="error-message" th:text="${error.message}" />
 		</ul>
 	</div>
+	<!-- エラーメッセージ（画像関連） -->
 	<div id="messages" layout:fragment="notField-messages" th:if="!${#lists.isEmpty(notFieldMessages)}">
 		<ul>
 			<li th:each="error : ${notFieldMessages}" class="error-message" th:text="${error}" />

@@ -2,7 +2,7 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -10,21 +10,27 @@
 		<div class="container">
 			<div class="row">
 				<main class="col-md-5 mx-auto">
+					<!-- タイトル表示 -->
 					<h1>区画編集</h1>
-					<!-- 画像以外のデータを入力するフォーム -->
+					<!-- 区画編集フォーム -->
 					<form method="post" th:action="@{/sections/edit-complete}" th:object="${form}">
+						<!-- エラーメッセージの表示 -->
 						<div layout:replace="~{layouts/common::messages}"></div>
+						<!-- 区画IDの隠しフィールド -->
 						<input type="hidden" th:field="*{id}" />
+						<!-- 区画名入力フォーム -->
 						<div class="mb-3">
 							<label>区画名</label>
 							<input type="text" class="form-control" th:field="*{name}" />
 							<p th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></p>
 						</div>
+						<!-- 説明入力フォーム -->
 						<div class="mb-3">
 							<label>説明</label>
 							<textarea class="form-control" th:field="*{description}" th:errorclass="error-field"></textarea>
 							<p th:if="${#fields.hasErrors('description')}" class="error-message" th:errors="*{description}"></p>
 						</div>
+						<!-- 編集ボタン -->
 						<input type="submit" value="編集" class="btn w-100 btn-success" />
 					</form>
 				</main>

@@ -3,7 +3,7 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Pictgram</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 		<div class="container">
 			<div class="row">
 				<main class="col-md-5 mx-auto">
-					<div layout:replace="~{layouts/common::messages}"></div>
+					<!-- ログインフォーム -->
 					<form method="get" th:action="@{/login}">
 						<input type="submit" value="ログインする" class="btn w-100 btn-success" />
 					</form>

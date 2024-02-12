@@ -3,29 +3,32 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
 	<div layout:fragment="contents">
 		<div class="container">
 			<div class="row">
+				<!-- 指定の月名を含むタイトル表示 -->
 				<h1 style="display: flex; align-items: center;"><span th:text="${month}" style="font-size: 50px;"></span>種まき作物
 				</h1>
 				<main class="col-md-12 mx-auto">
+					<!-- 作物リストをカード形式で表示 -->
 					<div style="display: flex; flex-wrap: wrap;">
-						<div th:each="crop : ${list}" >
+						<div th:each="crop : ${list}">
 							<div class="card border-white" style="width: 300px; height: 300px; margin: 10px;">
+								<!-- トップ画像の作物画像がある場合表示 -->
 								<div th:if="${#lists.size(crop.cropImages) > 0}">
 									<div th:each="image: ${crop.cropImages}">
 										<div th:if="${image.topImage}">
-											<a th:href="@{'/crops/detail/' + ${crop.id}}">
-												<img th:src="${image.path}" class="card-img" alt="Image" style="width: 300px; height: 300px;">
-											</a>
+											<img th:src="${image.path}" class="card-img" alt="Image" style="width: 300px; height: 300px;">
 										</div>
 									</div>
 								</div>
+								<!-- 作物詳細へのリンクを設定 -->
 								<a th:href="@{'/crops/detail/' + ${crop.id}}" style="text-decoration: none; color: inherit;">
+									<!-- カードタイトルとして作物名を表示 -->
 									<div class="card-img-overlay">
 										<h2 class="card-title" th:text="${crop.name}" style="color: white;"></h2>
 									</div>

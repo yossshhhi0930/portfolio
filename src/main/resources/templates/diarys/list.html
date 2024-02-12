@@ -3,7 +3,7 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -11,22 +11,27 @@
 		<div class="container mt-4">
 			<div class="row">
 				<main class="col-md-5 mx-auto">
+					<!-- 期間での検索フォーム -->
 					<form id="searchForm" method="post" th:action="@{/diarys/search}">
 						<div class="form-group">
 							<label class="form-label" for="sarch_period">期間を入力:</label>
 							<div class="row">
 								<div class="input-group">
+									<!-- 検索期間開始日 -->
 									<div class="col">
-										<input type="date" class="form-control" 　id="sarch_period" name="start_date"
+										<input type="date" class="form-control" id="sarch_period" name="start_date"
 											th:value="${start_date}" />
 									</div>
 									<span class="mx-2">～</span>
+									<!-- 検索期間終了日 -->
 									<div class="col">
-										<input type="date" class="form-control" 　id="sarch_period" name="end_date" th:value="${end_date}" />
+										<input type="date" class="form-control" id="sarch_period" name="end_date" th:value="${end_date}" />
 									</div>
 								</div>
 							</div>
+							<!-- 検索結果がなかった場合にメッセージを表示 -->
 							<span th:if="${sarchMessage}" th:text="${sarchMessage}"></span>
+							<!-- 検索ボタン -->
 							<button type="submit" class="btn w-40 btn-success">検索</button>
 						</div>
 					</form>
@@ -34,22 +39,29 @@
 			</div>
 			<div class="row">
 				<main class="col-md-12 mx-auto">
+					<!-- 栽培日誌一覧をカード形式で表示 -->
+					<!-- タイトル -->
 					<h1>栽培日誌一覧</h1>
 					<div style="display: flex; flex-wrap: wrap;">
 						<div th:each="diary : ${list}" class="card" style="width: 18rem; margin: 10px;">
+							<!-- 一番最初に登録した栽培日誌画像を表示 -->
 							<div th:if="${#lists.size(diary.diaryImages) > 0}">
 								<div th:each="image, index : ${diary.diaryImages}" th:if="${index.index == 0}">
 									<img th:src="${image.path}" alt="Image" class="card-img-top">
 								</div>
 							</div>
 							<div class="card-body">
+								<!-- カードタイトルとして栽培日誌の記録日を表示 -->
 								<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
+								<!-- カードテキストとして栽培日誌の説明を表示 -->
 								<p class="card-text" th:text="${diary.description}"></p>
+								<!-- 栽培日誌詳細表示ボタン -->
 								<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
 							</div>
 						</div>
 					</div>
-					<a class="btn btn-success" th:href="@{/plans/list}" role="button">新しい作物日誌を作成</a>
+					<!-- 新しい栽培日誌作成ボタン -->
+					<a class="btn btn-success" th:href="@{/plans/list}" role="button">新しい栽培日誌を作成</a>
 				</main>
 			</div>
 		</div>

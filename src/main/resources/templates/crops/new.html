@@ -2,7 +2,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -10,11 +10,14 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 		<div class="container">
 			<div class="row">
 				<main class="col-md-8 mx-auto">
+					<!-- タイトル表示 -->
 					<h1 class="text-center">作物登録</h1>
+					<!-- 作物登録フォーム -->
 					<form method="post" th:action="@{/crop}" th:object="${form}" enctype="multipart/form-data">
+						<!-- エラーメッセージの表示 -->
 						<div layout:replace="~{layouts/common::messages}"></div>
 						<div layout:replace="~{layouts/common::notField-messages}"></div>
-						<input type="hidden" th:field="*{id}" />
+						<!-- トップ画像選択フォーム -->
 						<div class="mb-3">
 							<div id="margin_for_imagePreview">
 								<label class="form-label" for="cropTopImage">トップ画像の選択 ※1itemまで</label>
@@ -23,6 +26,7 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 							<br>
 							<p th:if="${topImageError}" class="error-message" th:text="${topImageError}"></p>
 						</div>
+						<!-- その他画像選択フォーム -->
 						<div class="mb-3">
 							<div id="margin_for_imagePreview">
 								<label class="form-label" for="cropImages">その他画像の選択 ※10itemまで</label>
@@ -31,11 +35,13 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 							<br>
 							<p th:if="${imageError}" class="error-message" th:text="${imageError}"></p>
 						</div>
+						<!-- 作物名入力フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="name">作物名</label>
 							<input type="text" class="form-control" id="name" th:field="*{name}" />
 							<p th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></p>
 						</div>
+						<!-- 播種可能期間入力フォーム -->
 						<div class="mb-3 row">
 							<label class="form-label" for="sowing_period">播種可能期間　※年を跨いで入力可 ※期間は1年以内で入力可</label>
 							<div class="row">
@@ -55,21 +61,24 @@ v<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.n
 							</p>
 							<p th:if="${#fields.hasErrors('sowing_end')}" class="error-message" th:errors="*{sowing_end}"></p>
 						</div>
+						<!-- 栽培日数入力フォーム -->
 						<div class="mb-3">
-							<label class="form-label" 　for="cultivationp_period">栽培日数</label>
+							<label class="form-label" for="cultivationp_period">栽培日数</label>
 							<div class="input-group">
-								<input type="number" class="form-control" 　id="cultivationp_period" th:field="*{cultivationp_period}" />
+								<input type="number" class="form-control" id="cultivationp_period" th:field="*{cultivationp_period}" />
 								<span>日</span>
 							</div>
 							<p th:if=" ${#fields.hasErrors('cultivationp_period')}" class="error-message"
 								th:errors="*{cultivationp_period}">
 							</p>
 						</div>
+						<!-- 栽培手順説明文入力フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="manual">育て方メモ</label>
 							<textarea class="form-control" id="manual" th:field="*{manual}" th:errorclass="error-field"></textarea>
 							<p th:if="${#fields.hasErrors('manual')}" class="error-message" th:errors="*{manual}"></p>
 						</div>
+						<!-- 登録ボタン -->
 						<input type="submit" value="登録" class="btn w-100 btn-success" />
 					</form>
 				</main>

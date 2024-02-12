@@ -189,8 +189,10 @@ span {
 
 /* the background color of the filepond drop area */
 .filepond--panel-root {
+	max-width: 100%;
+	height: auto;
 	background-color: #eee;
-	padding: 250px 30px;
+	padding: 20%;
 }
 
 /* the border radius of the drop area */
@@ -252,8 +254,9 @@ span {
 }
 
 #margin_for_imagePreview {
-	height: 40vh;
-	margin-bottom: 100px;
+	max-width: 100%;
+	height: auto;
+	margin-bottom: 40%;
 }
 
 #frame {
@@ -270,38 +273,32 @@ span {
 
 .bordered-div {
 	border-top: 1px solid #333;
-	/* 1ピクセルの実線ボーダー、色は#333（灰色） */
 	margin: 10px 0;
-	/* 上下に10pxのマージン（隙間） */
 	padding: 0.2px;
-	/* 内部に10pxのパディング */
 	background-color: rgb(101, 67, 33);
 }
 
 .scalable-element {
 	transition: transform 0.3s ease;
-	/* スケールの変化にトランジションを追加 */
 }
 
 .scalable-element:hover {
 	transform: scale(1.1);
-	/* ホバー時のスケール変化 */
 }
 
 .faded-element {
 	transition: opacity 0.3s ease;
-	/* 透明度の変化にトランジションを追加 */
 }
 
 .faded-element:hover {
 	opacity: 0.7;
-	/* ホバー時の透明度 */
 }
+
 .description {
-      padding: 10px 20px;
-      overflow: auto;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      background-color: white;
-      border: none;
-    }
+	padding: 10px 20px;
+	overflow: auto;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	background-color: white;
+	border: none;
+}

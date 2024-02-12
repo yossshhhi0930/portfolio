@@ -8,9 +8,17 @@ import com.example.portfolio.converter.DateToStringConverter;
 import com.example.portfolio.converter.LocalDateToStringConverter;
 import com.example.portfolio.converter.LocalDateConverter;
 
+/**
+ * Webアプリケーションの設定を行うクラス
+ */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+	/**
+	 * カスタムコンバーターをフォーマッターレジストリに追加
+	 *
+	 * @param registry フォーマッターレジストリ
+	 */
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
 		registry.addConverter(new DateConverter());

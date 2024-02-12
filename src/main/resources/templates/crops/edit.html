@@ -2,7 +2,7 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Portfolio</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
@@ -10,15 +10,20 @@
 		<div class="container">
 			<div class="row">
 				<main class="col-md-8 mx-auto">
+					<!-- タイトル表示 -->
 					<h1 class="text-center">作物編集</h1>
+					<!-- 作物編集フォーム -->
 					<form method="post" th:action="@{/crops/edit-complete}" th:object="${form}">
-						<label>トップ画像</label>
+						<!-- エラーメッセージの表示 -->
 						<div layout:replace="~{layouts/common::messages}"></div>
+						<!-- トップ画像表示 -->
+						<label>トップ画像</label>
 						<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
 							<div th:if="${image.topImage}">
 								<img th:src="${image.path}" alt="Image" style="width: 150px; height: 150px;">
 							</div>
 						</div>
+						<!-- その他画像表示 -->
 						<label>その他画像</label>
 						<div style="display: flex; flex-wrap: wrap;">
 							<div th:if="${#lists.size(list) > 0}" th:each="image: ${list}">
@@ -27,14 +32,17 @@
 								</div>
 							</div>
 						</div>
+						<!-- 作物IDの隠しフィールド -->
 						<input type="hidden" th:field="*{id}" />
+						<!-- 作物名入力フォーム -->
 						<div class="mb-3">
-							<label label class="form-label" for="name">作物名</label>
+							<label class="form-label" for="name">作物名</label>
 							<input type="text" class="form-control" th:field="*{name}" />
 							<p th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></p>
 						</div>
+						<!-- 播種可能期間入力フォーム -->
 						<div class="mb-3 row">
-							<label class="form-label" 　for="sowing_period" 　>播種可能期間</label>
+							<label class="form-label" for="sowing_period">播種可能期間</label>
 							<div class="row">
 								<div class="input-group">
 									<div class="col">
@@ -52,21 +60,24 @@
 							</p>
 							<p th:if="${#fields.hasErrors('sowing_end')}" class="error-message" th:errors="*{sowing_end}"></p>
 						</div>
+						<!-- 栽培日数入力フォーム -->
 						<div class="mb-3">
-							<label class="form-label" 　for="cultivationp_period">栽培日数</label>
+							<label class="form-label" for="cultivationp_period">栽培日数</label>
 							<div class="input-group">
-								<input type="number" class="form-control" 　id="cultivationp_period" th:field="*{cultivationp_period}" />
+								<input type="number" class="form-control" id="cultivationp_period" th:field="*{cultivationp_period}" />
 								<span>日</span>
 							</div>
 							<p th:if=" ${#fields.hasErrors('cultivationp_period')}" class="error-message"
 								th:errors="*{cultivationp_period}">
 							</p>
 						</div>
+						<!-- 栽培手順説明文入力フォーム -->
 						<div class="mb-3">
 							<label class="form-label" for="manual">育て方メモ</label>
 							<textarea class="form-control" id="manual" th:field="*{manual}" th:errorclass="error-field"></textarea>
 							<p th:if="${#fields.hasErrors('manual')}" class="error-message" th:errors="*{manual}"></p>
 						</div>
+						<!-- 編集ボタン -->
 						<input type="submit" value="編集" class="btn w-100 btn-success" />
 					</form>
 				</main>

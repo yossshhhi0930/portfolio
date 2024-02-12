@@ -3,18 +3,19 @@
 	layout:decorate="~{layouts/layout}">
 
 <head>
-	<title>Pictgram</title>
+	<title>さいばい手帖</title>
 </head>
 
 <body>
 	<div layout:fragment="contents">
-		<div layout:replace="~{layouts/common::messages}"></div>
 		<div class="container">
 			<div class="row">
 				<h1 class="text-center">マイページ</h1>
 				<main class="col-md-12 mx-auto">
+					<!-- 新しく栽培計画を立てる月を選択する領域 -->
 					<div class="frame" id="frame">
 						<h2 id="dark_h" class="text-center">新しく栽培計画を立てる</h2>
+						<!-- 各月ごとにボタンを設置 -->
 						<a class="btn btn-success scalable-element" th:href="@{/crops(month='JANUARY')}" role="button">1月</a>
 						<a class="btn btn-success scalable-element" th:href="@{/crops(month='FEBRUARY')}" role="button">２月</a>
 						<a class="btn btn-success scalable-element" th:href="@{/crops(month=MARCH)}" role="button">３月</a>
@@ -28,39 +29,48 @@
 						<a class="btn btn-success scalable-element" th:href="@{/crops(month='NOVEMBER')}" role="button">１１月</a>
 						<a class="btn btn-success scalable-element" th:href="@{/crops(month='DECEMBER')}" role="button">１２月</a>
 					</div>
+					<!-- 最近の栽培日誌投稿をカード形式で5つまで表示する箇所 -->
 					<div class="frame" id="frame">
 						<h2 id="dark_h" class="text-center">最近の栽培日誌投稿</h2>
 						<div style="display: flex; flex-wrap: wrap;">
 							<div th:each="diary, index : ${DiaryList}" th:if="${index.index <=5}" class="card"
 								style="width: 18rem; margin: 10px;">
+								<!-- 一番最初に登録した栽培日誌画像を表示 -->
 								<div th:if="${#lists.size(diary.diaryImages) > 0}">
 									<div th:each="image, index : ${diary.diaryImages}" th:if="${index.index == 0}">
 										<img th:src="${image.path}" alt="Image" class="card-img-top">
 									</div>
 								</div>
 								<div class="card-body">
+									<!-- カードタイトルとして栽培日誌の記録日を表示 -->
 									<h5 class="card-title" th:text="${diary.record_date}">Card title</h5>
 									<p class="card-text"></p>
+									<!-- 栽培日誌詳細表示ボタン -->
 									<a class="btn btn-primary" th:href="@{'/diarys/detail/' + ${diary.Id}}">詳細</a>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="frame" id="frame">
+						<!-- 現在栽培中の栽培計画を5つまで表示する箇所 -->
 						<h2 id="dark_h" class="text-center">現在栽培中の作物</h2>
 						<div style="display: flex; flex-wrap: wrap;">
 							<div th:if="${doingList}" th:each="plan : ${doingList}" class="card" style="width: 18rem; margin: 40px;">
+								<!-- 栽培計画の作物の作物トップ画像を表示 -->
 								<div th:if="${plan != null and plan.crop != null and #lists.size(plan.crop.cropImages) >0 }">
 									<img th:each="image : ${plan.crop.cropImages}" th:if="${image.topImage}" th:src="${image.path}"
 										alt="Image" class="card-img-top">
 								</div>
 								<div class="card-body">
+									<!-- カードタイトルとして栽培計画の作物名を表示 -->
 									<h5 class="card-title" th:text="${plan.crop.name}">Card title</h5>
+									<!-- カードテキストとして栽培期間を表示 -->
 									<div style="display: flex; align-items: center;">
 										<p class="card-text" th:text="${plan.sowing_date}"></p>
 										<p class="card-text">　～　</p>
 										<p class="card-text" th:text="${plan.harvest_completion_date}"></p>
 									</div>
+									<!-- 栽培計画詳細表示ボタン -->
 									<a class="btn btn-primary" th:href="@{'/plans/detail/' + ${plan.id}}">詳細</a>
 								</div>
 							</div>
@@ -69,20 +79,25 @@
 						<div class="bordered-div">
 						</div>
 						<br>
+						<!-- 栽培予定の栽培計画を5つまで表示する箇所 -->
 						<h2 id="dark_h" class="text-center">栽培予定の作物</h2>
 						<div style="display: flex; flex-wrap: wrap;">
 							<div th:if="${toDoList}" th:each="plan : ${toDoList}" class="card" style="width: 18rem; margin: 40px;">
+								<!-- 栽培計画の作物の作物トップ画像を表示 -->
 								<div th:if="${plan != null and plan.crop != null and #lists.size(plan.crop.cropImages) >0}">
 									<img th:each="image : ${plan.crop.cropImages}" th:if="${image.topImage}" th:src="${image.path}"
 										alt="Image" class="card-img-top">
 								</div>
 								<div class="card-body">
+									<!-- カードタイトルとして栽培計画の作物名を表示 -->
 									<h5 class="card-title" th:text="${plan.crop.name}">Card title</h5>
 									<div style="display: flex; align-items: center;">
+										<!-- カードテキストとして栽培期間を表示 -->
 										<p class="card-text" th:text="${plan.sowing_date}"></p>
 										<p class="card-text">　～　</p>
 										<p class="card-text" th:text="${plan.harvest_completion_date}"></p>
 									</div>
+									<!-- 栽培計画詳細表示ボタン -->
 									<a class="btn btn-primary" th:href="@{'/plans/detail/' + ${plan.id}}">詳細</a>
 								</div>
 							</div>
